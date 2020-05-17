@@ -1,0 +1,57 @@
+<rule><name>pi_r</name>
+<sequent><level>0</level>
+                                         <lhs></lhs><rhs>
+                                           <formula><generic></generic> (pi n\ (nat n =&gt; nat (s n)))</formula>
+                                           </rhs><focused>false</focused></sequent><formula><generic></generic> (pi n\ (nat n =&gt; nat (s n)))</formula><bound>y0</bound><sub><rule><name>imp_r</name>
+
+<sequent><level>1</level>
+<lhs></lhs><rhs>
+  <formula><generic></generic> (nat n =&gt; nat (s n))</formula>
+  </rhs><focused>false</focused></sequent><formula><generic></generic> (nat n =&gt; nat (s n))</formula><bound></bound><sub><rule><name>mu_r</name>
+<sequent><level>1</level>
+                                          <lhs>
+                                            <formula><generic></generic> nat n*</formula>
+                                            </lhs><rhs>
+                                            <formula><generic></generic>#nat (s n)</formula>
+                                            </rhs><focused>true</focused></sequent><formula><generic></generic>#nat (s n)</formula><bound></bound><sub><rule><name>right</name>
+
+<sequent><level>1</level>
+<lhs><formula><generic></generic> nat n*</formula></lhs><rhs>
+  <formula><generic></generic>#(((s n) = o); (sigma y\ (((s n) = (s y)), nat y)))</formula>
+  </rhs><focused>true</focused></sequent><formula><generic></generic>#(((s n) = o); (sigma y\ (((s n) = (s y)), nat y)))</formula><bound></bound><sub><rule><name>sigma_r</name>
+<sequent><level>1</level>
+                                         <lhs>
+                                           <formula><generic></generic> nat n*</formula>
+                                           </lhs><rhs>
+                                           <formula><generic></generic>#(sigma y\ (((s n) = (s y)), nat y))</formula>
+                                           </rhs><focused>true</focused></sequent><formula><generic></generic>#(sigma y\ (((s n) = (s y)), nat y))</formula><bound>n</bound><sub><rule><name>and_r</name>
+
+<sequent><level>1</level>
+<lhs><formula><generic></generic> nat n*</formula></lhs><rhs>
+  <formula><generic></generic>#(((s n) = (s n)), nat n)</formula>
+  </rhs><focused>true</focused></sequent><formula><generic></generic>#(((s n) = (s n)), nat n)</formula><bound></bound><sub><rule><name>eq_r</name>
+<sequent><level>1</level>
+                                         <lhs>
+                                           <formula><generic></generic> nat n*</formula>
+                                           </lhs><rhs>
+                                           <formula><generic></generic>#((s n) = (s n))</formula>
+                                           </rhs><focused>true</focused></sequent><formula><generic></generic>#((s n) = (s n))</formula><bound></bound><sub></sub>
+</rule>
+<rule><name>init_mu</name>
+
+<sequent><level>1</level>
+<lhs><formula><generic></generic> nat n*</formula></lhs><rhs>
+  <formula><generic></generic>#nat n</formula></rhs><focused>true</focused></sequent><formula><generic></generic>#nat n</formula><bound></bound><sub></sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>

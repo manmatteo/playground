@@ -1,0 +1,35 @@
+kind for type.
+kind proof type.
+type prove (list for) -> for -> proof -> prop.
+mode (prove i             i      o).
+type ax, bt proof.
+type ran, lim, lor proof -> proof -> proof.
+type ror, rim, lan proof -> proof.
+type a int -> for.
+type and for -> for -> for.
+type or for -> for -> for.
+type imp for -> for -> for.
+type not for -> for.
+type bot for.
+
+:if "DEBUG" prove X Y Z:- print "Prove " X Y Z, fail.
+prove L X ax                  :- std.mem L X. 
+prove L _ bt                  :- std.mem L bot.
+prove L (and A B) (ran P1 P2) :- prove L A P1, prove L B P2.
+prove L (or A B)  (ror P)     :- prove L A P; prove L B P.
+prove L (not A)   (rim P)     :- prove (A :: L) bot P.
+prove L (imp A B) (rim P)     :- prove (A :: L) B P.
+
+prove G R (lan P)     :- mem_and_rest G (and A B) G1, prove (A::B::G1) R P.
+prove G R (lor P1 P2) :- mem_and_rest G (or A B)  G1, prove (A :: G1) R P1, prove (B :: G1) R P2.
+prove G R (lim P1 P2) :- mem_and_rest G (imp A B) G1, prove G1 A P1, prove (B :: G1) R P2.
+prove G R (lim P1 P2) :- mem_and_rest G (not A)   G1, prove G1 A P1, prove (bot::G1) R P2.
+
+% pred mem_and_rest i:(list A), i:A, o:(list A).
+% :if "DEBUG" mem_and_rest X Y Z :- print "Mem_and_rest " X Y Z, fail.
+mem_and_rest [X | L] X L.
+mem_and_rest [X | L] Y [X | R] :- mem_and_rest L Y R.
+
+% pred pp i:(list for), i:for, i:proof, o:string.
+% pp G F ax S :- S is {term_to_string G}. %"\infer[axiom]{".% ^ {term_to_string G} ^ "\vdash". 
+

@@ -1,0 +1,134 @@
+<rule><name>pi_r</name>
+
+<sequent><level>0</level>
+<lhs></lhs><rhs>
+  <formula><generic></generic> (pi n\ (nat n =&gt; (((n = o) =&gt; false); (n = o))))</formula>
+  </rhs><focused>false</focused></sequent><formula><generic></generic> (pi n\ (nat n =&gt; (((n = o) =&gt; false); (n = o))))</formula><bound>y</bound><sub><rule><name>imp_r</name>
+<sequent><level>1</level>
+                                          <lhs></lhs><rhs>
+                                            <formula><generic></generic> (nat n =&gt; (((n = o) =&gt; false); (n = o)))</formula>
+                                            </rhs><focused>false</focused></sequent><formula><generic></generic> (nat n =&gt; (((n = o) =&gt; false); (n = o)))</formula><bound></bound><sub><rule><name>induction</name>
+
+<sequent><level>1</level>
+<lhs><formula><generic></generic> nat n</formula></lhs><rhs>
+  <formula><generic></generic> (((n = o) =&gt; false); (n = o))</formula>
+  </rhs><focused>false</focused></sequent><formula><generic></generic> nat n</formula><bound></bound><sub><rule><name>or_l</name>
+<sequent><level>2</level>
+                                          <lhs>
+                                            <formula><generic></generic> ((x = o); (sigma y\ ((x = (s y)), (((y = o) =&gt; false); (y = o)))))</formula>
+                                            </lhs><rhs>
+                                            <formula><generic></generic> (((x = o) =&gt; false); (x = o))</formula>
+                                            </rhs><focused>false</focused></sequent><formula><generic></generic> ((x = o); (sigma y\ ((x = (s y)), (((y = o) =&gt; false); (y = o)))))</formula><bound></bound><sub><rule><name>eq_l</name>
+
+<sequent><level>2</level>
+<lhs><formula><generic></generic> (x = o)</formula></lhs><rhs>
+  <formula><generic></generic> (((x = o) =&gt; false); (x = o))</formula>
+  </rhs><focused>false</focused></sequent><formula><generic></generic> (x = o)</formula><bound></bound><sub><rule><name>right</name>
+<sequent><level>2</level>
+                                          <lhs></lhs><rhs>
+                                            <formula><generic></generic>#(((o = o) =&gt; false); (o = o))</formula>
+                                            </rhs><focused>true</focused></sequent><formula><generic></generic>#(((o = o) =&gt; false); (o = o))</formula><bound></bound><sub><rule><name>eq_r</name>
+
+<sequent><level>2</level>
+<lhs></lhs><rhs><formula><generic></generic>#(o = o)</formula>
+  </rhs><focused>true</focused></sequent><formula><generic></generic>#(o = o)</formula><bound></bound><sub></sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+<rule><name>sigma_l</name>
+<sequent><level>2</level>
+                                         <lhs>
+                                           <formula><generic></generic> (sigma y\ ((x = (s y)), (((y = o) =&gt; false); (y = o))))</formula>
+                                           </lhs><rhs>
+                                           <formula><generic></generic> (((x = o) =&gt; false); (x = o))</formula>
+                                           </rhs><focused>false</focused></sequent><formula><generic></generic> (sigma y\ ((x = (s y)), (((y = o) =&gt; false); (y = o))))</formula><bound>n</bound><sub><rule><name>and_l</name>
+
+<sequent><level>3</level>
+<lhs>
+  <formula><generic></generic> ((x = (s y)), (((y = o) =&gt; false); (y = o)))</formula>
+  </lhs><rhs>
+  <formula><generic></generic> (((x = o) =&gt; false); (x = o))</formula>
+  </rhs><focused>false</focused></sequent><formula><generic></generic> ((x = (s y)), (((y = o) =&gt; false); (y = o)))</formula><bound></bound><sub><rule><name>eq_l</name>
+<sequent><level>3</level>
+                                          <lhs>
+                                            <formula><generic></generic> (x = (s y))</formula>
+                                            <formula><generic></generic> (((y = o) =&gt; false); (y = o))</formula>
+                                            </lhs><rhs>
+                                            <formula><generic></generic> (((x = o) =&gt; false); (x = o))</formula>
+                                            </rhs><focused>false</focused></sequent><formula><generic></generic> (x = (s y))</formula><bound></bound><sub><rule><name>or_l</name>
+
+<sequent><level>3</level>
+<lhs>
+  <formula><generic></generic> (((y0 = o) =&gt; false); (y0 = o))</formula>
+  </lhs><rhs>
+  <formula><generic></generic> ((((s y0) = o) =&gt; false); ((s y0) = o))</formula>
+  </rhs><focused>false</focused></sequent><formula><generic></generic> (((y0 = o) =&gt; false); (y0 = o))</formula><bound></bound><sub><rule><name>left</name>
+<sequent><level>3</level>
+                                          <lhs>
+                                            <formula><generic></generic> ((y0 = o) =&gt; false)</formula>
+                                            </lhs><rhs>
+                                            <formula><generic></generic>#((((s y0) = o) =&gt; false); ((s y0) = o))</formula>
+                                            </rhs><focused>true</focused></sequent><formula><generic></generic>#((((s y0) = o) =&gt; false); ((s y0) = o))</formula><bound></bound><sub><rule><name>imp_r</name>
+
+<sequent><level>3</level>
+<lhs><formula><generic></generic> ((y0 = o) =&gt; false)</formula></lhs><rhs>
+  <formula><generic></generic> (((s y0) = o) =&gt; false)</formula>
+  </rhs><focused>false</focused></sequent><formula><generic></generic> (((s y0) = o) =&gt; false)</formula><bound></bound><sub><rule><name>eq_l</name>
+<sequent><level>3</level>
+                                          <lhs>
+                                            <formula><generic></generic> ((y0 = o) =&gt; false)</formula>
+                                            <formula><generic></generic> ((s y0) = o)</formula>
+                                            </lhs><rhs>
+                                            <formula><generic></generic> false</formula>
+                                            </rhs><focused>false</focused></sequent><formula><generic></generic> ((s y0) = o)</formula><bound></bound><sub></sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+<rule><name>eq_l</name>
+
+<sequent><level>3</level>
+<lhs><formula><generic></generic> (y0 = o)</formula></lhs><rhs>
+  <formula><generic></generic> ((((s y0) = o) =&gt; false); ((s y0) = o))</formula>
+  </rhs><focused>false</focused></sequent><formula><generic></generic> (y0 = o)</formula><bound></bound><sub><rule><name>left</name>
+<sequent><level>3</level>
+                                          <lhs></lhs><rhs>
+                                            <formula><generic></generic>#((((s o) = o) =&gt; false); ((s o) = o))</formula>
+                                            </rhs><focused>true</focused></sequent><formula><generic></generic>#((((s o) = o) =&gt; false); ((s o) = o))</formula><bound></bound><sub><rule><name>imp_r</name>
+
+<sequent><level>3</level>
+<lhs></lhs><rhs>
+  <formula><generic></generic> (((s o) = o) =&gt; false)</formula>
+  </rhs><focused>false</focused></sequent><formula><generic></generic> (((s o) = o) =&gt; false)</formula><bound></bound><sub><rule><name>eq_l</name>
+<sequent><level>3</level>
+                                          <lhs>
+                                            <formula><generic></generic> ((s o) = o)</formula>
+                                            </lhs><rhs>
+                                            <formula><generic></generic> false</formula>
+                                            </rhs><focused>false</focused></sequent><formula><generic></generic> ((s o) = o)</formula><bound></bound><sub></sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>

@@ -1,0 +1,118 @@
+<rule><name>imp_r</name>
+<sequent><level>0</level>
+<lhs></lhs><rhs>
+  <formula><generic></generic> (((x =&gt; false) =&gt; (y; z)) =&gt; (((x =&gt; false) =&gt; y); ((x =&gt; false) =&gt; z)))</formula>
+  </rhs><focused>false</focused></sequent><formula><generic></generic> (((x =&gt; false) =&gt; (y; z)) =&gt; (((x =&gt; false) =&gt; y); ((x =&gt; false) =&gt; z)))</formula><bound></bound><sub><rule><name>left</name>
+<sequent><level>0</level>
+                                          <lhs>
+                                            <formula><generic></generic> ((x =&gt; false) =&gt; (y; z))</formula>
+                                            </lhs><rhs>
+                                            <formula><generic></generic>#(((x =&gt; false) =&gt; y); ((x =&gt; false) =&gt; z))</formula>
+                                            </rhs><focused>true</focused></sequent><formula><generic></generic>#(((x =&gt; false) =&gt; y); ((x =&gt; false) =&gt; z))</formula><bound></bound><sub><rule><name>imp_r</name>
+
+<sequent><level>0</level>
+<lhs><formula><generic></generic> ((x =&gt; false) =&gt; (y; z))</formula>
+  </lhs><rhs><formula><generic></generic> ((x =&gt; false) =&gt; y)</formula>
+  </rhs><focused>false</focused></sequent><formula><generic></generic> ((x =&gt; false) =&gt; y)</formula><bound></bound><sub><rule><name>imp_l</name>
+<sequent><level>0</level>
+                                          <lhs>
+                                            <formula><generic></generic>#((x =&gt; false) =&gt; (y; z))</formula>
+                                            <formula><generic></generic> (x =&gt; false)</formula>
+                                            </lhs><rhs>
+                                            <formula><generic></generic> y</formula>
+                                            </rhs><focused>true</focused></sequent><formula><generic></generic>#((x =&gt; false) =&gt; (y; z))</formula><bound></bound><sub><rule><name>imp_r</name>
+
+<sequent><level>0</level>
+<lhs><formula><generic></generic> (x =&gt; false)</formula></lhs><rhs>
+  <formula><generic></generic> (x =&gt; false)</formula>
+  </rhs><focused>false</focused></sequent><formula><generic></generic> (x =&gt; false)</formula><bound></bound><sub><rule><name>imp_l</name>
+<sequent><level>0</level>
+                                          <lhs>
+                                            <formula><generic></generic>#(x =&gt; false)</formula>
+                                            <formula><generic></generic> x*</formula>
+                                            </lhs><rhs>
+                                            <formula><generic></generic> false</formula>
+                                            </rhs><focused>true</focused></sequent><formula><generic></generic>#(x =&gt; false)</formula><bound></bound><sub><rule><name>init_mu</name>
+
+<sequent><level>0</level>
+<lhs><formula><generic></generic> x*</formula></lhs><rhs>
+  <formula><generic></generic>#x</formula></rhs><focused>true</focused></sequent><formula><generic></generic>#x</formula><bound></bound><sub></sub>
+</rule>
+<rule><name>false</name>
+
+<sequent><level>0</level>
+<lhs><formula><generic></generic> false</formula>
+  <formula><generic></generic> x*</formula></lhs><rhs>
+  <formula><generic></generic> false</formula></rhs><focused>false</focused></sequent><formula><generic></generic> false</formula><bound></bound><sub></sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+<rule><name>or_l</name>
+
+<sequent><level>0</level>
+<lhs><formula><generic></generic> (y; z)</formula>
+  <formula><generic></generic> (x =&gt; false)</formula></lhs><rhs>
+  <formula><generic></generic> y</formula></rhs><focused>false</focused></sequent><formula><generic></generic> (y; z)</formula><bound></bound><sub><rule><name>imp_l</name>
+
+<sequent><level>0</level>
+<lhs><formula><generic></generic> y*</formula>
+  <formula><generic></generic>#(x =&gt; false)</formula></lhs><rhs>
+  <formula><generic></generic> y</formula></rhs><focused>true</focused></sequent><formula><generic></generic>#(x =&gt; false)</formula><bound></bound><sub><rule><name>mu_r</name>
+
+<sequent><level>0</level>
+<lhs><formula><generic></generic> y*</formula></lhs><rhs>
+  <formula><generic></generic>#x</formula></rhs><focused>true</focused></sequent><formula><generic></generic>#x</formula><bound></bound><sub><rule><name>true</name>
+
+<sequent><level>0</level>
+<lhs><formula><generic></generic> y*</formula></lhs><rhs>
+  <formula><generic></generic>#true</formula></rhs><focused>true</focused></sequent><formula><generic></generic>#true</formula><bound></bound><sub></sub>
+</rule>
+</sub>
+</rule>
+<rule><name>false</name>
+
+<sequent><level>0</level>
+<lhs><formula><generic></generic> y*</formula>
+  <formula><generic></generic> false</formula></lhs><rhs>
+  <formula><generic></generic> y</formula></rhs><focused>false</focused></sequent><formula><generic></generic> false</formula><bound></bound><sub></sub>
+</rule>
+</sub>
+</rule>
+<rule><name>imp_l</name>
+
+<sequent><level>0</level>
+<lhs><formula><generic></generic> z*</formula>
+  <formula><generic></generic>#(x =&gt; false)</formula></lhs><rhs>
+  <formula><generic></generic> y</formula></rhs><focused>true</focused></sequent><formula><generic></generic>#(x =&gt; false)</formula><bound></bound><sub><rule><name>mu_r</name>
+
+<sequent><level>0</level>
+<lhs><formula><generic></generic> z*</formula></lhs><rhs>
+  <formula><generic></generic>#x</formula></rhs><focused>true</focused></sequent><formula><generic></generic>#x</formula><bound></bound><sub><rule><name>true</name>
+
+<sequent><level>0</level>
+<lhs><formula><generic></generic> z*</formula></lhs><rhs>
+  <formula><generic></generic>#true</formula></rhs><focused>true</focused></sequent><formula><generic></generic>#true</formula><bound></bound><sub></sub>
+</rule>
+</sub>
+</rule>
+<rule><name>false</name>
+
+<sequent><level>0</level>
+<lhs><formula><generic></generic> z*</formula>
+  <formula><generic></generic> false</formula></lhs><rhs>
+  <formula><generic></generic> y</formula></rhs><focused>false</focused></sequent><formula><generic></generic> false</formula><bound></bound><sub></sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>
+</sub>
+</rule>

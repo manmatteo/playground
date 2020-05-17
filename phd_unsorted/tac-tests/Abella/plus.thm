@@ -1,0 +1,141 @@
+%%Title: plus.thm
+%%Description: Addition on nature numbers
+%%Author: Dale Miller
+%%Dates: 4 January 2019
+
+%include "http://www.lix.polytechnique.fr/Labo/Dale.Miller/alib/nat.thm".
+
+Define plus : nat -> nat -> nat -> prop by
+	plus zero N N
+;	plus (succ M) N (succ K) := plus M N K.
+
+% Typing judgments for plus
+Theorem augend_nat : forall A B C, plus A B C -> nat B -> nat C -> nat A.
+induction on 1. intros. case H1.
+  search.
+  case H3. apply IH to H4 H2 H5. search.
+
+Theorem augend_nat' : forall A B C, plus A B C -> nat C -> nat A.
+induction on 1. intros. case H1.
+  search.
+  case H2. apply IH to H3 H4. search.
+
+Theorem addend_nat : forall A B C, plus A B C -> nat C -> nat B.
+induction on 1. intros. case H1.
+  search.
+  case H2.  apply IH to H3 H4. search.
+
+Theorem plus_nat : forall A B C, plus A B C -> nat A -> nat B -> nat C.
+induction on 1. intros. case H1.
+  search.
+  case H2. apply IH to H4 H5 H3. search.
+
+Theorem plus_type1 : forall N M P, plus N M P -> nat N.
+  induction on 1. intros. case H1. search. apply IH to H2. search.
+
+Theorem plus_type2 : forall N M P, nat M -> plus N M P -> nat P.
+  induction on 2. intros. case H2. search.
+  apply IH to H1 H3. search.
+
+Theorem plus_zeroero : forall N, nat N -> plus N zero N.
+induction on 1. intros. case H1.
+  search.
+  apply IH to H2. search.
+
+Theorem plus_succ : forall M N K, plus M N K -> plus M (succ N) (succ K).
+induction on 1. intros. case H1.
+  search.
+  apply IH to H2. search.
+
+% Commutativity of plus
+Theorem plus_comm : forall M N K, nat K -> plus M N K -> plus N M K.
+induction on 2. intros. case H2.
+  apply plus_zeroero to H1. search.
+  case H1. apply IH to H4 H3. apply plus_succ to H5. search.
+
+% Determinacy of plus
+Theorem plus_det : forall A B C D, plus A B C -> plus A B D -> C = D.
+induction on 1. intros. case H1.
+  case H2. search.
+  case H2. apply IH to H3 H4. search.
+
+% Associativity of plus
+Theorem plus_assoc : forall A B C AB ABC,
+	plus A B AB -> plus AB C ABC -> exists BC, plus B C BC /\ plus A BC ABC.
+induction on 1. intros. case H1.
+  search.
+  case H2. apply IH to H3 H4. search.
+
+Theorem plus_assoc_rl : forall A B C BC ABC, nat ABC ->
+	plus B C BC -> plus A BC ABC -> exists AB, plus A B AB /\ plus AB C ABC.
+intros.
+apply plus_comm to H1 H3.
+apply addend_nat to H3 H1.
+apply plus_comm to H5 H2.
+apply plus_assoc to H6 H4.
+apply plus_comm to H1 H8.
+apply addend_nat to H8 H1.
+apply plus_comm to H10 H7.
+search.
+
+% And a permutation lemma
+Theorem plus_perm4 : forall A B C D AB CD ABCD, nat ABCD ->
+	plus A B AB -> plus C D CD -> plus AB CD ABCD ->
+	exists AC BD, plus A C AC /\ plus B D BD /\ plus AC BD ABCD.
+intros.
+apply plus_assoc to H2 H4.
+apply addend_nat to H6 H1.
+apply plus_comm to H7 H5.
+apply plus_assoc to H3 H8.
+apply addend_nat to H10 H7.
+apply plus_comm to H11 H9.
+apply plus_assoc_rl to H1 H10 H6.
+search.
+
+% Totality of addition %
+Theorem plus_total : forall M N, nat M -> exists K, plus M N K.
+induction on 1. intros. case H1.
+  search.
+  % In apply, instantiate the variables that are not referenced in the hypothesis
+  apply IH to H2 with N = N. search.
+
+% Now with more typing judgments!
+Theorem plus_total' : forall M N, nat M -> nat N ->
+	exists K, nat K /\ plus M N K.
+induction on 1. intros. case H1.
+  exists N. search.
+  apply IH to H3 H2. search.
+
+Theorem plus_swaprl : forall A B C, plus A (succ B) C -> plus (succ A) B C.
+induction on 1. intros. case H1.
+  search.
+  apply IH to H2. search.
+
+Theorem plus_swaplr : forall A B C, plus (succ A) B C -> plus A (succ B) C.
+induction on 1. intros. case H1.
+  apply plus_succ to H2. search.
+
+Theorem plus_one : forall N, nat N -> plus N (succ zero) (succ N).
+induction on 1. intros. case H1.
+  search.
+  apply IH to H2. search.
+
+Theorem plus_twice : forall N M, nat N -> plus N N M -> even M.
+ induction on 1. intros tyN pivot. tyN :case tyN.
+   case pivot. search.
+   plus: case pivot.
+   plus: apply plus_swaprl to plus. plus: case plus1.
+           apply IH to tyN plus1. search.
+
+Theorem odd_plus_even : forall X Y Z, odd X -> even Y -> plus X Y Z -> odd Z.
+ induction on 1. intros. case H1.
+  case H3. case H4. apply even_odd to H2. search.
+  case H3. case H5. apply IH to H4 H2 H6.
+           apply odd_even to H7. apply even_odd to H8. search.
+
+Theorem odd_plus_odd : forall X Y Z, odd X -> odd Y -> plus X Y Z -> even Z.
+ induction on 1. intros. case H1.
+  case H3. case H4. apply odd_even to H2. search.
+  case H3. case H5. apply IH to H4 H2 H6.
+           apply even_odd to H7. apply odd_even to H8. search.
+

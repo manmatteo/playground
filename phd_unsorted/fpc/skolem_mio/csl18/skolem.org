@@ -1,0 +1,383 @@
+* Front matter
+** Venue CSL 2018: Final draft deadline is 14 April 2018.
+  DEADLINE: <2018-04-07 sam.>
+  Submissions must be no more than 15 pages (not including
+  references) 
+** Titles
+   - A proof-theoretic approach to certifying Skolemization
+   - Certifying Skolemization using proof theory
+   - Certification of Skolemization
+** Authors: Chaudhuri, Manighetti, Miller
+** Orthography
+    - Capitalize Skolem (function, term) but not skolemization.
+    - Use deskolemization (not unskolemize).
+
+* Section: Introduction
+* Section: Skolemization
+* Section: Benefits of a proof theory approach (a bit of philosophy)
+* Section: Foundational proof certificates
+** The role of sequent calculus
+
+   Assume that we are working with first-order classical or
+   intuitionistic logic.
+
+   Let us assume that we can trust sequent calculus proofs,
+   essentially Gentzen's LJ and LK proof systems and that we can trust
+   a lambda Prolog implementation of such proof systems.
+
+   One should note that such proof systems make use of eigenvariables
+   to treat quantification and that lambda Prolog (as some other
+   logical frameworks) has built-in and completely declarative support
+   for eigenvariables.
+
+   The sequent calculus plays a distinquished role here: it is the
+   assembly language into which other proof systems are compiled.
+
+   Most proof evidence comes with ad hoc / large scale inference rules
+   compared to the micro rules of sequent calculus.  Polarization and
+   focusing have provided a means to compile many forms of proof
+   evidence into sequent calculus.
+
+** Client-side vs kernel-side dichotomy: formulas and terms
+
+   Polarization maps client-side to kernel-side propositional
+   connectives.  So far, however, most proof evidence that has been
+   described and checked with in the FPC framework either ignores the
+   specification of (client-side) terms or conflates client-side and
+   kernel-side terms.  For example, resolution refutations can be
+   encoded without substitution terms since computing mgus involving
+   first-order terms is determinate and effectively computable.  Our
+   course, encoding also substitution terms is possible.  (Exploring
+   the difference in checking times, certificate sizes, and checker
+   complexity when certificates contact substitution terms or not was
+   explored in \cite{blanco17cade}.)
+
+   More generally, however, client-side and kernel-side term
+   structures are different.  For example, clients generally use
+   Skolem functions where as the sequent calculus kernels use
+   eigenvariables.  (Note that natural deduction proofs use
+   eigenvariables also.)
+
+   As we shall describe here, within the FPC framework, polarization
+   is a mapping from client-side formulas to kernel-side formulas and
+   deskolemization is a similar mapping of client-side terms to
+   kernel-side terms.
+
+   - Polarization: mapping client-side formulas to kernel-side formulas.
+
+   - Deskolemization: mapping client-side terms to kernel-side terms.
+
+    Note that what we achieve here is a bit more than
+    deskolemization.  In general, eigenvariables are associated with
+    names (not necessarily skolem terms).  For example, select
+    variables in expansion trees.
+
+** lambda Prolog provides an implementation of eigenvariables
+   The kernel is essentially a guided mechanism for building proof
+   systems very close to Gentzen's original LK.
+   - Differences are that both the additive and mulitplicative
+     versions of disjunction and conjunction (and their units) are
+     available (Gentzen picked just one; the others are admissible).
+   - The soundness of the kernel is straightforward and breaks down
+     as follows
+     - the lambda Prolog code of the kernel clearly builds valid
+       sequent calculus proofs: one merely needs to remove a lot of
+       the annotations involving control which cannot affect
+       soundness.
+     - One must also trust the lambda Prolog implementation.  Proof
+       checkers are generally implemented in general purpose
+       programming languages (such as ML) and their implementations
+       must be trusted.
+
+   Illustrate with a bit of lambda Prolog code.
+
+** Eigenvariables are abstractions
+
+   Remember that the eigenvariables in LKF are genuine abstracts,
+   hidden from the outside.  (Remember that this feature of logic
+   programming has been used to capture abstract datatypes.)  Thus, it
+   is *impossible* for client-side and kernel-side terms to actually
+   be the same when there are strong quantifiers present.   Often, the
+   exact substitutions terms are not in the proof evidence (in
+   first-order proof checking, unification is determinate and unary).
+
+   Expansion trees used select-variables with the requirement that
+   they were unique.  But these are not eigenvariables!  They are now
+   bound within the trees: the only bounding possible seems to be
+   global. 
+
+   In other words, the "usual" proof evidence will not contain
+   binders.  Constructors with types like (i -> cert) -> cert is not
+   common.
+
+** Nondeterminism, backtracking, acyclic relation, etc
+* Section: Deskolemization outermost skolemization
+  Outermost skolemization can be mapped to eigenvariables using
+  copy-clauses. 
+
+  Existing kernel designs needed only have additional features (allCx
+  vs allC).
+
+  Deskolemizing just involved using a copy-clause interpreter.
+
+   - The relationship between eigenvariables and Skolem terms is
+     "clear" and implementable using the copy-clause technique.
+   - Try to justify the above statement by showing how we can
+     modularly extend an FPC that works on a skolemize formula and
+     proof evidence (ie, no strong quantifiers, no calls to allC) to
+     an FPC that is exactly the same except that we now have an
+     implementation of allC (using copy-clauses) and a revised version
+     of existE (using copy to translate terms).
+   - Illustrate doing this with exp-fpc and with geo-fpc.
+
+** Outermost skolemization
+    The soundness of outermost skolemization: if the proof evidence
+    for sk(B) is *cut-free* (meaning what?) then we can translate that
+    proof to a cut-free proof of B.  (The proposal for *cut-free*
+    proof evidence means that the kernel does not invoke the
+    cut-expert).
+
+    NB In a cut-free setting, only terms need to be translated
+    (client-> kernel).  If we also have cut-formulas, we would need to
+    translate them as well?
+** Observation about skolemization in general
+    If we have checked proof evidence Xi for sk(B) and theta is *any*
+    (higher-order) substitution whose domain is only Skolem functions,
+    then theta(Xi) will check as proof evidence of theta(sk(B)).
+
+    Thus, if Prog |- check B Xi and if theta is a substitution for
+    Skolem function symbols, then Prog |- check (theta B) (theta Xi).
+    The converse is not true.
+
+    When you take the instance via theta, the proof
+    checking/reconstruction process will increase in
+    nondeterminism.  If theta throws away information, there is a
+    cost in reconstructing it.
+
+    Thus, if the proof evidence uses outer-most skolemization, then
+    changing it to be innermost will still proof-check.  (This is
+    immediate.)  Similarly, renaming all Skolem functions to have the
+    same name will also result in checkable proof evidence.
+
+    It is possible to "simplify" Skolem terms.  For example, we can
+    replace sk3 with, say, x\y\z\ (sk 2 y z), that is, replace a three
+    argument Skolem function with a two-argument Skolem function
+    (discarding an argument).
+
+    This aspect of "instantiating Skolem functions" sends checkable
+    proof evidence to checkable proof evidence" seems "new".  Also,
+    the trade-off with nondeterminism in proof checking.
+
+    Of course, when one is doing theorem proving (not proof checking),
+    dropping too many arguments during skolemization can be unsound.
+   
+* Section: Justifying optimizations of skolemization
+** Miniscoping
+    Given the above, it is easy to certify the use of miniscoping prior
+    to applying outermost skolemization.  It should be easy to produce
+    proof evidence that
+       miniscope(B) |- B
+    Then, we collect from the client proof evidence for
+       outermost skolemization sk-out(miniscope(B))
+    We should then be able to build (from the point above) a proof of
+       miniscope(B) 
+    which with the cut rule yields a proof, finally, of B.
+** Other intermediate forms
+    We can replace miniscope(B) above by any lemma C.  If we have both
+    a proof of C and of C |- B, then we are done.  This is completely
+    open and only involves cleverness of the client to find C.
+** Can all forms of skolemization be encoded using such intermediate forms?
+    Is this a meaningful questions?  
+
+** Innermost vs outermost skolemization
+
+    - Thus, a cut-free proof using outer-skolemization yields a
+      cut-free proof using inner-skolemization.  The converse is,
+      however, not necessarily true.
+
+    - We might be faced with a situation in which we have a cut-free
+      proof of ski(B) (using inner skolemization) but no simple way to
+      construct a cut-free proof of B.  This is a topic (really?
+      check this) addressed by Baaz and others.  Since inner
+      skolemization is sound (proved by Andrews?), then the existence
+      of a proof of inner skolemization of B means that B is valid
+      and, hence, it has a cut-free proof (by completeness and
+      cut-elimination).  The resulting proof size can be much larger
+      (again, Baaz et al).
+
+    - We propose to proof-check inner skolemization by injecting an
+      explicit cut formula and cut inference rule.
+
+    - Relate innermost skolemization with miniscoping.  Matteo has a
+      counterexample to the claim: innermost skolemization is the
+      same as miniscoping and then using outermost skolemization.
+
+    - Thus, we might need to resign to using "miniscoping plus
+      outermost" as opposed to innermost.  If we live with this
+      limitation, then we can automatically generate the cut/lemma
+      formula.  (The generation of the formal proof of entailment
+      with miniscoped formulas is still a bit tricky...)
+
+    - Of course, other forms of skolemization might well be possible
+      for clever/deep reason.  In that case, the client will need to
+      supply the proof that allows the argument list to be reduced.
+
+* Section: Experiments / Implementation / prototypes
+** FPC for expansion trees and Skolem expansions
+** How to certify miniscoping?
+   Proposal: A series of cuts that certifies one quantifier shift at a
+   time.
+** Restrictions on eigenvariables and skolemization
+   Note that in the FPC setting, we do not need "client-side"
+   notations for eigenvariables to be functional.  It can, in fact, be
+   relational.  It can even be cyclic as long as the kernel can find a
+   path through the dependences that is sequentialized.  Maybe we
+   don't need all the Skolem functions to be distinct.  Maybe all the
+   (outermost) arguments are not needed.
+
+   In general, we need enough information to allow our
+   nondeterministic checker to succeed.  If there is a path to a
+   correct proof in the kernel, then there is still a path even if two
+   different names are identified...  Checking becomes more costly but
+   such a less explicit proof object leads also to successful proof
+   checking.
+** Do some examples of certifying proofs that use skolemization
+
+** Expansion trees 
+   We know the connection between select variables and outermost
+   skolemization. If we maintain the acyclic nature of dependency on
+   select variables, then a certain kind of FPC checking can be
+   achieved functional (ie, deterministic choices): always pick the
+   existential quantifier that is minimal.  (Choosing all minimals at
+   the same time results in maximal multifocusing.)  If other choices
+   are made (non-minimal selections) then backtracking might be
+   necessary. 
+** Geometric theories
+   These are rather natural to link to.  Skolem terms build new
+   objects, sometimes uniquely, sometimes not.  Examples: 
+   - the typical examples from modal logics and frame assumptions
+   - equality and other Horn clauses
+   - category theory: universal properties generally is reasoning with
+     geometric theories.  Equality is needed since much is made of
+     uniqueness of constructions.  E.g., given to objects A and B,
+     there is a third unique object that satisfies a universal
+     property: that is, for every hom(f,C,A) and for every hom(g,C,B)
+     there exists a unique hom(phi,AxB,C) such that f = phi o pi1 and
+     f = phi o pi2.   Prove some basic properties: associativity of
+     produces, adjunctness, etc.
+
+* Section: Related work
+    The goal here is to build proofs in LK using eigenvariables
+    instead of Skolem terms.  There appear to be various approaches
+    but one common features: they use an operator on formulas that
+    maps terms to variables (not the usual converse direction).  Such
+    a mapping sends Skolem terms to variables (that can be used as
+    eigenvariables).  
+** Hans de Nivelle
+  - \cite{denivelle05ic}
+
+  -  On page 593, of the paper "Extraction of proofs from the clausal
+     normal form transformation" H de Nivelle \cite{denivelle02csl}.
+     the author claims that "For every first-order formula F, there is
+     a first-order formula F , which is first-order equivalent to F,
+     such that the standard Skolemization of F equals the
+     strong/optimized Skolemization of F. Because of this, no
+     additional choice axioms are needed to generate proofs from
+     optimized or strong Skolemization steps. An additional
+     consequence of our reduction is that the Skolem-elimination
+     techniques of [9] and [14] can be applied to strong and optimized
+     Skolemization as well, without much difficulty."
+
+** Epsilon calculus
+  The Vienna crowd has written about this topic via epsilon calculus
+  but their ultimate goal seems to be to say that the epsilon
+  calculus is able to keep things small when doing cut-free proofs.
+  My impression, however, is that one uses cut on simple proofs such
+  as miniscoping justification in order to keep things compact.
+  Pushing for cut-free might be complicating and unnecessary.
+
+    - \cite{maehara55jmsj} He lists all epsilon terms and sorts them and
+      then replaces with with variables.  Check also his notes on
+      Skolem terms.
+    - \cite{miller83,miller87sl} Deskolemization described (also for
+      higher-order). 
+
+    - Dowek and Werner provide a weak example but in intuitionistic
+      logic.  I can't find any place where this paper was actually
+      printed.  Always listed as "manuscript" and "to appear 2005".
+    - Check also Mints "Axiomatization of a Skolem function
+      intuitionistic logic", 1998.
+    - Avigad \cite{avigad03tocl}
+
+* Section: Future work
+  Tseltin constants (?)
+
+  Should cut-formulas be skolemized?  
+
+  In an attempt to prove |- C, we might introduce a lemma B and
+  prove |- B and B |- C .  But we might give both of these sequents to
+  different provers that might use skolemization.  Before those two
+  proofs can be combined, we must deskolemization them from using any
+  new Skolem functions.
+
+
+
+* Readings / References
+   - S. Maehara, 1955 paper on epsilon calculus and later note on
+     Skolemization. 
+   - Baaz et al on unsafe inference.  
+   - "A sequent-calculus based formulation of the Extended First
+     Epsilon Theorem" by Matthias Baaz, Alexander Leitsch, and Anela
+     Lolic (see Lolic's Dropbox folder).
+   - Also the paper (on page 5) by Meng and Paulson about [[http://www.cl.cam.ac.uk/~lp15/papers/Automation/translations-jar.pdf]["Translating
+     Higher-Order Clauses to First-Order Clauses"]] saying that
+     Skolemization is fine since they use the axiom of choice anyway.
+   - The accepted paper for CADE 2017: by Haniel Barbosa, Jasmin
+     Christian Blanchette and Pascal Fontaine.  "An Efficient
+     Proof-Producing Framework for Formula Processing".  They use
+     Hilbert choice operators to justify Skolemization.  In their
+     rebuttal letter they write: "We do not claim to invent the use of
+     Hilbert choice to handle Skolemization. This has been used in
+     many places for a long time, e.g. it is mentioned in work by De
+     Nivelle in the early 2000s and by Paulson and Susanto in Metis a
+     few years later. But we are perhaps the first who use Hilbert
+     choice in the proof format, not just for reconstruction, to
+     simplify and uniformize proofs."
+     http://matryoshka.gforge.inria.fr/pubs/processing_report.pdf
+   - A constructive proof of Skolem theorem for constructive logic by
+     Gilles Dowek and Benjamin Werner
+     http://www.lsv.fr/~dowek/Publi/skolem.pdf
+   - Skolemization in intuitionistic first order logic by Olivier
+     Hermant (in Dropbox).
+   - Handbook of automated reasoning Vol 1 (Robinson, Voronkov eds)
+     has the article: "Chapter 5. Normal Form Transformations" by
+     Matthias Baaz, Uwe Egly, and Alexander Leitsch 
+   - There was the paper in ARCADE ("Checkable Proofs for First-Order
+     Theorem Proving" by Reger and Suda) that says we need to allow
+     for only-satisfiability-preserving operations in certificates.  I
+     disagree.  Outer-most Skolemization yields cut-free proofs.
+     Other versions can be justified by cuts with mimic proofs.
+   - Beyond Standard Miniscoping (About an idea in an early stage)
+     Marco Voigt, https://fg-dedsys.gi.de/fileadmin/user_upload/dt2016/voigt.pdf
+   - See paper "No Choice: Reconstruction of First-order ATP Proofs
+     without Skolem Functions" by Michael Färber and Cezary Kaliszyk
+     (PAAR 2016) in my Dropbox/Proceedings/ folder.
+   - Translation of resolution proofs into short first-order proofs
+     without choice axioms by Hans de Nivelle 
+     https://doi.org/10.1016/j.ic.2004.10.011
+
+
+#+STARTUP: showall
+#+TITLE: Certifying skolemization
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="/home/dale/Dropbox/Sync/Exports/mystyle.css" />
+#+INFOJS_OPT: view:overview toc:nil ltoc:nil path:/home/dale/Dropbox/Sync/Exports/org-info.js
+
+#+bind: org-export-allow-bind-keywords t
+#+bind: org-export-publishing-directory "/home/dale/Dropbox/Sync/Exports/"
+#+OPTIONS: toc:nil
+
+# Local Variables:
+# org-export-html-style: "<link rel=\"stylesheet\" type=\"text/css\" href=\"mystyle.css\" />"
+# org-export-allow-bind-keywords: t
+# End:
+

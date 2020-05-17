@@ -1,0 +1,202 @@
+%%Title: times.thm
+%%Description: Multiplication on nature numbers
+%%Author: Dale Miller, based on a develop from Rob Blanco
+%%Dates: 4 January 2019
+
+%include "http://www.lix.polytechnique.fr/Labo/Dale.Miller/alib/nat.thm".
+%include "http://www.lix.polytechnique.fr/Labo/Dale.Miller/alib/plus.thm".
+
+Define times : nat -> nat -> nat -> prop by
+	times zero N zero
+;	times (succ K) M N := exists N', times K M N' /\ plus N' M N.
+
+Theorem times_nat : forall A B C, times A B C -> nat A -> nat B -> nat C.
+induction on 1. intros. case H1.
+  search.
+  case H2. apply IH to H4 H6 H3. apply plus_nat to H5 H7 H3. search.
+
+Theorem times_zeroero : forall N, nat N -> times N zero zero.
+induction on 1. intros. case H1. search. apply IH to H2. search.
+
+Theorem times_total' : forall M N, nat M -> nat N -> exists K, nat K /\ times M N K.
+induction on 1. intros. case H1.  search.
+  apply IH to H3 H2. apply plus_total' to H4 H2. search.
+
+Theorem times_det : forall A B C D, times A B C -> times A B D -> C = D.
+induction on 1. intros. case H1. case H2. search.
+  case H2. apply IH to H3 H5. apply plus_det to H4 H6. search.
+
+Theorem times_one : forall N, nat N -> times N (succ zero) N.
+induction on 1. intros. case H1. search.
+  apply IH to H2. apply plus_one to H2. search.
+
+Theorem times_one_simpl : forall A B, times (succ zero) A B -> A = B.
+induction on 1. intros. case H1. case H2. case H3. search.
+
+Theorem times_succ' : forall M N MN, nat M -> nat N -> nat MN ->
+	times M N MN -> exists K, nat K /\ plus MN M K /\ times M (succ N) K.
+induction on 4. intros. case H4.
+% Base case
+search.
+% Inductive step
+%% First, derive missing typing judgments and apply induction hypothesis
+case H1 (keep).
+apply times_nat to H5 H7 H2.
+apply IH to H7 H2 H8 H5.
+%% Next, manipulate relation trees
+%%% Here we provide an anchor for exists from one of two possibilities, addition
+apply nat_succ to H2.
+apply plus_total' to H9 H12.
+exists K2.
+%%% Next, we transform the second tree into leaf-isomorphic version of the first
+apply plus_total' to H3 H1.
+apply plus_swaprl to H16.
+apply plus_succ to H6.
+apply augend_nat to H17 H7 H15.
+apply plus_comm to H19 H18.
+apply plus_assoc to H20 H17.
+apply plus_comm to H15 H22.
+%%% Finally, we identify the nodes and finish
+apply plus_det to H10 H21.
+apply plus_det to H14 H23.
+search.
+
+% A consequence
+Theorem times_incr : forall A B AB ABB, nat ABB ->
+	times A B AB -> plus AB B ABB -> times (succ A) B ABB.
+search.
+
+% In reverse
+Theorem times_succl : forall A B C, nat A -> nat B -> nat C ->
+  times A B C -> exists D, nat D /\ times (succ A) B D /\ plus C B D.
+induction on 4. intros. case H4.
+  search.
+  case H1. apply augend_nat to H6 H2 H3. apply IH to H7 H2 H8 H5.
+    apply plus_det to H6 H11. apply plus_total' to H9 H2. exists K1. search.
+
+% Commutativity of multiplication %
+
+Theorem times_comm' : forall M N K, nat M -> nat N -> nat K ->
+	times M N K -> times N M K.
+induction on 4.
+intros.
+% Base case
+case H4.
+apply times_zeroero to H2.
+search.
+% Inductive step
+case H1.
+%% Derive missing typing judgment, then apply induction
+apply augend_nat to H6 H2 H3.
+apply IH to H7 H2 H8 H5.
+%% From this point, manipulate expressions to reach the goal and finish
+apply plus_comm to H3 H6.
+apply times_succ' to H2 H7 H8 H9.
+apply plus_det to H6 H12.
+search.
+
+% Distributivity of multiplication over addition %
+
+% A constructive version
+Theorem distribute : forall X Y ZERO YpZERO T,
+	% Typing judgments
+	nat X -> nat Y -> nat ZERO -> nat YpZERO -> nat T ->
+	% Relations
+	plus Y ZERO YpZERO -> times X YpZERO T ->
+	% Conclusion
+	exists XtY XtZERO,
+	nat XtY /\ nat XtZERO /\
+	times X Y XtY /\ times X ZERO XtZERO /\ plus XtY XtZERO T.
+induction on 1.
+intros.
+case H1.
+% Base case
+case H7.
+search.
+% Induction step
+case H7.
+apply augend_nat to H10 H4 H5.
+apply IH to H8 H2 H3 H4 H11 H6 H9.
+apply plus_perm4 to H5 H16 H6 H10.
+apply augend_nat' to H19 H5.
+apply times_incr to H20 H14 H17.
+apply addend_nat to H19 H5.
+apply times_incr to H22 H15 H18.
+search.
+
+% In reverse
+Theorem undistr_times_plus : forall X Y ZERO XtY XtZERO XtYpXtZERO,
+	% Typing judgments
+	nat X -> nat Y -> nat ZERO ->
+	nat XtY -> nat XtZERO -> nat XtYpXtZERO ->
+	% Relations
+	times X Y XtY -> times X ZERO XtZERO -> plus XtY XtZERO XtYpXtZERO ->
+	% Conclusion
+	exists YpZERO XtYpZERO,
+	nat YpZERO /\ nat XtYpZERO /\
+	times Y ZERO YpZERO /\ times X YpZERO XtYpZERO.
+induction on 1.
+intros.
+case H1.
+% Base case
+case H7.
+case H8.
+case H9.
+apply times_total' to H2 H3.
+search.
+% Induction step
+case H7.
+case H8.
+apply augend_nat to H12 H2 H4.
+apply augend_nat to H14 H3 H5.
+apply plus_total' to H15 H16.
+apply IH to H10 H2 H3 H15 H16 H17 H11 H13 H18.
+apply nat_succ to H10.
+apply times_total' to H23 H19.
+search.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Associativity of multiplication %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Theorem times_assoc' : forall A B C AB ABC,
+	nat A -> nat B -> nat C -> nat AB -> nat ABC ->
+	times A B AB -> times AB C ABC -> exists BC, times B C BC /\ times A BC ABC.
+induction on 6. intros. case H6.
+  case H7. apply times_total' to H2 H3. search.
+  case H1. apply times_comm' to H4 H3 H5 H7.
+           apply augend_nat to H9 H2 H4.
+	   apply distribute to H3 H12 H2 H4 H5 H9 H11.
+	   apply times_comm' to H3 H12 H13 H15.
+	   apply IH to H10 H2 H3 H12 H13 H8 H18.
+	   apply times_nat to H19 H2 H3.
+	   apply times_comm' to H2 H3 H21 H19.
+	   apply times_det to H16 H22.
+	   search.     
+
+Theorem times2_even : forall X Y, nat X -> times (succ (succ zero)) X Y -> even Y.
+  intros. case H2. case H3. case H5. case H6. apply plus_type2 to H1 H4.
+  apply plus_twice to H1 H4. search.
+
+Theorem even_times2 : forall Y, even Y -> exists Y', times (succ (succ zero)) Y' Y.
+  induction on 1. intros. case H1. exists zero. search.
+  apply IH to H2. exists (succ Y'). unfold. exists (succ Y'). split.
+   unfold. exists zero. split. search. search.
+   case H3. case H4. case H6. case H7. unfold. 
+   assert plus (succ N') N' (succ X). apply even_type to H2. assert nat (succ X).
+   apply plus_comm to H10 H8. search.
+
+Theorem odd_times_odd : forall X Y Z, odd X -> odd Y -> times X Y Z -> odd Z.
+ induction on 1. intros. case H1.
+   case H3. case H4. case H5. search.
+   case H3. case H5. apply IH to H4 H2 H7.  apply odd_plus_odd to H9 H2 H8.
+      apply odd_type to H2.  apply plus_type2 to H11 H6.
+      apply plus_comm to H12 H6. apply odd_plus_even to H2 H10 H13. search.
+
+Define square : nat -> nat -> prop by
+  square N S := times N N S.
+
+Theorem temp : forall N S, nat N -> square N S -> even S -> even N.
+  intros. case H2. apply even_type to H3. backchain not_odd_even. intros.
+    apply odd_times_odd to H6 H6 H4. apply even_odd_exclusion to H3 H7.
+

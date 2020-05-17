@@ -1,0 +1,21 @@
+%%Title: propositions.thm
+%%Description: Some definitions and theorems about the most basic
+%%             aspects of propositional connectives
+%%Author: Dale Miller
+%%Dates: 6 March 2017, 31 December 2018
+  
+Define afalse : prop by
+  afalse := afalse.
+
+Theorem afalse-is-false :
+  afalse -> false.
+  induction on 1. intros. case H1. apply IH to H2.
+
+CoDefine atrue : prop by
+  atrue := atrue.
+  
+Theorem atrue-is-true :
+  true -> atrue.
+  intros.
+  coinduction. unfold. search.
+

@@ -1,0 +1,22 @@
+sig pairing-fpc.
+accum_sig lkf-certificates.
+
+type <i>        index -> index -> index.
+type <c>         cert ->  cert ->  cert.
+infix <i>, <c>  5.
+
+module pairing-fpc.
+
+all_kc     (A <c> B) (x\ (C x) <c> (D x))    :- all_kc A C,       all_kc B D. 
+andNeg_kc  (A <c> B) (C <c> D) (E <c> F)     :- andNeg_kc A C E,  andNeg_kc B D F.
+andPos_ke  (A <c> B) (C <c> D) (E <c> F)     :- andPos_ke A C E,  andPos_ke B D F.
+cut_ke     (A <c> B) (C <c> D) (E <c> F) Cut :- cut_ke A C E Cut, cut_ke B D F Cut. 
+decide_ke  (A <c> B) (C <c> D) (I <i> J)     :- decide_ke A C I,  decide_ke B D J.
+false_kc   (A <c> B) (C <c> D)               :- false_kc A C,     false_kc B D.
+initial_ke (C <c> B) (I <i> J)               :- initial_ke C I,   initial_ke B J.
+orNeg_kc   (A <c> B) (C <c> D)               :- orNeg_kc A C,     orNeg_kc B D.
+orPos_ke   (A <c> B) (C <c> D) E             :- orPos_ke A C E,   orPos_ke B D E. 
+release_ke (A <c> B) (C <c> D)               :- release_ke A C,   release_ke B D.
+some_ke    (A <c> B) (C <c> D) W             :- some_ke A C W,    some_ke B D W.
+store_kc   (A <c> B) (C <c> D) (I <i> J)     :- store_kc A C I,   store_kc B D J.
+true_ke    (A <c> B)                         :- true_ke A,        true_ke B.

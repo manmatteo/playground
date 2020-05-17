@@ -1,0 +1,174 @@
+#theorem even_or_even_s "pi x\ nat x => even x ; even (s x)".
+Success.
+#theorem onono "pi N\ nat N => (N = o ; sigma M\ nat M , N = (s M))".
+Success.
+#theorem nat_s "pi N\ nat N => nat (s N)".
+Success.
+#theorem s_nat "pi N\ nat (s N) => nat N".
+Success.
+#theorem eq_o_decidable "pi n\ nat n => ((n = o => false) ; (n = o))".
+Success.
+#theorem decideeq "pi N\ nat N => pi M\ nat M => ((N = M => false) ; (N = M))".
+Success.
+#theorem even_type "pi X\ even X => nat X".
+Success.
+#theorem odd_type "pi X\ odd X => nat X".
+Success.
+#theorem even_odd "pi N\ even N => odd (s N)".
+Success.
+#theorem odd_even "pi N\ odd N => even (s N)".
+Success.
+#theorem even_or_odd "pi N\ nat N => even N ; odd N".
+Success.
+#theorem not_odd_even "pi X\ nat X => (odd X => false) => even X".
+Failure.
+#theorem even_odd_exclusion "pi N\ even N => odd N => false".
+Success.
+#theorem greater_less "pi N\ M\ greater N M => less M N".
+Success.
+#theorem less_greater "pi N\ M\ less N M => greater M N".
+Success.
+#theorem simple_less "pi N\ nat N => less N (s N)".
+Success.
+#theorem s_greater "pi N\ nat N => greater (s N) N".
+Success.
+#theorem greater_greater "pi N\ M\ nat M => greater N (s M) => greater N M".
+Success.
+#theorem greater_s "pi N\ M\ nat N => nat M => greater N M => N = (s M) ; greater N (s M)".
+Success.
+#theorem less_s "pi N\ M\ nat N => nat M => less N M => (s N) = M ; less (s N) M".
+Success.
+#theorem greater_s1 "pi N\ M\ greater N M => greater (s N) M".
+Success.
+#theorem trichotomy "pi N\ nat N => pi M, nat M => (greater N M ; N = M ; less N M)".
+Failure.
+#theorem trichotomyA "pi N\ M\ nat N => nat M => less N M => N = M => false".
+Failure.
+#theorem trichotomyB "pi N\ M\ nat N => nat M => less N M => greater N M => false".
+Failure.
+#theorem trichotomyC "pi N\ M\ nat N => nat M => greater N M => N = M => false".
+Failure.
+#theorem simple_three "pi N\ less N (s (s o)) => N = o ; N = (s o) ; N = (s (s o))".
+Success.
+#theorem lesseq_less "pi N\ M\ lesseq N M => N = M ; less N M".
+Success.
+#theorem lesseq_eq "pi N\ nat N => lesseq N N".
+Success.
+#theorem lesseq_trans "pi N\ M\ P\ lesseq N M => lesseq M P => lesseq N P".
+Success.
+#theorem lesseq_type "pi N\ M\ lesseq N M => nat N".
+Failure.
+#theorem lesseq_s "pi N\ M\ lesseq N M => lesseq N (s M)".
+Success.
+#theorem lesseq_anitsym "pi N\ M\ lesseq N M => lesseq M N => N = M".
+Failure.
+#theorem augend_nat "pi A\ B\ C\ plus A B C => nat B => nat C => nat A".
+Success.
+#theorem augend_nat1 "pi A\ B\ C\ plus A B C => nat C => nat A".
+Success.
+#theorem addend_nat "pi A\ B\ C\ plus A B C => nat C => nat B".
+Success.
+#theorem plus_nat "pi A\ B\ C\ plus A B C => nat A => nat B => nat C".
+Success.
+#theorem plus_type1 "pi N\ M\ P\ plus N M P => nat N".
+Success.
+#theorem plus_type2 "pi N\ M\ P\ nat M => plus N M P => nat P".
+Success.
+#theorem plus_oero "pi N\ nat N => plus N o N".
+Success.
+#theorem plus_s "pi M\ N\ K\ plus M N K => plus M (s N) (s K)".
+Success.
+#theorem plus_comm "pi M\ N\ K\ nat K => plus M N K => plus N M K".
+Success.
+#theorem plus_det "pi A\ B\ C\ D\ plus A B C => plus A B D => C = D".
+Success.
+#theorem plus_assoc "pi A\ B\ C\ AB\ ABC\ plus A B AB => plus AB C ABC => sigma BC\ plus B C BC, plus A BC ABC".
+Success.
+#theorem plus_assoc_rl "pi A\ B\ C\ BC\ ABC\ nat ABC => plus B C BC => plus A BC ABC => sigma\ AB\ plus A B AB, plus AB C ABC".
+Success.
+#theorem plus_perm4 "pi A\ B\ C\ D\ AB\ CD\ ABCD\ nat ABCD => plus A B AB => plus C D CD => plus AB CD ABCD => sigma AC\ BD\ plus A C AC, plus B D BD, plus AC BD ABCD".
+Success.
+#theorem plus_total "pi M\ N\ nat M => sigma K\ plus M N K".
+Success.
+#theorem plus_total1 "pi M\ N\ nat M => nat N => sigma K\ nat K, plus M N K".
+Success.
+#theorem plus_swaprl "pi A\ B\ C\ plus A (s B) C => plus (s A) B C".
+Success.
+#theorem plus_swaplr "pi A\ B\ C\ plus (s A) B C => plus A (s B) C".
+Success.
+#theorem plus_one "pi N\ nat N => plus N (s o) (s N)".
+Success.
+#theorem plus_twice "pi N\ M\ nat N => plus N N M => even M".
+Failure.
+#theorem odd_plus_even "pi X\ Y\ Z\ odd X => even Y => plus X Y Z => odd Z".
+Success.
+#theorem odd_plus_odd "pi X\ Y\ Z\ odd X => odd Y => plus X Y Z => even Z".
+Success.
+#theorem times_nat "pi A\ B\ C\ times A B C => nat A => nat B => nat C".
+Success.
+#theorem times_oero "pi N\ nat N => times N o o".
+Failure.
+#theorem times_total1 "pi M\ N\ nat M => nat N => sigma K\ nat K , times M N K".
+Failure.
+#theorem times_det "pi A\ B\ C\ D\ times A B C => times A B D => C = D".
+Failure.
+#theorem times_one "pi N\ nat N => times N (s o) N".
+Failure.
+#theorem times_one_simpl "pi A\ B\ times (s o) A B => A = B".
+Success.
+#theorem times_s "pi M\ N\ MN\ nat M => nat N => nat MN => times M N MN => sigma K\ nat K,plus MN M K,times M (s N) K".
+Success.
+#theorem times_incr "pi A\ B\ AB\ ABB\ nat ABB => times A B AB => plus AB B ABB => times (s A) B ABB".
+Success.
+#theorem times_sl "pi A\ B\ C\ nat A => nat B => nat C => times A B C => exists D, nat D , times (s A) B D , plus C B D".
+Success.
+#theorem times_comm "pi M\ N\ K\ nat M => nat N => nat K => times M N K => times N M K".
+Success.
+#theorem distribute "pi X\ Y\ ZERO\ YpZERO\ T\
+Success.
+#theorem undistr_times_plus "pi X\ Y\ ZERO\ XtY\ XtZERO\ XtYpXtZERO\
+Success.
+#theorem times_assoc "pi A\ B\ C\ AB\ ABC\ nat A => nat B => nat C => nat AB => nat ABC => times A B AB => times AB C ABC => sigma BC\ times B C BC , times A BC ABC".
+Success.
+#theorem times_incr "pi A\ B\ AB\ ABB\ nat ABB => times A B AB => plus AB B ABB => times (s A) B ABB".
+Success.
+#theorem times_sl "pi A\ B\ C\ nat A => nat B => nat C => times A B C => sigma D\ nat D, times (s A) B D, plus C B D".
+Success.
+#theorem times_comm1 "pi M\ N\ K\ nat M => nat N => nat K => times M N K => times N M K".
+Success.
+#theorem distribute "pi X\ Y\ ZERO\ YpZERO\ T\ nat X => nat Y => nat ZERO => nat YpZERO => nat T => plus Y ZERO YpZERO => times X YpZERO T => sigma XtY\ XtZERO\ nat XtY, nat XtZERO, times X Y XtY, times X ZERO XtZERO, plus XtY XtZERO T".
+Success.
+#theorem undistr_times_plus "pi X\ Y\ ZERO\ XtY\ XtZERO\ XtYpXtZERO\ nat X => nat Y => nat ZERO => nat XtY => nat XtZERO => nat XtYpXtZERO => times X Y XtY => times X ZERO XtZERO => plus XtY XtZERO XtYpXtZERO => sigma YpZERO\ XtYpZERO\ nat YpZERO, nat XtYpZERO, times Y ZERO YpZERO, times X YpZERO XtYpZERO".
+Success.
+#theorem times_assoc1 "pi A\ B\ C\ AB\ ABC\
+Success.
+#theorem times2_even "pi X\ Y\ nat X => times (s (s o)) X Y => even Y".
+Success.
+#theorem even_times2 "pi Y\ even Y => sigma Y1\ times (s (s o)) Y1 Y".
+Failure.
+#theorem odd_times_odd "pi X\ Y\ Z\ odd X => odd Y => times X Y Z => odd Z".
+Success.
+#theorem temp "pi N\ S\ nat N => square N S => even S => even N".
+Success.
+#theorem plus_monotone "pi N\ M\ P\ greater M o => plus N M P => greater P N".
+Success.
+#theorem plus_monotone1 "pi N\ M\ I\ P\ Q\ greater M I => plus N I P => plus N M Q => greater Q P".
+Success.
+#theorem monotone_plus0 "pi N\ M\ P\ nat M => plus N M P => lesseq M P".
+Success.
+#theorem fib_three "pi F\ fib (s (s (s o))) F => F = (s (s o))".
+Success.
+#theorem fib_four "pi F\ fib (s (s (s (s o)))) F => F = (s (s (s o)))".
+Success.
+#theorem fib_det "pi A\ B\ C\ nat A => nat B => nat C => fib A B => fib A C => B = C".
+Success.
+#theorem fib_type "pi N\ nat N => (pi F\ fib N F => nat F) , (pi F\ fib (s N) F => nat F)".
+Success.
+#theorem three_solutions "pi N\ (N = o ; N = (s o) ; N = (s (s (s (s (s o)))))) => fib N N".
+Failure.
+#theorem fib_bounding "pi N\ nat N => (pi F\ (fib (s (s (s (s (s (s N)))))) F => greater F (s (s (s (s (s (s N)))))))), (pi F\ (fib (s (s (s (s (s (s (s N))))))) F => greater F (s (s (s (s (s (s (s N)))))))))".
+Success.
+#theorem only_three_solutions "pi N\ nat N => fib N N => (N = o ; N = (s o) ; N = (s (s (s (s (s o))))))".
+Success.
+#theorem bounded "pi N\ F\ Sq\ nat N => less (s (s (s (s (s (s (s (s (s (s (s (s o)))))))))))) N => fib N F => times N N Sq => less Sq F".
+Success.

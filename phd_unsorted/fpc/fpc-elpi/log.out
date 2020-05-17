@@ -1,0 +1,9 @@
+ljf-kernel.mod:  28: Warning: constant unk has no declared type.
+ljf-kernel.mod:  96: Warning: constant true_je has no declared type.
+ljf-kernel.mod:  74: Warning: constant true_jc has no declared type.
+ljf-kernel.mod:  32: Warning: 
+ constant str has no declared type. Did you mean std.string.map std.string.map.empty std.string.map.mem std.string.map.add std.string.map.find std.string.map.bindings std.string.set std.string.set.empty std.string.set.mem std.string.set.add std.string.set.remove std.string.set.elements std.string.set.cardinal ?
+ljf-kernel.mod:  43: Warning: constant storeR_jc has no declared type.
+ljf-kernel.mod:  40: Warning: constant storeL_jc has no declared type.
+ljf-kernel.mod:  32: Warning: constant storage has no declared type.
+[suppressing 26 warnings]

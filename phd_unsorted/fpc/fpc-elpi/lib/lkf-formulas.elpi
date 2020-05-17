@@ -1,0 +1,60 @@
+% Kernal side formula, also known as polarized formulas.
+
+% Client-side terms and atomic formulas are embedded into this client-side formulas. 
+%   Client-side terms have type i
+%   Client-side atomic formulas can have any type (via polymorphic type of p and n)
+
+sig lkf-formulas.
+
+kind form, i                         type. % Formulas and terms
+
+type n, p                       A -> form. % Constructors of literals
+type f+, f-, t+, t-                  form. % Units
+type d-, d+                  form -> form. % Delays 
+type &-&, &+&        form -> form -> form. % Conjunctions
+type !-!, !+!        form -> form -> form. % Disjunction
+type all, some       (i -> form)  -> form. % Quantifiers
+
+infixr &-&, &+&  6.
+infixr !-!, !+!  5.
+
+type isNegForm, isNegAtm, isNeg        form -> o. 
+type isPosForm, isPosAtm, isPos        form -> o. 
+
+type negate                    form -> form -> o.
+type ensure+, ensure-          form -> form -> o.
+
+module lkf-formulas.
+
+isNegAtm (n _).
+isPosAtm (p _).
+
+isNegForm f-        .  isNegForm t-.
+isNegForm (_ &-& _) . isNegForm (_ !-! _).
+isNegForm (d- _)    . isNegForm (all _).
+isNeg A :- isNegForm A ; isNegAtm A.
+
+isPosForm f+        . isPosForm t+.
+isPosForm (_ &+& _) . isPosForm (_ !+!  _).
+isPosForm (d+ _)    . isPosForm (some _).
+isPos A :- isPosForm A ; isPosAtm A.
+
+negate f- t+.
+negate t+ f-.
+negate t- f+.
+negate f+ t-.
+
+negate (p A)      (n A).
+negate (n A)      (p A).
+negate (A &+& B)  (NA !-! NB)  :- negate A NA, negate B NB.
+negate (A !-! B)  (NA &+& NB)  :- negate A NA, negate B NB.
+negate (A &-& B)  (NA !+! NB)  :- negate A NA, negate B NB.
+negate (A !+! B)  (NA &-& NB) :- negate A NA, negate B NB.
+negate (all B)    (some NB)   :- pi x\ negate (B x) (NB x).
+negate (some B)   (all  NB)   :- pi x\ negate (B x) (NB x).
+
+ensure+ A A      :- isPos A.
+ensure+ A (d+ A) :- isNeg A.
+
+ensure- A A      :- isNeg A.
+ensure- A (d- A) :- isPos A.

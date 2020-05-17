@@ -1,0 +1,34 @@
+kind form type.
+type a,b,false form.
+type => form -> form -> form.
+type ~  form -> form.
+type a  int  -> form.
+pred atomic i:form.
+atomic (a _).
+
+pred prove i:form.
+prove X :- expand_neg X X', ljb X' [].
+
+pred kprove i:form.
+kprove X :- expand_neg (~ (~ X)) X', ljb X' [].
+
+pred ljb i:form, i:(list form).
+:if "DEBUG" ljb X Y :- print "LJB " X Y, fail.
+ljb _ Vs :- std.mem Vs false.
+ljb A Vs :- std.mem Vs A.
+ljb (A => B) Vs :- ljb B [A|Vs].
+ljb G Vs1 :- mem_and_rest Vs1 (A => B) Vs2, ljb_imp A B Vs2, ljb G [B|Vs2].
+
+pred ljb_imp i:form, i:form, i:(list form).
+ljb_imp (C => D) B Vs :-ljb (C => D) [(D => B)|Vs].
+ljb_imp A _ Vs :-atomic A, std.mem Vs A.
+
+% pred mem_and_rest i:list A, i:A, o:list A.
+mem_and_rest [X | L] X L.
+mem_and_rest [X | L] Y [X | R] :- mem_and_rest L Y R.
+
+pred expand_neg i:form, o:form.
+expand_neg A A :- atomic A.
+expand_neg (~ A) (A' => false) :- expand_neg A A'.
+expand_neg (A => B) (A' => B') :- expand_neg A A', expand_neg B B'.
+

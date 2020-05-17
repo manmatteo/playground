@@ -1,0 +1,30 @@
+kind term    type.
+type app     term -> term -> term.
+type lam     (term -> term) -> term.
+type tm      term -> cert.
+type op      (term -> term) -> cert. 
+type vr     term -> index.
+
+storeL_jc   (op T) (x\ tm (T x)) (x\ vr x).
+decideL_je  (tm Term) (op T) (vr Var).%:- Term = (T Var).
+storeR_jc   (tm T) (x\ tm T) (x\ _).
+% decideR_je  (tm T) (pr (tm T) _).
+releaseL_je (tm T) (tm T).
+releaseR_je (tm T) (tm T).
+initialL_je (op (x\ x)).
+% initialR_je (seq [axr Idx]) Idx.
+% some_jc     (seq D) (x\ dd D).
+% all_jc      (seq D) (x\ dd D).
+% some_je     (seq D) (pr (dd D) _).
+% all_je      (seq D) (pr (dd D) _).
+arr_jc      (tm (lam T)) (op T).
+arr_je      (op (x\ U (app x T))) (tm T) (op U).
+% andPos_jc   (dd D) (dd D).
+% or_jc       (seq [orl P1 | P2]) (pr (seq P1) (seq P2)).
+% or_je       (seq [orr Choice | P]) (pr (seq P) Choice).
+% andNeg_jc   (dd D) (pr (dd D) (dd D)).
+% andPos_je   (dd D) (pr (dd D) (dd D)).
+% andNeg_je   (dd D) (pr (dd D) _).
+% true_je     (seq _D).
+% true_jc     (seq D) (seq D).
+

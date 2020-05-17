@@ -1,0 +1,49 @@
+Specification "hof".
+
+Kind patt,val,fun,sub,exp,linctx type.
+
+Type arr,tensor,sum o -> o -> o.
+Type top o.
+% Pattern constructors
+Type null patt.
+Type pair patt -> patt -> patt.
+Type inl, inr patt -> patt.
+% Value constructors
+Type value patt -> sub -> val.
+% Function constructors
+Type id fun.
+Type lambda (patt -> exp) -> fun.
+% Expression constructors
+Type return val -> exp.
+Type appv fun -> val -> exp.
+Type appe fun -> exp -> exp.
+Type fail exp.
+
+% Helper predicates
+Define sublist : olist -> olist -> prop by
+sublist nil L;
+sublist (Head :: Rest) L := member Head L /\ sublist Rest L.
+
+% Pattern typing judgment
+Define pof : patt -> olist -> o -> prop by
+pof (inl Patt) Delta (sum P Q) := pof Patt Delta P;
+pof (inr Patt) Delta (sum P Q) := pof Patt Delta Q;
+pof (pair P1 P2) Delta (tensor P Q) := exists Delta1 Delta2, sublist Delta1 Delta /\ sublist Delta2 Delta /\ pof P1 Delta1 P /\ pof P2 Delta2 P;
+pof null nil top;
+pof f ((arr P Q)::nil) (arr P Q).
+
+% Substitution
+Define sof sub -> olist -> prop by
+
+% Value (right focus)
+Define vof : val -> o -> prop by
+vof (value Sigma Patt) Ty := exists Delta, pof Patt Delta Ty /\ sof Sigma Delta. 
+
+% Expressions (unfocused sequent)
+Define eof exp -> o -> prop by
+eof Exp Ty := vof Exp Ty
+
+% Functions (left focus)
+Define fof fun -> o -> o -> prop by
+
+

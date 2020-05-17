@@ -1,0 +1,795 @@
+%%Title: nat.thm
+%%Description: Some definitions and theorems about the most basic
+%%             aspects of nature numbers
+%%Author: Dale Miller
+%%Dates: 6 March 2017, 31 December 2018
+
+Kind nat      type.
+Type zero     nat.
+Type succ     nat -> nat.
+
+Define nat : nat -> prop by
+  nat zero
+; nat (succ N) := nat N.
+
+Theorem zero-nonzero : forall N, nat N -> (N = zero \/ exists M, nat M /\ N = (succ M)).
+  induction on 1. intros tyN. tyN: case tyN.
+    left. search.
+    disj: apply IH to tyN. disj: case disj.
+      right. exists zero. search.
+      right. exists (succ M). search.
+
+Theorem nat_succ : forall N, nat N -> nat (succ N).
+induction on 1. intros tyN. tyN: case tyN.
+   search.
+   add: apply IH to tyN. search.
+
+Theorem succ_nat : forall N, nat (succ N) -> nat N.
+  intros aux. case aux. search.
+
+Theorem eq_zero_decidable : forall (n : nat), nat n -> ((n = zero -> false) \/ (n = zero)).
+  induction on 1. intros tyN. tyN: case tyN.
+    right. search.
+    left. intros aux. case aux.
+
+Theorem decide-eq : forall N, nat N -> forall M, nat M -> ((N = M -> false) \/ (N = M)).
+  induction on 1. intros tyN tyM. tyN: case tyN.
+    disj: apply zero-nonzero to tyM. disj: case disj.
+      right. search.
+      left. intros aux. case aux.
+    tyM: case tyM.
+      left. intros aux. case aux.
+    add: apply IH to tyN. disj: apply add to tyM. disj: case disj.
+      left. intros aux. case aux. backchain disj.
+      right. search.
+
+Define even : nat -> prop by
+  even zero ;
+  even (succ (succ X)) := even X.
+
+Define odd : nat -> prop by
+  odd (succ zero) ;
+  odd (succ (succ X)) := odd X.
+
+Theorem even_type : forall X, even X -> nat X.
+ induction on 1. intros. case H1. search.  apply IH to H2. search.
+
+Theorem odd_type : forall X, odd X -> nat X.
+ induction on 1. intros. case H1. search. apply IH to H2. search.
+
+Theorem even_odd : forall N, even N -> odd (succ N).
+  induction on 1. intros pivot. pivot: case pivot.
+    search.
+    add: apply IH to pivot. search.
+
+Theorem odd_even : forall N, odd N -> even (succ N).
+  induction on 1. intros pivot. pivot: case pivot.
+    search.
+    add: apply IH to pivot. search.
+
+Theorem even_or_odd : forall N, nat N -> even N \/ odd N.
+  induction on 1. intros pivot. pivot: case pivot.
+    left. search.
+    result: apply IH to pivot. c: case result.
+      right. apply even_odd to c. search.
+      left.  apply odd_even to c. search.
+
+Theorem not_odd_even : forall X, nat X -> (odd X -> false) -> even X.
+  intros. apply even_or_odd to H1. case H3. search. apply H2 to H4.
+
+Theorem even_odd_exclusion : forall N, even N -> odd N -> false.
+  induction on 1. intros e o. e: case e.
+    case o.
+    o: case o. apply IH to e o.
+
+%%Title: nat-order.thm
+%%Description: Some definitions and theorems about ordering 
+%%             on nature numbers
+%%Author: Dale Miller
+%%Dates: 4 January 2019
+
+%include "http://www.lix.polytechnique.fr/Labo/Dale.Miller/alib/nat.thm".
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%    Greater and lessthan relationship on nat            %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Define less : nat -> nat -> prop by
+  less zero (succ N)
+; less (succ N) (succ M) := less N M.
+
+Define greater : nat -> nat -> prop by
+  greater (succ N) zero
+; greater (succ N) (succ M) := greater N M.
+
+Define lesseq : nat -> nat -> prop by
+  lesseq zero zero
+; lesseq zero (succ N)
+; lesseq (succ N) (succ M) := lesseq N M.
+
+Theorem greater_less : forall N M, greater N M -> less M N.
+  induction on 1. intros pivot. pivot: case pivot. search. add: apply IH to pivot. search.
+
+Theorem less_greater : forall N M, less N M -> greater M N.
+  induction on 1. intros pivot. pivot: case pivot. search. add: apply IH to pivot. search.
+
+Theorem simple_less : forall N, nat N -> less N (succ N).
+  induction on 1. intros. case H1. search.  apply IH to H2. search.
+
+Theorem  succ_greater : forall N, nat N -> greater (succ N) N.
+  induction on 1. intros pivot. pivot: case pivot. search.
+  add: apply IH to pivot. search.
+
+Theorem greater_greater :
+ forall N M, nat M -> greater N (succ M) -> greater N M.
+  induction on 1. intros pivot aux. pivot: case pivot. aux: case aux. search.
+  aux: case aux. add: apply IH to pivot aux. search. 
+
+Theorem greater_succ :
+ forall N M, nat N -> nat M -> greater N M -> N = (succ M) \/ greater N (succ M).
+  induction on 2. intros aux pivot aux.
+  pivot: case pivot. case aux1. aux: case aux. case aux.  search. search.
+  aux1: case aux1. aux: case aux. add: apply IH to aux pivot aux1. case add.
+    search. search.
+
+Theorem less_succ :
+ forall N M, nat N -> nat M -> less N M -> (succ N) = M \/ less (succ N) M.
+  induction on 2. intros aux pivot aux.  pivot: case pivot. 
+    case aux1. 
+    aux: case aux. pivot: case pivot. search. search.
+    aux1: case aux1. add: apply  IH to aux pivot aux1. add: case add.
+     search. search.
+
+Theorem greater-succ : forall N M, greater N M -> greater (succ N) M.
+  induction on 1. intros pivot. pivot: case pivot. search.
+    add: apply IH to pivot. search.
+
+Theorem trichotomy :
+ forall N, nat N -> forall M, nat M -> (greater N M \/ N = M \/ less N M).
+  induction on 1. intros pivot aux. pivot: case pivot.
+  aux: case aux. search. search.
+  add: apply IH to pivot. add: apply add to aux. add1: case add1.
+    add: apply greater-succ to add1. search.
+    add: apply succ_greater to aux. search.
+    add: apply less_succ to pivot aux add1.  case add2. search. search.
+
+Theorem trichotomyA :
+ forall N M, nat N -> nat M -> less N M -> N = M -> false.
+  induction on 3. intros aux aux1 pivot eq. case eq. case pivot. 
+  aux: case aux. aux1: case aux1. apply IH to aux aux1 H1 _.
+
+Theorem trichotomyB :
+ forall N M, nat N -> nat M -> less N M -> greater N M -> false.
+  induction on 3. intros aux aux1 pivot gr. pivot: case pivot.
+    case gr. aux: case aux. aux1: case aux1. 
+    apply IH to aux aux1 pivot _. case gr. search.
+
+Theorem trichotomyC :
+ forall N M, nat N -> nat M -> greater N M -> N = M -> false.
+  induction on 3. intros aux aux pivot eq. case eq. pivot: case pivot.
+  aux: case aux.  aux1: case aux1. apply IH to aux aux1 pivot _.
+
+Theorem simple-three :
+ forall N, less N (succ (succ zero)) -> N = zero \/ N = (succ zero) \/ N = (succ (succ zero)).
+  intros aux.
+  aux: case aux. search.
+  aux: case aux. search.
+       case aux.
+
+Theorem lesseq_less : forall N M, lesseq N M -> N = M \/ less N M.
+  induction on 1. intros pivot. pivot: case pivot. search. search.
+  add: apply IH to pivot. add: case add. search. search.
+
+Theorem lesseq_eq : forall N, nat N -> lesseq N N.
+  induction on 1. intros pivot. pivot: case pivot.
+   search.
+   apply IH to pivot. search.
+
+Theorem lesseq_trans : forall N M P, lesseq N M -> lesseq M P -> lesseq N P.
+  induction on 1. intros pivot aux. pivot: case pivot. search. 
+  aux: case aux. search.
+  aux: case aux. apply IH to pivot aux. search.
+
+Theorem lesseq_type : forall N M, lesseq N M -> nat N.
+  induction on 1. intros pivot. pivot: case pivot.
+   search. search. apply IH to pivot. search.
+
+Theorem lesseq_succ : forall N M, lesseq N M -> lesseq N (succ M).
+  induction on 1. intros pivot. pivot: case pivot. 
+    search. search. apply IH to pivot. search.
+
+Theorem lesseq_anitsym : forall N M, lesseq N M -> lesseq M N -> N = M.
+  induction on 1. intros pivot leq. pivot: case pivot.
+    search.
+    case leq.
+    leq: case leq. add: apply IH to pivot leq. search.
+%%Title: plus.thm
+%%Description: Addition on nature numbers
+%%Author: Dale Miller
+%%Dates: 4 January 2019
+
+%include "http://www.lix.polytechnique.fr/Labo/Dale.Miller/alib/nat.thm".
+
+Define plus : nat -> nat -> nat -> prop by
+	plus zero N N
+;	plus (succ M) N (succ K) := plus M N K.
+
+% Typing judgments for plus
+Theorem augend_nat : forall A B C, plus A B C -> nat B -> nat C -> nat A.
+induction on 1. intros. case H1.
+  search.
+  case H3. apply IH to H4 H2 H5. search.
+
+Theorem augend_nat' : forall A B C, plus A B C -> nat C -> nat A.
+induction on 1. intros. case H1.
+  search.
+  case H2. apply IH to H3 H4. search.
+
+Theorem addend_nat : forall A B C, plus A B C -> nat C -> nat B.
+induction on 1. intros. case H1.
+  search.
+  case H2.  apply IH to H3 H4. search.
+
+Theorem plus_nat : forall A B C, plus A B C -> nat A -> nat B -> nat C.
+induction on 1. intros. case H1.
+  search.
+  case H2. apply IH to H4 H5 H3. search.
+
+Theorem plus_type1 : forall N M P, plus N M P -> nat N.
+  induction on 1. intros. case H1. search. apply IH to H2. search.
+
+Theorem plus_type2 : forall N M P, nat M -> plus N M P -> nat P.
+  induction on 2. intros. case H2. search.
+  apply IH to H1 H3. search.
+
+Theorem plus_zeroero : forall N, nat N -> plus N zero N.
+induction on 1. intros. case H1.
+  search.
+  apply IH to H2. search.
+
+Theorem plus_succ : forall M N K, plus M N K -> plus M (succ N) (succ K).
+induction on 1. intros. case H1.
+  search.
+  apply IH to H2. search.
+
+% Commutativity of plus
+Theorem plus_comm : forall M N K, nat K -> plus M N K -> plus N M K.
+induction on 2. intros. case H2.
+  apply plus_zeroero to H1. search.
+  case H1. apply IH to H4 H3. apply plus_succ to H5. search.
+
+% Determinacy of plus
+Theorem plus_det : forall A B C D, plus A B C -> plus A B D -> C = D.
+induction on 1. intros. case H1.
+  case H2. search.
+  case H2. apply IH to H3 H4. search.
+
+% Associativity of plus
+Theorem plus_assoc : forall A B C AB ABC,
+	plus A B AB -> plus AB C ABC -> exists BC, plus B C BC /\ plus A BC ABC.
+induction on 1. intros. case H1.
+  search.
+  case H2. apply IH to H3 H4. search.
+
+Theorem plus_assoc_rl : forall A B C BC ABC, nat ABC ->
+	plus B C BC -> plus A BC ABC -> exists AB, plus A B AB /\ plus AB C ABC.
+intros.
+apply plus_comm to H1 H3.
+apply addend_nat to H3 H1.
+apply plus_comm to H5 H2.
+apply plus_assoc to H6 H4.
+apply plus_comm to H1 H8.
+apply addend_nat to H8 H1.
+apply plus_comm to H10 H7.
+search.
+
+% And a permutation lemma
+Theorem plus_perm4 : forall A B C D AB CD ABCD, nat ABCD ->
+	plus A B AB -> plus C D CD -> plus AB CD ABCD ->
+	exists AC BD, plus A C AC /\ plus B D BD /\ plus AC BD ABCD.
+intros.
+apply plus_assoc to H2 H4.
+apply addend_nat to H6 H1.
+apply plus_comm to H7 H5.
+apply plus_assoc to H3 H8.
+apply addend_nat to H10 H7.
+apply plus_comm to H11 H9.
+apply plus_assoc_rl to H1 H10 H6.
+search.
+
+% Totality of addition %
+Theorem plus_total : forall M N, nat M -> exists K, plus M N K.
+induction on 1. intros. case H1.
+  search.
+  % In apply, instantiate the variables that are not referenced in the hypothesis
+  apply IH to H2 with N = N. search.
+
+% Now with more typing judgments!
+Theorem plus_total' : forall M N, nat M -> nat N ->
+	exists K, nat K /\ plus M N K.
+induction on 1. intros. case H1.
+  exists N. search.
+  apply IH to H3 H2. search.
+
+Theorem plus_swaprl : forall A B C, plus A (succ B) C -> plus (succ A) B C.
+induction on 1. intros. case H1.
+  search.
+  apply IH to H2. search.
+
+Theorem plus_swaplr : forall A B C, plus (succ A) B C -> plus A (succ B) C.
+induction on 1. intros. case H1.
+  apply plus_succ to H2. search.
+
+Theorem plus_one : forall N, nat N -> plus N (succ zero) (succ N).
+induction on 1. intros. case H1.
+  search.
+  apply IH to H2. search.
+
+Theorem plus_twice : forall N M, nat N -> plus N N M -> even M.
+ induction on 1. intros tyN pivot. tyN :case tyN.
+   case pivot. search.
+   plus: case pivot.
+   plus: apply plus_swaprl to plus. plus: case plus1.
+           apply IH to tyN plus1. search.
+
+Theorem odd_plus_even : forall X Y Z, odd X -> even Y -> plus X Y Z -> odd Z.
+ induction on 1. intros. case H1.
+  case H3. case H4. apply even_odd to H2. search.
+  case H3. case H5. apply IH to H4 H2 H6.
+           apply odd_even to H7. apply even_odd to H8. search.
+
+Theorem odd_plus_odd : forall X Y Z, odd X -> odd Y -> plus X Y Z -> even Z.
+ induction on 1. intros. case H1.
+  case H3. case H4. apply odd_even to H2. search.
+  case H3. case H5. apply IH to H4 H2 H6.
+           apply even_odd to H7. apply odd_even to H8. search.
+
+%%Title: times.thm
+%%Description: Multiplication on nature numbers
+%%Author: Dale Miller, based on a develop from Rob Blanco
+%%Dates: 4 January 2019
+
+%include "http://www.lix.polytechnique.fr/Labo/Dale.Miller/alib/nat.thm".
+%include "http://www.lix.polytechnique.fr/Labo/Dale.Miller/alib/plus.thm".
+
+Define times : nat -> nat -> nat -> prop by
+	times zero N zero
+;	times (succ K) M N := exists N', times K M N' /\ plus N' M N.
+
+Theorem times_nat : forall A B C, times A B C -> nat A -> nat B -> nat C.
+induction on 1. intros. case H1.
+  search.
+  case H2. apply IH to H4 H6 H3. apply plus_nat to H5 H7 H3. search.
+
+Theorem times_zeroero : forall N, nat N -> times N zero zero.
+induction on 1. intros. case H1. search. apply IH to H2. search.
+
+Theorem times_total' : forall M N, nat M -> nat N -> exists K, nat K /\ times M N K.
+induction on 1. intros. case H1.  search.
+  apply IH to H3 H2. apply plus_total' to H4 H2. search.
+
+Theorem times_det : forall A B C D, times A B C -> times A B D -> C = D.
+induction on 1. intros. case H1. case H2. search.
+  case H2. apply IH to H3 H5. apply plus_det to H4 H6. search.
+
+Theorem times_one : forall N, nat N -> times N (succ zero) N.
+induction on 1. intros. case H1. search.
+  apply IH to H2. apply plus_one to H2. search.
+
+Theorem times_one_simpl : forall A B, times (succ zero) A B -> A = B.
+induction on 1. intros. case H1. case H2. case H3. search.
+
+Theorem times_succ' : forall M N MN, nat M -> nat N -> nat MN ->
+	times M N MN -> exists K, nat K /\ plus MN M K /\ times M (succ N) K.
+induction on 4. intros. case H4.
+% Base case
+search.
+% Inductive step
+%% First, derive missing typing judgments and apply induction hypothesis
+case H1 (keep).
+apply times_nat to H5 H7 H2.
+apply IH to H7 H2 H8 H5.
+%% Next, manipulate relation trees
+%%% Here we provide an anchor for exists from one of two possibilities, addition
+apply nat_succ to H2.
+apply plus_total' to H9 H12.
+exists K2.
+%%% Next, we transform the second tree into leaf-isomorphic version of the first
+apply plus_total' to H3 H1.
+apply plus_swaprl to H16.
+apply plus_succ to H6.
+apply augend_nat to H17 H7 H15.
+apply plus_comm to H19 H18.
+apply plus_assoc to H20 H17.
+apply plus_comm to H15 H22.
+%%% Finally, we identify the nodes and finish
+apply plus_det to H10 H21.
+apply plus_det to H14 H23.
+search.
+
+% A consequence
+Theorem times_incr : forall A B AB ABB, nat ABB ->
+	times A B AB -> plus AB B ABB -> times (succ A) B ABB.
+search.
+
+% In reverse
+Theorem times_succl : forall A B C, nat A -> nat B -> nat C ->
+  times A B C -> exists D, nat D /\ times (succ A) B D /\ plus C B D.
+induction on 4. intros. case H4.
+  search.
+  case H1. apply augend_nat to H6 H2 H3. apply IH to H7 H2 H8 H5.
+    apply plus_det to H6 H11. apply plus_total' to H9 H2. exists K1. search.
+
+% Commutativity of multiplication %
+
+Theorem times_comm' : forall M N K, nat M -> nat N -> nat K ->
+	times M N K -> times N M K.
+induction on 4.
+intros.
+% Base case
+case H4.
+apply times_zeroero to H2.
+search.
+% Inductive step
+case H1.
+%% Derive missing typing judgment, then apply induction
+apply augend_nat to H6 H2 H3.
+apply IH to H7 H2 H8 H5.
+%% From this point, manipulate expressions to reach the goal and finish
+apply plus_comm to H3 H6.
+apply times_succ' to H2 H7 H8 H9.
+apply plus_det to H6 H12.
+search.
+
+% Distributivity of multiplication over addition %
+
+% A constructive version
+Theorem distribute : forall X Y ZERO YpZERO T,
+	% Typing judgments
+	nat X -> nat Y -> nat ZERO -> nat YpZERO -> nat T ->
+	% Relations
+	plus Y ZERO YpZERO -> times X YpZERO T ->
+	% Conclusion
+	exists XtY XtZERO,
+	nat XtY /\ nat XtZERO /\
+	times X Y XtY /\ times X ZERO XtZERO /\ plus XtY XtZERO T.
+induction on 1.
+intros.
+case H1.
+% Base case
+case H7.
+search.
+% Induction step
+case H7.
+apply augend_nat to H10 H4 H5.
+apply IH to H8 H2 H3 H4 H11 H6 H9.
+apply plus_perm4 to H5 H16 H6 H10.
+apply augend_nat' to H19 H5.
+apply times_incr to H20 H14 H17.
+apply addend_nat to H19 H5.
+apply times_incr to H22 H15 H18.
+search.
+
+% In reverse
+Theorem undistr_times_plus : forall X Y ZERO XtY XtZERO XtYpXtZERO,
+	% Typing judgments
+	nat X -> nat Y -> nat ZERO ->
+	nat XtY -> nat XtZERO -> nat XtYpXtZERO ->
+	% Relations
+	times X Y XtY -> times X ZERO XtZERO -> plus XtY XtZERO XtYpXtZERO ->
+	% Conclusion
+	exists YpZERO XtYpZERO,
+	nat YpZERO /\ nat XtYpZERO /\
+	times Y ZERO YpZERO /\ times X YpZERO XtYpZERO.
+induction on 1.
+intros.
+case H1.
+% Base case
+case H7.
+case H8.
+case H9.
+apply times_total' to H2 H3.
+search.
+% Induction step
+case H7.
+case H8.
+apply augend_nat to H12 H2 H4.
+apply augend_nat to H14 H3 H5.
+apply plus_total' to H15 H16.
+apply IH to H10 H2 H3 H15 H16 H17 H11 H13 H18.
+apply nat_succ to H10.
+apply times_total' to H23 H19.
+search.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Associativity of multiplication %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Theorem times_assoc' : forall A B C AB ABC,
+	nat A -> nat B -> nat C -> nat AB -> nat ABC ->
+	times A B AB -> times AB C ABC -> exists BC, times B C BC /\ times A BC ABC.
+induction on 6. intros. case H6.
+  case H7. apply times_total' to H2 H3. search.
+  case H1. apply times_comm' to H4 H3 H5 H7.
+           apply augend_nat to H9 H2 H4.
+	   apply distribute to H3 H12 H2 H4 H5 H9 H11.
+	   apply times_comm' to H3 H12 H13 H15.
+	   apply IH to H10 H2 H3 H12 H13 H8 H18.
+	   apply times_nat to H19 H2 H3.
+	   apply times_comm' to H2 H3 H21 H19.
+	   apply times_det to H16 H22.
+	   search.     
+
+Theorem times2_even : forall X Y, nat X -> times (succ (succ zero)) X Y -> even Y.
+  intros. case H2. case H3. case H5. case H6. apply plus_type2 to H1 H4.
+  apply plus_twice to H1 H4. search.
+
+Theorem even_times2 : forall Y, even Y -> exists Y', times (succ (succ zero)) Y' Y.
+  induction on 1. intros. case H1. exists zero. search.
+  apply IH to H2. exists (succ Y'). unfold. exists (succ Y'). split.
+   unfold. exists zero. split. search. search.
+   case H3. case H4. case H6. case H7. unfold. 
+   assert plus (succ N') N' (succ X). apply even_type to H2. assert nat (succ X).
+   apply plus_comm to H10 H8. search.
+
+Theorem odd_times_odd : forall X Y Z, odd X -> odd Y -> times X Y Z -> odd Z.
+ induction on 1. intros. case H1.
+   case H3. case H4. case H5. search.
+   case H3. case H5. apply IH to H4 H2 H7.  apply odd_plus_odd to H9 H2 H8.
+      apply odd_type to H2.  apply plus_type2 to H11 H6.
+      apply plus_comm to H12 H6. apply odd_plus_even to H2 H10 H13. search.
+
+Define square : nat -> nat -> prop by
+  square N S := times N N S.
+
+Theorem temp : forall N S, nat N -> square N S -> even S -> even N.
+  intros. case H2. apply even_type to H3. backchain not_odd_even. intros.
+    apply odd_times_odd to H6 H6 H4. apply even_odd_exclusion to H3 H7.
+
+%%Title: monotone.thm
+%%Description: Relating addition and order relation on nature numbers
+%%Author: Dale Miller
+%%Dates: 4 January 2019
+
+%include "http://www.lix.polytechnique.fr/Labo/Dale.Miller/alib/nat.thm".
+%include "http://www.lix.polytechnique.fr/Labo/Dale.Miller/alib/nat-order.thm".
+%include "http://www.lix.polytechnique.fr/Labo/Dale.Miller/alib/plus.thm".
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%    Relate plus and order                               %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Theorem plus_monotone :
+ forall N M P, greater M zero -> plus N M P -> greater P N.
+  induction on 2. intros. case H2. search. apply IH to H1 H3. search.
+
+Theorem plus_monotone' : 
+ forall N M I P Q, greater M I -> plus N I P -> plus N M Q -> greater Q P.
+  induction on 2. intros. case H2. case H3. search.
+  case H3. apply IH to H1 H4 H5. search.
+
+Theorem monotone_plus0 :
+ forall N M P, nat M -> plus N M P -> lesseq M P.
+  induction on 2. intros. case H2. apply lesseq_eq to H1. search.
+  apply IH to H1 H3. apply lesseq_succ to H4. search.
+
+%%Title: fibonacci.thm
+%%Description: Some simple theorems about the Fibonacci series.
+%%Author: Dale Miller
+%%Dates: 25 October 2016, 4 January 2019
+
+%include "http://www.lix.polytechnique.fr/Labo/Dale.Miller/alib/nat.thm".
+%include "http://www.lix.polytechnique.fr/Labo/Dale.Miller/alib/nat-order.thm".
+%include "http://www.lix.polytechnique.fr/Labo/Dale.Miller/alib/plus.thm".
+%include "http://www.lix.polytechnique.fr/Labo/Dale.Miller/alib/times.thm".
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%    Fibonacci numbers     (DM 25 Oct 2016)              %%%%
+%%%%                                                        %%%%
+%%%%    The main theorem proved below is that (fib N) = N   %%%%
+%%%%    if and only if N is a member of the set {0, 1, 5}.  %%%%
+%%%%                                                        %%%%
+%%%%    There is a similar theorem not yet attempted:       %%%%
+%%%%    (fib N) = N*N if and only if N is a member of the   %%%%
+%%%%    set {0, 1, 12}.                                     %%%%
+%%%%                                                        %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Define fib : nat -> nat -> prop by
+  fib zero zero 
+; fib (succ zero) (succ zero)
+; fib (succ (succ N)) F := exists F1 F2, fib N F1 /\ fib (succ N) F2 /\ plus F1 F2 F.
+
+Theorem fib_three : forall F, fib (succ (succ (succ zero))) F -> F = (succ (succ zero)).
+  intros fb.
+  fb: case fb. 
+  fb: case fb.
+  fc: case fb1.
+      case fc.
+      case fc1.
+      case fc2.
+ fb2: case fb2.
+      case fb2.
+      search.
+
+Theorem fib_four : forall F, fib (succ (succ (succ (succ zero)))) F -> F = (succ (succ (succ zero))).
+  intros. case H1. case  H2. case  H5. case  H6. case  H7. case  H3. case H8.
+          case H9. case H11. case H12. case H13. case H10. case H14. 
+          case H4. case H15. search.
+
+Theorem fib_five : forall F, fib (succ (succ (succ (succ (succ zero))))) F -> F = (succ (succ (succ (succ (succ zero))))).
+  intros. case H1. apply fib_three to H2. apply fib_four to H3.
+          case H4. case H5. case H6. search.
+
+Theorem fib_six : forall F, fib (succ (succ (succ (succ (succ (succ zero)))))) F ->
+                         F = (succ (succ (succ (succ (succ (succ (succ (succ zero)))))))).
+  intros. case H1. apply fib_four to H2. apply fib_five to H3.
+          case H4. case H5. case H6. case H7. search.
+
+Theorem fib_seven : forall F, fib (succ (succ (succ (succ (succ (succ (succ zero))))))) F -> 
+                           F = (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ zero))))))))))))).
+  intros. case H1. apply fib_five to H2.  apply fib_six to H3.
+  case H4. case H5. case H6. case H7. case H8. case H9. search.
+
+Theorem fib_det : forall A B C, fib A B -> fib A C -> B = C.
+  induction on 1. intros. case H1. 
+    case H2. search.
+    case H2. search.
+    case H2. apply IH to H3 H6. apply IH to H4 H7.
+      apply plus_det to H5 H8. search.
+
+Theorem fib_type : forall N, nat N -> (forall F, fib N F -> nat F) /\ (forall F, fib (succ N) F -> nat F).
+  induction on 1. intros. case H1.
+  split. intros. case H2. search. intros. case H2. search.
+  apply IH to H2. split.
+    search.
+    intros. case H5. apply H3 to H6. apply H4 to H7. apply plus_type2 to H10 H8. search.
+  
+% There are at least three solutions to the fibonacci equation (fib N) = N.
+
+Theorem three_solutions : forall N, (N = zero \/ N = (succ zero) \/ N = (succ (succ (succ (succ (succ zero)))))) -> fib N N.
+  intros. case H1. search. search. search.
+
+% The converse of this theorem takes a bit more work
+
+Theorem plus_greater : forall X Y Z N,
+   nat N -> nat X -> nat Y -> greater X N -> greater Y (succ N) -> plus X Y Z -> greater Z (succ (succ N)).
+  induction on 1. intros. case H1.
+  case H4. case H5. case H6. case H7. case H2. apply plus_type2 to H3 H8.
+     apply plus_comm to H10 H8. case H11. case H12. search.
+  case H4. case H5. case H2. case H3. case H6. assert nat (succ N3).
+  apply plus_type2 to H13 H12. apply plus_comm to H14 H12.
+  case H15. case H14. apply plus_comm to H17 H16.
+  apply IH to H7 H10 H11 H8 H9 H18. unfold. apply greater-succ to H19. search.
+
+Theorem fib_bounding : forall N, nat N -> 
+      (forall F, (fib    (succ (succ (succ (succ (succ (succ N))))))  F -> greater F    (succ (succ (succ (succ (succ (succ N)))))))) /\ 
+      (forall F, (fib (succ (succ (succ (succ (succ (succ (succ N))))))) F -> greater F (succ (succ (succ (succ (succ (succ (succ N))))))))).
+  induction on 1. intros. case H1. split.
+   intros. apply fib_six to H2. search 10.
+   intros. apply fib_seven to H2. search 10.
+  apply IH to H2. split. search.
+  intros. case H5. apply H3 to H6. apply H4 to H7.
+  assert nat (succ (succ (succ (succ (succ (succ N1)))))). search 10.
+  apply fib_type to H11. apply H12 to H6. apply H13 to H7.
+  apply plus_greater to H11 H14 H15 H9 H10 H8. search.
+
+Theorem only_three_solutions :
+ forall N, nat N -> fib N N -> (N = zero \/ N = (succ zero) \/ N = (succ (succ (succ (succ (succ zero)))))).
+  intros.
+  assert nat (succ (succ (succ (succ (succ zero))))). search 10.
+  apply trichotomy to H3. apply H4 to H1. case H5.
+  case H6. search.
+  case H7. search. 
+  case H8. case H2. case H9. case H10. case H11.
+  case H9. apply fib_three to H2.
+  case H10. apply fib_four to H2.
+  case H11.
+  search.
+  case H6. case H7. case H8. case H9. case H10. case H11. 
+  case H1. case H12. case H13. case H14. case H15. case H16.
+  apply fib_bounding to H17. apply H18 to H2.
+  assert (succ (succ (succ (succ (succ (succ N1)))))) = (succ (succ (succ (succ (succ (succ N1)))))).
+  assert nat (succ (succ (succ (succ (succ (succ N1)))))). search 10.
+  apply trichotomyC to H22 H22 H20 H21.
+
+
+Theorem fib_eight : forall F, fib (succ (succ (succ (succ (succ (succ (succ (succ zero)))))))) F -> 
+                           F = (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+                               (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+                               zero))))))))))))))))))))).
+  intros. case H1. apply fib_six to H2. apply fib_seven to H3.
+  H: case H4. H: case H. H: case H. H: case H. H: case H. H: case H. H: case H.
+  H: case H. H: case H.
+  search.
+
+
+Theorem fib_nine : forall F, fib (succ (succ (succ (succ (succ (succ (succ (succ (succ zero))))))))) F -> 
+                           F = (succ (succ (succ (succ (succ (succ
+                               (succ (succ (succ (succ (succ (succ
+                               (succ (succ (succ (succ (succ (succ
+                               (succ (succ (succ (succ (succ (succ
+                               (succ (succ (succ (succ (succ (succ
+                               (succ (succ (succ (succ
+                               zero)))))))))))))))))))))))))))))))))).
+  intros. case H1. apply fib_seven to H2. apply fib_eight to H3.
+  H: case H4. H: case H. H: case H. H: case H. H: case H. H: case H. H: case H.
+  H: case H. H: case H. H: case H. H: case H. H: case H. H: case H.
+  H: case H. 
+  search.
+
+Theorem fib_ten : forall F, fib (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ zero)))))))))) F -> 
+                           F = (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+                               (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+                               (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+                               (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+                               (succ (succ (succ (succ (succ (succ (succ zero))))))))))))))))))))))))
+                                ))))))))))))))))))))))))))))))).
+  intros. case H1. apply fib_eight to H2. apply fib_nine to H3.
+  H: case H4. H: case H. H: case H. H: case H. H: case H. H: case H. H: case H.
+  H: case H.  H: case H. H: case H. H: case H. H: case H. H: case H.
+  H: case H.  H: case H. H: case H. H: case H. H: case H. H: case H.
+  H: case H.  H: case H. H: case H. 
+  search.
+
+Theorem fib_eleven : forall F, fib (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ zero))))))))))) F -> 
+                            F = 
+	(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+	(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+	(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+	(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+	(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+	(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+	(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+	(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+	(succ zero))))))))))))))))))))))))
+	))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))).
+  intros. case H1. apply fib_nine to H2. apply fib_ten to H3.
+  H: case H4. H: case H. H: case H. H: case H. H: case H. H: case H.
+  H: case H. H: case H. H: case H. H: case H. H: case H. H: case H.
+  H: case H. H: case H. H: case H. H: case H. H: case H. H: case H.
+  H: case H. H: case H. H: case H. H: case H. H: case H. H: case H.
+  H: case H. H: case H. H: case H. H: case H. H: case H. H: case H. 
+  H: case H. H: case H. H: case H. H: case H. H: case H. 
+  search.
+
+
+Theorem fib_twelve : forall F, fib (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ zero)))))))))))) F -> 
+                            F = 
+(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+(succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ
+(succ zero)))))))))))))))))))))))))))))))))))))))))))))))))))))))
+)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+)))))))))))))))))))))))).
+  intros. case H1. apply fib_ten to H2. apply fib_eleven to H3.
+  H: case H4. H: case H. H: case H. H: case H. H: case H. H: case H.
+  H: case H. H: case H. H: case H. H: case H. H: case H. H: case H.
+  H: case H. H: case H. H: case H. H: case H. H: case H. H: case H.
+  H: case H. H: case H. H: case H. H: case H. H: case H. H: case H.
+  H: case H. H: case H. H: case H. H: case H. H: case H. H: case H. 
+  H: case H. H: case H. H: case H. H: case H. H: case H. 
+  H: case H. H: case H. H: case H. H: case H. H: case H. H: case H.
+  H: case H. H: case H. H: case H. H: case H. H: case H. H: case H.
+  H: case H. H: case H. H: case H. H: case H. H: case H. H: case H.
+  H: case H. H: case H. H: case H. 
+  search.
+
+%% The following is yet to be proved
+
+Theorem bounded : forall N F Sq,
+  nat N -> 
+  less (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ (succ zero)))))))))))) N -> 
+  fib N F -> times N N Sq -> less Sq F.
+%induction on 3. intros. case H3.
+skip.

@@ -1,0 +1,36 @@
+<Output type="command" text="end-computation"/>
+<Output type="output" text="Definition: inductive nat := x&#x005C;&amp;#x000A;((x = o); (sigma y&#x005C; ((x = (s y)), nat y))).&amp;#x000A;"/>
+<Output type="output" text="Definition: inductive even := x&#x005C;&amp;#x000A;((x = o); (sigma y&#x005C; ((x = (s (s y))), even y))).&amp;#x000A;"/>
+<Output type="output" text="Definition: inductive odd := x&#x005C;&amp;#x000A;((x = (s o)); (sigma y&#x005C; ((x = (s (s y))), odd y))).&amp;#x000A;"/>
+<Output type="output" text="Definition: inductive leq := x&#x005C; y&#x005C;&amp;#x000A;((x = y); (sigma z&#x005C; ((y = (s z)), leq x z))).&amp;#x000A;"/>
+<Output type="output" text="Definition: inductive gt := x&#x005C; y&#x005C;&amp;#x000A;((x = (s y)); (sigma p&#x005C; ((x = (s p)), gt p y))).&amp;#x000A;"/>
+<Output type="command" text="begin-computation"/>
+<Output type="output" text="Success.&amp;#x000A;"/>
+<Output type="output" text="Proof completed.&amp;#x000A;"/>
+<Output type="goal" text=""/>
+<Output type="command" text="end-computation"/>
+<Output type="command" text="begin-computation"/>
+<Output type="output" text="Success.&amp;#x000A;"/>
+<Output type="output" text="Proof completed.&amp;#x000A;"/>
+<Output type="goal" text=""/>
+<Output type="command" text="end-computation"/>
+<Output type="command" text="begin-computation"/>
+<Output type="output" text="Success.&amp;#x000A;"/>
+<Output type="output" text="Proof completed.&amp;#x000A;"/>
+<Output type="goal" text=""/>
+<Output type="command" text="end-computation"/>
+<Output type="command" text="begin-computation"/>
+<Output type="output" text="Success.&amp;#x000A;"/>
+<Output type="output" text="Proof completed.&amp;#x000A;"/>
+<Output type="goal" text=""/>
+<Output type="command" text="end-computation"/>
+<Output type="command" text="begin-computation"/>
+<Output type="output" text="Success.&amp;#x000A;"/>
+<Output type="output" text="Proof completed.&amp;#x000A;"/>
+<Output type="goal" text=""/>
+<Output type="command" text="end-computation"/>
+<Output type="command" text="begin-computation"/>
+<Output type="output" text="Success.&amp;#x000A;"/>
+<Output type="output" text="Proof completed.&amp;#x000A;"/>
+<Output type="goal" text=""/>
+<Output type="command" text="end-computation"/>

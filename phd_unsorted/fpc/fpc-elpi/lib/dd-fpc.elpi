@@ -1,0 +1,25 @@
+sig dd-fpc.
+
+accum_sig lkf-certificates.
+
+kind nat    type.
+type zero   nat.
+type s      nat -> nat. % Successor
+type indx   index.
+type dd     nat -> cert.
+module dd-fpc.
+
+andNeg_kc      (dd D) (dd D) (dd D).
+false_kc       (dd D) (dd D).
+orNeg_kc       (dd D) (dd D).
+all_kc         (dd D) (x\ dd D).
+store_kc       (dd D) (dd D) indx.
+
+orPos_ke       (dd D) (dd D) _Choice.
+andPos_ke      (dd D) (dd D) (dd D).
+some_ke        (dd D) (dd D) _T.
+release_ke     (dd D) (dd D).
+initial_ke     (dd _D) indx.
+true_ke        (dd _D).
+
+decide_ke      (dd (s D)) (dd D) indx.

@@ -1,0 +1,19 @@
+imp_i_r(
+  or_i_r(
+    imp_i_l(
+      imp_i_r(
+        imp_i_r(
+          not_i_l(
+            not_i_l(
+              not_i_r(axiom<x>())))))
+      , or_i_l(
+      imp_i_r(
+      imp_i_r(
+      not_i_l(
+      not_i_l(axiom<y>()))))
+          , imp_i_r(
+          imp_i_r(
+          not_i_l(
+          not_i_l(axiom<z>()))))))
+  )
+)

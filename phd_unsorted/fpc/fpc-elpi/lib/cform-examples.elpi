@@ -1,0 +1,83 @@
+module cform-examples.
+accumulate cforms.
+accumulate lkf-kernel, lkf-formulas.
+accumulate all-fpc.
+accumulate spy.
+
+% If the quantifier is vacuous, then you are done.
+% The cut is needed since later clauses can also be applied.
+
+quant_redex (forall x\ B) B :- !.
+quant_redex (exists x\ B) B :- !.
+
+quant_redex (forall x\ (B x) or  C) ((forall B) or  C) :- !.
+quant_redex (forall x\ B  or (C x)) (B or  (forall C)) :- !.
+quant_redex (forall x\ (B x) and C) ((forall B) and C) :- !.
+quant_redex (forall x\ B and (C x)) (B and (forall C)) :- !.
+
+quant_redex (exists x\ (B x) or  C) ((exists B) or  C) :- !.
+quant_redex (exists x\ B or  (C x)) (B or  (exists C)) :- !.
+quant_redex (exists x\ (B x) and C) ((exists B) and C) :- !.
+quant_redex (exists x\ B and (C x)) (B and (exists C)) :- !.
+
+quant_redex (forall x\ (B x) and (C x)) ((forall B) and (forall C)).
+quant_redex (exists x\ (B x) or  (C x)) ((exists B) or  (exists C)).
+quant_redex (exists x\ (B x) imp (C x)) ((forall B) or  (exists C)).
+
+miniscope tt tt.    miniscope ff ff.
+miniscope (B and C) (B' and C') &
+miniscope (B or  C) (B' or  C') :- miniscope B B', miniscope C C'.
+miniscope A A & miniscope (neg A) (neg A) :- atomic A.
+% If a step of rewriting can be done, then apply miniscope again.
+miniscope Quant Result :- quant_redex Quant Red, !, miniscope Red Result.
+% Otherwise, move through the outermost quantifier.
+miniscope (forall B) (forall B') :- pi x\ miniscope (B x) (B' x).
+miniscope (exists B) (exists B') :- pi x\ miniscope (B x) (B' x).
+
+generate _ ss.
+% generate _ (rr a).
+% generate _ tt.
+% generate _ ff.
+generate (succ N) (B or  C) :- generate N B, generate N C.
+generate (succ N) (B and C) :- generate N B, generate N C.
+generate (succ N) (B imp C) :- generate N B, generate N C.
+
+%  Classic and simple formula
+cform_ex 1 (exists x\ forall y\ (rr x) imp (rr y)).
+%  Formulas from Example 1.1 or Handbook article by Baaz, et al.
+cform_ex 2 (((forall x\ exists y\ pp x y) and (exists u\ forall v\ (pp u v) imp (qq u v))) imp
+ (exists w\ exists z\ qq w z)).
+cform_ex 3 (((forall x\ pp x (f x)) and (forall v\ (pp a v) imp (qq a v))) imp
+ (exists w\ exists z\ qq w z)).
+cform_ex 4 ((ss imp uu) imp ss).
+cform_ex 5 (((ss imp uu) imp uu) imp ss).
+cform_ex 6 ((ss and (ss imp (rr a))) imp (rr a)).
+cform_ex 7 (((rr a) and (forall x\ ((rr x) imp (rr (f x))))) imp (rr (f a))).
+
+% #3 is a current counterexample
+
+cform_ex 8 (((forall x\ pp x (f x)) and (forall v\ (pp a v) imp (qq a v))) imp (exists w\ qq w w)).%
+cform_ex 9 (((forall x\ pp x (f x)) and (forall v\ (pp a v) imp (qq a v))) imp ss).
+
+cform_ex 10 ((ss and (forall v\ (pp a v) imp (qq a v))) imp (exists w\ qq w w)).%
+cform_ex 11 ((ss and ss) imp (exists w\ qq w w)).%
+cform_ex 12 (ss imp (exists w\ qq w w)).%
+cform_ex 13 (ss imp (exists w\ ss)).% Counterexample
+cform_ex 14 (ss imp ss).
+cform_ex 15 ((neg ss) imp (exists w\ (neg ss))).
+cform_ex 16 (ss imp (forall w\ ss)).% has two solutions but probably should not
+cform_ex 17 (ss imp ss). 
+cform_ex 18 (ss imp (exists w\ rr a)).% counterexample
+cform_ex 19 (ss imp rr a).
+
+polar_add tt t-.
+polar_add ff f+.
+polar_add (B and C) (B' &-& C') :- polar_add B B', polar_add C C'.
+polar_add (B or  C) (B' !+! C') :- polar_add B B', polar_add C C'.
+polar_add (forall B) (all B')   :- pi x\ polar_add (B x) (B' x).
+polar_add (exists B) (some B')  :- pi x\ polar_add (B x) (B' x).
+polar_add A (p A)               :- atomic A.
+polar_add (neg A) (n A)         :- atomic A.
+
+test A B :- nnf (A imp B) (C or D), polar_add C C', polar_add D D', 
+            ensure+ C' C'', ensure+ D' D'', lkf_entry start (C'' !-! D'').
