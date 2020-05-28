@@ -1,0 +1,24 @@
+%% An abstract focused machine, supporting the implementation of general logic programming languages
+
+kind j type.
+kind p type.
+
+type ` j -> j -> j.
+infixr ` 1.
+
+type <- j -> j -> j.
+infixr <- 2.
+
+type & p -> p -> p.
+infixr & 3.
+
+type trv p -> j.
+type fls p -> j.
+type tru p -> j.
+type abs p -> j.
+type contra j.
+
+type eval j -> prop.
+eval (A ` B) :- eval A, eval B.
+eval ((trv X) <- B) :- eval (trv X).
+eval ((false P) <- B) :- 
