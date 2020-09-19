@@ -1,0 +1,25 @@
+kind prog type.
+type << prog -> prog -> prog.
+infixr << 100.
+type >> prog -> prog -> prog.
+infixr && 80.
+type && prog -> prog -> prog.
+infixr >> 130.
+type interp prog -> prop.
+type backchain prog -> prog -> prop.
+
+interp X :- print "interp" X, fail.
+interp (A << B) :- backchain B A.
+interp (A && B) :- interp A, interp B.
+
+backchain X Y :- print "backchain" X Y, fail.
+backchain A A.
+backchain (A >> B) G :- backchain B G, interp A.
+
+test :-
+  backchain (
+  bello "ciao"
+
+) (
+  bello X
+).
