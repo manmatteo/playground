@@ -30,16 +30,16 @@ Inductive Betac : Term -> Term -> Prop :=
 
 Notation " A ≡ B " := (Betac A B) (at level 80) : DN_scope.
 
-Hint Constructors Beta.
-Hint Constructors Betas.
-Hint Constructors Betac.
+Hint Constructors Beta : core.
+Hint Constructors Betas : core.
+Hint Constructors Betac : core.
 
 (* dummy facts about Betas et Betac, mainly congruence *)
 Lemma Betac_refl : forall T, T ≡ T.
 intros; constructor; constructor.
 Qed.
 
-Hint Resolve Betac_refl.
+Hint Resolve Betac_refl : core.
 
 Lemma Betas_App : forall a b c d, a →→ b -> c →→ d -> a·c →→ b·d.
 assert (forall a b c, b →→ c ->  a·b →→ a·c).
@@ -49,7 +49,7 @@ induction 1; eauto.
 intros; eauto.
 Qed.
 
-Hint Resolve Betas_App.
+Hint Resolve Betas_App : core.
 
 Lemma Betac_App : forall a b c d, a ≡ b -> c ≡ d -> a·c ≡ b·d.
 assert (forall a b c, b ≡ c ->  a· b ≡ a· c).
@@ -59,7 +59,7 @@ induction 1; eauto.
 eauto.
 Qed.
 
-Hint Resolve Betac_App.
+Hint Resolve Betac_App : core.
 
 Lemma Betas_La : forall a b c d, a →→  b -> c →→ d -> λ[a], c →→ λ[b], d.
 assert (forall a b c , a →→ b -> λ[c],  a →→ λ[c], b).
@@ -70,7 +70,7 @@ eauto.
 Qed.
 
 
-Hint Resolve Betas_La.
+Hint Resolve Betas_La : core.
 
 Lemma Betac_La: forall a b c d, a ≡ b -> c ≡ d -> λ[a],c ≡ λ[b], d.
 assert (forall a b c, a ≡ b -> λ[c], a ≡ λ[c], b).
@@ -80,7 +80,7 @@ induction 1; eauto.
 eauto.
 Qed.
 
-Hint Resolve Betac_La.
+Hint Resolve Betac_La : core.
 
 Lemma Betas_Pi : forall a b c d, a →→ b -> c →→ d -> Π(a), c →→ Π(b), d.
 assert (forall a b c , a →→ b -> Π (c), a →→ Π(c), b).
@@ -90,7 +90,7 @@ induction 1; eauto.
 eauto.
 Qed.
 
-Hint Resolve Betas_Pi.
+Hint Resolve Betas_Pi : core.
 
 Lemma Betac_Pi : forall a b c d, a ≡ b -> c ≡ d -> Π(a), c ≡ Π(b), d.
 assert (forall a b c , a ≡ b -> Π(c), a ≡ Π(c), b).
@@ -100,7 +100,7 @@ induction 1; eauto.
 eauto.
 Qed.
 
-Hint Resolve Betac_Pi.
+Hint Resolve Betac_Pi : core.
 
 
 (* some other facts, not every thing is used in the main development *)
@@ -181,7 +181,7 @@ apply Betac_sym; trivial.
 apply Betac_trans with (y:=y ↑ n # m); trivial.
 Qed.
 
-Hint Resolve Beta_lift Betas_lift Betac_lift.
+Hint Resolve Beta_lift Betas_lift Betac_lift : core.
 
 
 Lemma Betas_subst : forall c a b n, a →→ b -> c [n←a] →→ c[n← b]. 
@@ -189,14 +189,14 @@ induction c; intros; simpl; eauto.
 destruct (lt_eq_lt_dec v n); intuition.
 Qed.
 
-Hint Resolve Betas_subst.
+Hint Resolve Betas_subst : core.
 
 Lemma Betas_subst2 : forall c a b n, a →→ b -> a [n← c] →→ b [n ← c].
 induction 1; eauto.
 constructor. apply Beta_beta; intuition.
 Qed.
 
-Hint Resolve Betas_subst2.
+Hint Resolve Betas_subst2 : core.
 
 Lemma Betac_subst : forall c a b n, a ≡ b -> c[n←a] ≡ c [n←b].
 induction c; simpl; intros; intuition.
@@ -208,7 +208,7 @@ Lemma Betac_subst2 : forall c a b n,
 induction 1; eauto.
 Qed.
 
-Hint Resolve Betac_subst Betac_subst2.
+Hint Resolve Betac_subst Betac_subst2 : core.
 
 (* Beta parallel definition *)
 Inductive Betap : Term -> Term -> Prop :=
@@ -224,7 +224,7 @@ Inductive Betap : Term -> Term -> Prop :=
 
 Notation "m →' n" := (Betap m n) (at level 80) : DN_scope.
 
-Local Hint Constructors Betap.
+Local Hint Constructors Betap : core.
 
 Lemma Betap_lift: forall a b n m, a →' b -> a ↑ n # m →' b ↑ n # m .
 intros.
@@ -235,7 +235,7 @@ rewrite substP1.
 constructor; intuition.
 Qed.
 
-Local Hint Resolve Betap_lift.
+Local Hint Resolve Betap_lift : core.
 
 (* inversion lemmas for beta // *)
 Lemma Betap1:forall m m' n n' x, 
@@ -309,7 +309,7 @@ Inductive Betaps : Term -> Term -> Prop :=
 
 Notation " x  →→' y " := (Betaps x y) (at level 80) : DN_scope.
 
-Local Hint Constructors Betaps.
+Local Hint Constructors Betaps : core.
 
 (* the closure of Beta is the same as Beta // *)
 
@@ -317,7 +317,7 @@ Lemma Betas_Betap_closure : forall x y , x →' y -> x →→ y.
 induction 1; eauto.
 Qed.
 
-Local Hint Resolve Betas_Betap_closure.
+Local Hint Resolve Betas_Betap_closure : core.
 
 
 Lemma Betas_Betaps_closure : forall x y , 
@@ -330,25 +330,25 @@ Lemma Betap_Beta_closure : forall x y,
 induction 1; intuition.
 Qed.
 
-Local Hint Resolve Betas_Betaps_closure Betap_Beta_closure.
+Local Hint Resolve Betas_Betaps_closure Betap_Beta_closure : core.
 
 Lemma Betaps_Beta_closure :forall x y, x → y -> x →→' y.
 eauto.
 Qed.
 
-Local Hint Resolve Betaps_Beta_closure.
+Local Hint Resolve Betaps_Beta_closure : core.
 
 Lemma Betaps_trans2 : forall x y z , x →→' y -> y →→' z  -> x →→' z.
 intros. revert z H0; induction H; eauto.
 Qed.
 
-Local Hint Resolve Betaps_trans2.
+Local Hint Resolve Betaps_trans2 : core.
 
 Lemma Betaps_Betas_closure : forall x y , x →→ y -> x →→' y.
 induction 1; eauto.
 Qed.
 
-Local Hint Resolve Betaps_Betas_closure.
+Local Hint Resolve Betaps_Betas_closure : core.
 
 Lemma sub_diamond_Betaps : 
 (   forall x y z, x →' y -> x →' z -> (exists t, y →' t /\ z →' t) )

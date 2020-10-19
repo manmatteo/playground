@@ -33,7 +33,7 @@ with typ : Env -> Term -> Term -> Prop :=
       A ≡ B  -> Γ ⊢ a : A -> Γ ⊢ B : !s -> Γ ⊢ a : B
 where "Γ ⊢ t : T" := (typ Γ t T) : DN_scope.
 
-Hint Constructors wf typ.
+Hint Constructors wf typ : core.
 
 Scheme typ_ind' := Induction for typ Sort Prop
       with wf_ind' := Induction for wf Sort Prop.
@@ -48,7 +48,7 @@ Lemma wf_inv : forall A Γ, A::Γ ⊣ -> exists s, Γ ⊢ A: !s.
 intros. inversion H; eauto.
 Qed.
 
-Hint Resolve wf_typ wf_inv.
+Hint Resolve wf_typ wf_inv : core.
 (* Inversion Lemmas , one for each kind of term 
 main shape : 
   if Γ ⊢ T : A and T is a (choose one sort/var/lambda/pi/app)
