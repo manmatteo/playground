@@ -1,16 +1,21 @@
+sig coc.
 kind term type.
 type fun  term -> (term -> term) -> term.
 type prod term -> (term -> term) -> term.
-type app  list term -> term.
+type app  (list term) -> term.
 
-type store term -> term -> prop.
+type beta  term -> term -> o.
 
-type sync  list term -> term -> term -> prop.
-type async term -> term -> prop.
-type astr  term -> term -> prop.
+type store term -> term -> o.
+type negatm term -> o.
+
+type sync  list term -> term -> term -> o.
+type async term -> term -> o.
+type astr  term -> term -> o.
 
 kind s type.
 type p s. % sort prop
 type t s. % sort type
 type sort s -> term.
-type axiom s -> s -> prop.
+type axiom s -> s -> o.
+type rel s -> s -> s -> o.

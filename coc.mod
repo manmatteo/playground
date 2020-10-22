@@ -1,20 +1,21 @@
+module coc.
 axiom p t.
 rel p p p. rel p t t. rel t p p. rel t t t.
 
-async A B :- print "async" A B, fail.
-astr A B :- print "astr" A B, fail.
-sync A B C :- print "sync" A B C, fail.
+% async A B :- print "async" A B, fail.
+% astr A B :- print "astr" A B, fail.
+% sync A B C :- print "sync" A B C, fail.
 
 %% sort
 async (sort X) C :-
   beta C (sort Y),
   axiom X Y.
 %% ax (negative atoms)
-sync [] A B :-
-  (beta A B; beta B A).
+sync nil A B :-
+  beta A B.
 
 %% structural
-astr (app [Var|L]) R :-
+astr (app ( Var :: L )) R :-
   store Var N,% isneg N,
   sync L N R.
 async Tm Ty :-
@@ -33,7 +34,7 @@ async (prod A B) C :-
   pi w\ store w A => negatm A => async (B w) (sort S2).
 
 %% sync (pi-l)
-sync [M|L] A B :-
+sync (M :: L) A B :-
   beta A (prod Ty1 Ty2),
   async M Ty1,
   sync L (Ty2 M) B.
