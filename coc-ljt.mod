@@ -1,4 +1,4 @@
-module coc.
+module coc-ljt.
 axiom p t.
 rel p p p. rel p t t. rel t p p. rel t t t.
 

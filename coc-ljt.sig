@@ -1,4 +1,4 @@
-sig coc.
+sig coc-ljt.
 kind term type.
 type fun  term -> (term -> term) -> term.
 type prod term -> (term -> term) -> term.
