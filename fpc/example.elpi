@@ -1,0 +1,9 @@
+accumulate kernel/ljf-lambda.
+accumulate fpc/dd-fpc.
+accumulate user/ljf-polarize.
+
+type a,b,c,d iform.
+atomic X :- (X = a; X = b; X = c; X = d).
+
+main :- polarize- (a imp ((a imp b) imp ((a imp (b imp c)) imp ((a imp (b imp (c imp d))) imp d)))) Term,
+        ljf_entry (dd (s (s (s (s zero))))) Term.
