@@ -22,22 +22,28 @@ async Tm Ty :-
   negatm Ty, %; ispos Ty 
   astr Tm Ty.
 
-%% async (pi-r+store), (pi-wf)
-async (fun _ Ty T) C :-
-  beta C (prod _ Ty Ty'),
-  pi w\ store w Ty => negatm Ty =>
-    async (T w) (Ty' w).
-async (prod A B) C :-
+%% asyncr (pi-r), (pi-wf)
+% async (fun _ Ty T) C :-
+asyncr Cert C :-
+  beta C (prod _ A B),
+  prod_c Cert Cert',
+  asyncl Cert' A B.
+asyncr (prod A B) C :-
   beta C (sort S3),
   rel S1 S2 S3,
-  async A (sort S1),
+  asyncr A (sort S1),
   pi w\ store w A => negatm A => async (B w) (sort S2).
+% asyncl (store)  
+% There are no positives except possibly posatoms...
+asyncl Cert L R :-
+  (isneg L; posatm L),
+  pi w\ store w Ty => asyncl (Cert w) (R w).
 
 %% sync (pi-l)
 sync Cert L R :-
   beta L (prod Ty1 Ty2),
-  pi_e (Cert Tm) Cert1 (Cert2 Tm),
+  pi_e Cert Cert1 Cert2,
   asyncr Cert1 Ty1,
-  sync Cert2 (Ty2 Tm) R.
+  sync Cert2 (Ty2 Cert1) R.
   
 beta X X.
