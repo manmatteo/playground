@@ -1,0 +1,18 @@
+accumulate coc-ljf.
+accumulate certificates/dd.
+
+type p s. % sort prop
+type t s. % sort type
+% All sorts are negative
+sortn p.
+sortn t.
+% Prop is a type, and the only product is ->
+axiom p t.
+rel p p p.
+
+main :-
+  pi a\ store dd_index a (sort p) => (
+  asyncr (dd 1) (app [a]) (str (sort p)),
+  print "Pass 1",
+  asyncr (dd 3) (fun _N (app [a]) (x\ negbox (app [x]))) (unk (prod _N (app [a]) (x\ app [a]))),
+  print "Pass 2").

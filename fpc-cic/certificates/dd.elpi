@@ -1,0 +1,15 @@
+type dd int -> cert.
+type dd_index index.
+
+prodL_je    (dd N) _Sort (dd N) (dd N) (x\ dd N).
+prodR_jc    (dd N) _Sort (dd N)        (x\ dd N).
+releaseL_je (dd N) _Sort (dd N)        (x\ dd N).
+releaseR_je (dd N) _Sort (dd N)        (dd N).
+decideL_jc  (dd N) _Sort (dd N')        (dd N') dd_index :- N > 0, N' is N - 1.
+decideR_jc  (dd N) _Sort (dd N)        (dd N).
+storeR_jc   (dd N)                     (dd N).
+axiomL_je   (dd N) _Sort (dd N).
+axiomR_je   (dd N) _Sort (dd N)        dd_index.
+prodsort_jc (dd N) _Sort1 (dd N) _Sort2 (x\ dd N).
+sorted_jc   (dd _N).
+storeL_jc   (x\ dd N) (x\ dd_index) _Sort (dd N).
