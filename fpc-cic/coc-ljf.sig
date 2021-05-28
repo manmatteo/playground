@@ -8,16 +8,18 @@ type posbox term -> term.
 type negbox term -> term.
 
 kind s type. % sorts
-type sort s -> term.
-type sortp s -> prop.
-type sortn s -> prop.
-type axiom s -> s -> o.
-type rel s -> s -> s -> o.
+% type sort  s -> term.
+kind ps type. % polarized sorts
+type p s -> ps.
+type n s -> ps.
+type sort ps -> term.
+type axiom s -> s -> prop.
+type rel s -> s -> s -> prop.
 
-type beta  term -> term -> o.
+type beta  term -> term -> prop.
 
 kind index type.
-type store index -> term -> term -> o.
+type store index -> term -> term -> prop.
 
 type #idx  term -> index.
 type #cert term -> cert.

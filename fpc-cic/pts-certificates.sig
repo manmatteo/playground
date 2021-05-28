@@ -16,7 +16,7 @@ type decideR_jc  cert -> s -> cert                   -> cert -> prop.
 type storeR_jc   cert                                -> cert -> prop.
 type axiomL_je   cert -> s -> cert                           -> prop.
 type axiomR_je   cert -> s -> cert                  -> index -> prop.
-type prodsort_jc cert -> s -> cert -> s -> (cert -> cert)    -> prop.
+type prodsort_jc cert -> ps -> cert -> ps -> (cert -> cert)  -> prop.
 type sorted_jc   cert                                        -> prop.
 %%%%%%%%%%%%%%%% Inputs                              % Sort and SortCert
 type storeL_jc   (cert -> cert) -> (index -> index) -> s -> cert -> prop.

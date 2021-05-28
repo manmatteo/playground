@@ -4,15 +4,32 @@ accumulate certificates/dd.
 type p s. % sort prop
 type t s. % sort type
 % All sorts are negative
-sortn p.
+sortn pn.
+sortp pp.
 sortn t.
 % Prop is a type, and the only product is ->
 axiom p t.
 rel p p p.
 
+type loop prop -> prop.
+loop G :- G, fail.
+loop _G.
+
 main :-
-  pi a\ store dd_index a (sort p) => (
-  asyncr (dd 1) (app [a]) (str (sort p)),
-  print "Pass 1",
-  asyncr (dd 3) (fun _N (app [a]) (x\ negbox (app [x]))) (unk (prod _N (app [a]) (x\ app [a]))),
-  print "Pass 2").
+  pi a\ store dd_index a (sort pp) => (
+    sigma Term\
+  % asyncr (dd 1) (app [a]) (str (sort p)),
+  % print "Pass 1",
+  % % Identity
+  % asyncr (dd 3) (fun _N (app [a]) (x\ negbox (app [x]))) (unk (prod _N (app [a]) (x\ app [a]))),
+  % print "Pass 2",
+  % loop (
+  % % Naturals
+  % asyncr (dd 6) Term (unk (prod _N (app [a]) (x\ (prod _ (prod _ (app [a]) (x\ app [a])) (x\ app [a]))))),
+  % % Shared naturals
+   asyncr (dd 3)
+          (fun _ (app [a]) c1\ fun _ (prod _ (app [a]) y\ app [a]) c2\ negbox (app [c2, c1| kappa _ (app [a]) (x\ posbox x)]))
+          (unk (prod _ (app [a]) (x\ (prod _ (prod _ (app [a]) (x\ app [a])) (x\ app [a]))))),
+  print "Built " Term "\n"
+  % )
+  ).
