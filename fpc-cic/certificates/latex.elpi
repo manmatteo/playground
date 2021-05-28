@@ -1,0 +1,45 @@
+%           context                      ephem     term      unk       str
+type ptsseq list (pair string string) -> string -> string -> string -> string -> cert.
+kind texterm type.
+type ptsprod string -> string -> string -> texterm.
+type ptslam  string -> string -> string -> texterm.
+
+type texidx string -> index.
+
+type sort_name sort -> string -> prop.
+sort_name _ "s_{temp}".
+type ctx_to_string list (pair string string) -> string -> prop.
+ctx_to_string [] "".
+ctx_to_string [pr Var Ty | R] S :- ctx_to_string R S', S is Var ^ ":" ^ Ty ^ ", " ^ S'.
+
+prodL_je (latexs Ctx Ephem T Unk Str)
+         Sort
+         (latexs Ctx Ephem ST SUnk SStr)
+         (latex Ctx Ephem1 T1 Unk1 Str1)
+         (x\ latexs (S2 x)) :-
+   ctx_to_string Ctx CtxStr,
+   OutString = "\\infer[Pl]{\\ptsseq s{" ^ CtxStr ^ "}{" ^ "\\ptsprod{}{}{}" ^ "}{}{}{}}{" + SortCert + "\\quad" + S1 + "\\quad" + S2 + "}".
+
+% prodR_jc    (dd N) _Sort (dd N)        (x\ dd N) :-
+%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
+% releaseL_je (dd N) _Sort (dd N)        (x\ dd N) :-
+%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
+% releaseR_je (dd N) _Sort (dd N)        (dd N) :-
+%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
+% decideL_jc  (dd N) _Sort (dd N')        (dd N') dd_index :-
+%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
+% decideR_jc  (dd N) _Sort (dd N)        (dd N) :-
+%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
+% storeR_jc   (dd N)                     (dd N) :-
+%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
+axiomL_je   (latexs Ctx Ephem T Unk Str) _Sort (dd N) :-
+   ctx_to_string Ctx CString,
+   OutString = "\\infer[axiom_n]{\\ptsseq s{" ^ CString ^ "}{" ^  ^ "}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
+% axiomR_je   (dd N) _Sort (dd N)        dd_index   :-
+%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
+% prodsort_jc (dd N) _Sort1 (dd N) _Sort2 (x\ dd N) :-
+%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
+sorted_jc   (latexa OutString) :-
+   OutString = "sort and sort are in ax".
+% storeL_jc   (x\ dd N) (x\ dd_index) _Sort (dd N) :-
+%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
