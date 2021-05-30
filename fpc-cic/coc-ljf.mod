@@ -6,6 +6,11 @@ accum_sig pts-certificates.
 :if "DEBUG" syncr  A B C :- print "syncr" A B C, fail.
 :if "DEBUG" syncl  A B C D :- print "syncl" A B C D, fail.
 
+unpol (n X) X.
+unpol (p X) X.
+pol X (p X).
+pol X (n X).
+
 %% prod
 % Pr
 asyncr Cert (fun _Name A T) (unk (prod _Name A B)) :-
@@ -22,15 +27,17 @@ syncl Cert (prod _Name A B) [P | L] R :-
   syncl    (Cert2 Cert1) (B P) L R.
 
 %% sort
-asyncr Cert (sort (_ X)) (str (sort (_ Y))) :-
+asyncr Cert (sort X) (str (sort Y)) :-
   sorted_jc Cert,
-  axiom X Y.
+  unpol X X', unpol Y Y',
+  axiom X' Y'.
 
-asyncr Cert (prod _Name A B) (str (sort (_ S3))) :-
-  prodsort_jc Cert (P1 S1) Cert1 (P2 S2) Cert2,
-  rel S1 S2 S3,
-  asyncr Cert1 A (str (sort (P1 S1))),
-  asyncl Cert2 [A] B (x\ str (sort (P2 S2))).
+asyncr Cert (prod _Name A B) (str (sort (n S3))) :-
+  prodsort_jc Cert S1 Cert1 S2 Cert2,
+  unpol S1 S1', unpol S2 S2',
+  rel S1' S2' S3,
+  asyncr Cert1 A (str (sort S1)),
+  asyncl Cert2 [A] B (x\ str (sort S2)).
 
 %% ax
 syncl Cert N [] N :-
@@ -63,7 +70,7 @@ asyncr Cert (negbox T) (unk A) :-
   asyncr Cert' T (str A).
 % store_l
 asyncl Cert [N] T R :-
-  storeL_jc Cert Index Sort SortCert,
+  storeL_jc Cert Index _Sort _SortCert, %% TODO remove unneeded params
   % sortn Sort, Store anything!!
   % asyncr SortCert N (str (sort Sort)),
   pi w\ store (Index (#idx w)) w N => (print "Storing" N "at" w, asyncr (Cert (#cert w)) (T w) (R w)).

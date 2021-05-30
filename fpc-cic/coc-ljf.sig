@@ -13,6 +13,8 @@ kind ps type. % polarized sorts
 type p s -> ps.
 type n s -> ps.
 type sort ps -> term.
+type pol   s -> ps -> prop.
+type unpol ps -> s -> prop.
 type axiom s -> s -> prop.
 type rel s -> s -> s -> prop.
 

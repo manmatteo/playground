@@ -1,22 +1,22 @@
 accumulate coc-ljf.
 accumulate certificates/dd.
 
-type p s. % sort prop
-type t s. % sort type
-% All sorts are negative
-sortn pn.
-sortp pp.
-sortn t.
+type pr s. % sort prop
+type ty s. % sort type
+% All sorts are negative. Old method!!
+% sortn pn.
+% sortp pp.
+% sortn t.
 % Prop is a type, and the only product is ->
-axiom p t.
-rel p p p.
+axiom pr ty.
+rel pr pr pr.
 
 type loop prop -> prop.
 loop G :- G, fail.
 loop _G.
 
 main :-
-  pi a\ store dd_index a (sort pp) => (
+  pi a\ store dd_index a (sort (n pr)) => (
     sigma Term\
   % asyncr (dd 1) (app [a]) (str (sort p)),
   % print "Pass 1",
