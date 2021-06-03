@@ -1,5 +1,7 @@
 accumulate coc-ljf.
 accumulate certificates/dd.
+% accumulate certificates/latex.
+accumulate certificates/pairing.
 
 type pr s. % sort prop
 type ty s. % sort type
@@ -16,20 +18,23 @@ loop G :- G, fail.
 loop _G.
 
 main :-
-  pi a\ store dd_index a (sort (n pr)) => (
+  pi a\ store dd_index a (sort (p pr)) => (
     sigma Term\
   % asyncr (dd 1) (app [a]) (str (sort p)),
   % print "Pass 1",
   % % Identity
   % asyncr (dd 3) (fun _N (app [a]) (x\ negbox (app [x]))) (unk (prod _N (app [a]) (x\ app [a]))),
   % print "Pass 2",
-  % loop (
+  loop (
   % % Naturals
   % asyncr (dd 6) Term (unk (prod _N (app [a]) (x\ (prod _ (prod _ (app [a]) (x\ app [a])) (x\ app [a]))))),
   % % Shared naturals
-   asyncr (dd 3)
-          (fun _ (app [a]) c1\ fun _ (prod _ (app [a]) y\ app [a]) c2\ negbox (app [c2, c1| kappa _ (app [a]) (x\ posbox x)]))
-          (unk (prod _ (app [a]) (x\ (prod _ (prod _ (app [a]) (x\ app [a])) (x\ app [a]))))),
+  % asyncr (pairing (dd 4) (latex (async [pr "a" (ptssort "Prop")] [] T (ptsprod "x" "a" (ptsprod "y" (ptsprod "z" "a" "a") "a")) hole) Str)) Term
+  %        %(fun _ (app [a]) c1\ fun _ (prod _ (app [a]) y\ app [a]) c2\ negbox (app [c2, c1| kappa _ (app [a]) (x\ posbox x)]))
+  %        (unk (prod _ (app [a]) (x\ (prod _ (prod _ (app [a]) (x\ app [a])) (x\ app [a]))))),
+  asyncr (dd 4) Term
+         %(fun _ (app [a]) c1\ fun _ (prod _ (app [a]) y\ app [a]) c2\ negbox (app [c2, c1| kappa _ (app [a]) (x\ posbox x)]))
+         (unk (prod (app (a ` #)) (x\ (prod (prod (app (a ` #)) (x\ app (a ` #))) (x\ app (a ` #)))))),
   print "Built " Term "\n"
-  % )
+  )
   ).

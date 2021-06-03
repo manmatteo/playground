@@ -1,9 +1,15 @@
 sig coc-ljf.
+
+kind continuation type.
+type # continuation.
+type ` term -> continuation -> continuation.
+infix ` 120.
+
 kind term type.
-type fun   string -> term -> (term -> term) -> term.
-type prod  string -> term -> (term -> term) -> term.
-type kappa string -> term -> (term -> term) -> list term.
-type app   (list term) -> term.
+type fun   term -> (term -> term) -> term.
+type prod  term -> (term -> term) -> term.
+type kappa term -> (term -> term) -> continuation.
+type app   continuation -> term.
 type posbox term -> term.
 type negbox term -> term.
 
@@ -32,5 +38,5 @@ type str term -> rhs.
 type unk term -> rhs.
 type asyncl (cert -> cert) -> list term -> (term -> term) -> (term -> rhs) -> prop.
 type asyncr cert ->                        term -> rhs -> prop.
-type syncl  cert ->          term -> list term -> term -> prop.
+type syncl  cert ->          term -> continuation -> term -> prop.
 type syncr  cert ->                       term -> term -> prop.
