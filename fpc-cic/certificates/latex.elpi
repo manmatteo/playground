@@ -1,5 +1,8 @@
-%           context                      ephem     term      unk       str
-type ptsseq list (pair string string) -> string -> string -> string -> string -> cert.
+kind ptsseq type.
+type latex ptsseq -> string -> prop.
+%          context                      ephem          term      unk       str
+type async list (pair string string) -> list string -> string -> string -> string -> ptsseq.
+type sync  list (pair string string) -> list string -> string -> string -> string -> ptsseq.
 kind texterm type.
 type ptsprod string -> string -> string -> texterm.
 type ptslam  string -> string -> string -> texterm.
@@ -11,21 +14,34 @@ sort_name _ "s_{temp}".
 type ctx_to_string list (pair string string) -> string -> prop.
 ctx_to_string [] "".
 ctx_to_string [pr Var Ty | R] S :- ctx_to_string R S', S is Var ^ ":" ^ Ty ^ ", " ^ S'.
+type ephem_to_string list string -> string -> prop.
+ephem_to_string [] "".
+ephem_to_string [Ty | R] S :- ephem_to_string R S', S is Ty ^ ", " ^ S'.
 
-prodL_je (latexs Ctx Ephem T Unk Str)
+prodL_je (latex (sync Ctx Ephem T Unk Str) OutString)
          Sort
-         (latexs Ctx Ephem ST SUnk SStr)
-         (latex Ctx Ephem1 T1 Unk1 Str1)
-         (x\ latexs (S2 x)) :-
+         (latex (async Ctx Ephem ST SUnk SStr) SortString)
+         (latex (sync Ctx Ephem1 T1 Unk1 Str1) String1)
+         (x\ latex (S2 x) String2) :-
    ctx_to_string Ctx CtxStr,
    OutString = "\\infer[Pl]{\\ptsseq s{" ^ CtxStr ^ "}{" ^ "\\ptsprod{}{}{}" ^ "}{}{}{}}{" + SortCert + "\\quad" + S1 + "\\quad" + S2 + "}".
 
-% prodR_jc    (dd N) _Sort (dd N)        (x\ dd N) :-
-%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
-% releaseL_je (dd N) _Sort (dd N)        (x\ dd N) :-
-%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
-% releaseR_je (dd N) _Sort (dd N)        (dd N) :-
-%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
+prodR_jc (latex (async Ctx Ephem (ptslam Var Ty Term) (ptsprod Var Ty A) _Str) OutString)
+         Sort
+         (latex (async Ctx SEphem ST SUnk SortName) SortString)
+         (x\ latex (Ctx [Ty|Ephem] Term A _Str) String') :-
+   ctx_to_string Ctx CtxStr,
+   ephem_to_string Ephem EphemStr,
+   sort_name Sort SortName,
+   OutString = "\\infer[Pl]{\\ptsseq a{" ^ CtxStr ^ "}{" ^ EphemStr ^ "}
+                                      {\\ptslam{" ^ Var ^ "}{" ^ Ty ^ "}{" ^ Term ^ "}}
+                                      {\\ptsprod{" ^ Var ^ "}{" ^ Ty ^ "}{" ^ A ^ "}}{}}
+                           {" ^ SortString ^ "\\quad" ^ String' ^ "}".
+
+releaseL_je (latex Seq OutString) _Sort (latex SortSeq SortString)  (x\ latex Seq' String') :-
+   OutString = "\\infer[release_l]{\\ptsseq s{}{}{}{}{}}{" ^ SortString ^ "\\quad" + String' ^ "}".
+releaseR_je (latex Seq OutString) _Sort (latex SortSeq SortString)  (latex Seq' String') :-
+   OutString = "\\infer[release_l]{\\ptsseq s{}{}{}{}{}}{" ^ SortString ^ "\\quad" + String' ^ "}".
 % decideL_jc  (dd N) _Sort (dd N')        (dd N') dd_index :-
 %    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
 % decideR_jc  (dd N) _Sort (dd N)        (dd N) :-
