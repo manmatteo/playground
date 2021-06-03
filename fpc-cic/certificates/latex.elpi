@@ -1,61 +1,72 @@
 kind ptsseq type.
-type latex ptsseq -> string -> prop.
-%          context                      ephem          term      unk       str
-type async list (pair string string) -> list string -> string -> string -> string -> ptsseq.
-type sync  list (pair string string) -> list string -> string -> string -> string -> ptsseq.
 kind texterm type.
+type latex ptsseq -> string -> cert.
+%          context                      ephem            term       unk        str
+type async list (pair string texterm) -> list texterm -> texterm -> texterm -> texterm -> ptsseq.
+type sync  list (pair string texterm) -> list texterm -> texterm -> texterm -> texterm -> ptsseq.
 type ptsprod string -> string -> string -> texterm.
 type ptslam  string -> string -> string -> texterm.
+type ptssort string -> texterm.
+type hole texterm.
 
 type texidx string -> index.
 
-type sort_name sort -> string -> prop.
+type sort_name s -> string -> prop.
 sort_name _ "s_{temp}".
-type ctx_to_string list (pair string string) -> string -> prop.
+type ctx_to_string list (pair string texterm) -> string -> prop.
 ctx_to_string [] "".
-ctx_to_string [pr Var Ty | R] S :- ctx_to_string R S', S is Var ^ ":" ^ Ty ^ ", " ^ S'.
-type ephem_to_string list string -> string -> prop.
+ctx_to_string [pr Var Ty | R] S :- ctx_to_string R S', tterm_to_string Ty TyString, S is Var ^ ":" ^ TyString ^ ", " ^ S'.
+type ephem_to_string list texterm -> string -> prop.
 ephem_to_string [] "".
-ephem_to_string [Ty | R] S :- ephem_to_string R S', S is Ty ^ ", " ^ S'.
+ephem_to_string [Ty | R] S :- tterm_to_string Ty TyString, ephem_to_string R S', S is TyString ^ ", " ^ S'.
+type tterm_to_string texterm -> string -> prop.
+tterm_to_string (ptsprod A B C) OutString :- OutString = "\\ptsprod{" ^ A ^ "}" ^ "{" ^ B ^ "}" ^ "{" ^ C ^ "}".
+tterm_to_string (ptslam  A B C) OutString :- OutString = "\\ptslam{" ^ A ^ "}" ^ "{" ^ B ^ "}" ^ "{" ^ C ^ "}".
+tterm_to_string (ptssort S)     OutString :- OutString = "\\ptssort{" ^ S ^ "}".
 
 prodL_je (latex (sync Ctx Ephem T Unk Str) OutString)
          Sort
          (latex (async Ctx Ephem ST SUnk SStr) SortString)
          (latex (sync Ctx Ephem1 T1 Unk1 Str1) String1)
-         (x\ latex (S2 x) String2) :-
+         (x\ latex S2 String2) :-
    ctx_to_string Ctx CtxStr,
-   OutString = "\\infer[Pl]{\\ptsseq s{" ^ CtxStr ^ "}{" ^ "\\ptsprod{}{}{}" ^ "}{}{}{}}{" + SortCert + "\\quad" + S1 + "\\quad" + S2 + "}".
+   OutString = "\\infer[Pl]{\\ptsseq s{" ^ CtxStr ^ "}{" ^ "\\ptsprod{}{}{}" ^ "}{}{}{}}{" ^ SortString ^ "\\quad" ^ String1 ^ "\\quad" ^ String2 ^ "}".
 
-prodR_jc (latex (async Ctx Ephem (ptslam Var Ty Term) (ptsprod Var Ty A) _Str) OutString)
+prodR_jc (latex (async Ctx Ephem (ptslam Var TyString TermString) (ptsprod Var TyString AString) _Str) OutString)
          Sort
-         (latex (async Ctx SEphem ST SUnk SortName) SortString)
-         (x\ latex (Ctx [Ty|Ephem] Term A _Str) String') :-
+         (latex (async Ctx SEphem ST SUnk (ptssort SortName)) SortString)
+         (x\ latex (async Ctx [Ty|Ephem] Term A _Str) String') :-
    ctx_to_string Ctx CtxStr,
    ephem_to_string Ephem EphemStr,
    sort_name Sort SortName,
+   tterm_to_string Ty TyString,
+   tterm_to_string A AString,
+   tterm_to_string Term TermString,
    OutString = "\\infer[Pl]{\\ptsseq a{" ^ CtxStr ^ "}{" ^ EphemStr ^ "}
-                                      {\\ptslam{" ^ Var ^ "}{" ^ Ty ^ "}{" ^ Term ^ "}}
-                                      {\\ptsprod{" ^ Var ^ "}{" ^ Ty ^ "}{" ^ A ^ "}}{}}
+                                      {\\ptslam{" ^ Var ^ "}{" ^ TyString ^ "}{" ^ TermString ^ "}}
+                                      {\\ptsprod{" ^ Var ^ "}{" ^ TyString ^ "}{" ^ AString ^ "}}{}}
                            {" ^ SortString ^ "\\quad" ^ String' ^ "}".
 
-releaseL_je (latex Seq OutString) _Sort (latex SortSeq SortString)  (x\ latex Seq' String') :-
-   OutString = "\\infer[release_l]{\\ptsseq s{}{}{}{}{}}{" ^ SortString ^ "\\quad" + String' ^ "}".
-releaseR_je (latex Seq OutString) _Sort (latex SortSeq SortString)  (latex Seq' String') :-
-   OutString = "\\infer[release_l]{\\ptsseq s{}{}{}{}{}}{" ^ SortString ^ "\\quad" + String' ^ "}".
-% decideL_jc  (dd N) _Sort (dd N')        (dd N') dd_index :-
-%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
-% decideR_jc  (dd N) _Sort (dd N)        (dd N) :-
-%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
-% storeR_jc   (dd N)                     (dd N) :-
-%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
-axiomL_je   (latexs Ctx Ephem T Unk Str) _Sort (dd N) :-
+releaseL_je (latex Seq OutString) _Sort (latex SortSeq SortString) (x\ latex Seq' String') :-
+   OutString = "\\infer[release_l]{\\ptsseq s{}{}{}{}{}}{" ^ SortString ^ "\\quad" ^ String' ^ "}".
+releaseR_je (latex Seq OutString) _Sort (latex SortSeq SortString) (latex Seq' String') :-
+   OutString = "\\infer[release_r]{\\ptsseq s{}{}{}{}{}}{" ^ SortString ^ "\\quad" ^ String' ^ "}".
+decideL_jc  (latex Seq OutString) _Sort (latex SortSeq SortString) (latex Seq' String') (texidx VarString) :-
+   OutString = "\\infer[decide_l]{\\ptsseq s{}{}{}{}{}}{" ^ SortString ^ "\\quad" ^ String' ^ "}".
+decideR_jc  (latex Seq OutString) _Sort (latex SortSeq SortString) (latex Seq' String') :-
+   OutString = "\\infer[decide_r]{\\ptsseq s{}{}{}{}{}}{" ^ SortString ^ "\\quad" ^ String' ^ "}".
+storeR_jc   (latex Seq OutString) (latex Seq' String') :-
+   OutString = "\\infer[store_r]{\\ptsseq s{}{}{}{}{}}{" ^ String' ^ "}".
+axiomL_je   (latex (sync Ctx [N] T _A N) OutString) _Sort (latex SortSeq SortString) :-
    ctx_to_string Ctx CString,
-   OutString = "\\infer[axiom_n]{\\ptsseq s{" ^ CString ^ "}{" ^  ^ "}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
-% axiomR_je   (dd N) _Sort (dd N)        dd_index   :-
-%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
-% prodsort_jc (dd N) _Sort1 (dd N) _Sort2 (x\ dd N) :-
-%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
-sorted_jc   (latexa OutString) :-
+   tterm_to_string N NString,
+   OutString = "\\infer[axiom_n]{\\ptsseq s{" ^ CString ^ "}{" ^ NString ^ "}{}{}{}}{" ^ SortString ^ "}".
+axiomR_je   (latex (sync Ctx [N] T _A N) OutString) _Sort (latex SortSeq SortString) (texidx VarString)   :-
+   ctx_to_string Ctx CString,
+   OutString = "\\infer[axiom_p]{\\ptsseq s{" ^ CString ^ "}{}{}{}{}}{" ^ SortString ^ "}".
+prodsort_jc (latex Seq OutString) _Sort1 (latex Seq1 String1) _Sort2 (x\ latex Seq2 String2) :-
+   OutString = "\\infer[sorted_p]{\\ptsseq s{}{}{}{}{}}{" ^ String1 ^ "\\quad" ^ String2 ^ "\\quad" ^ "rel" ^ "}".
+sorted_jc   (latex Seq OutString) :-
    OutString = "sort and sort are in ax".
-% storeL_jc   (x\ dd N) (x\ dd_index) _Sort (dd N) :-
-%    OutString = "\\infer[Pl]{\\ptsseq s{}{}{}{}{}}{" + Sort + "\\quad" + S1 + "\\quad" + S2 + "}".
+storeL_jc   (x\ latex Seq OutString) (x\ (texidx VarIdx)) _Sort (latex SortSeq SortString) :-
+   OutString = "\\infer[store_l]{\\ptsseq s{}{}{}{}{}}{" ^ SortString ^ "\\quad" ^ "this needs fixes" ^ "}".
