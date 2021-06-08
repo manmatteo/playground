@@ -9,7 +9,7 @@ kind term type.
 type fun   term -> (term -> term) -> term.
 type prod  term -> (term -> term) -> term.
 type kappa term -> (term -> term) -> continuation.
-type app   continuation -> term.
+type app   term -> continuation -> term.
 type posbox term -> term.
 type negbox term -> term.
 

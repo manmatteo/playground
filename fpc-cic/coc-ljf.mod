@@ -50,7 +50,7 @@ syncr Cert Var P :-
 
 %% structural
 % decide_l
-asyncr Cert (app (Var ` L)) (str R) :-
+asyncr Cert (app Var L) (str R) :-
   decideL_jc Cert Sort SortCert Cert' Index,
   % print "Enter decide...",
   store Index Var N,
