@@ -1,0 +1,75 @@
+type proof_to_latex list (pair term term) -> term -> term -> string -> prop.
+type term_to_latex  term -> string -> prop.
+type cont_to_latex  continuation -> string -> prop.
+type var_name       term -> string -> prop.
+
+var_name Var OutString :-
+  std.any->string Var OutString.
+  % trace.counter "run" NR,
+  % std.any->string NR NRString,
+  % OutString = "x" ^ "_" ^ NRString.
+
+% type fun   term -> (term -> term) -> term.
+% type prod  term -> (term -> term) -> term.
+% type kappa term -> (term -> term) -> continuation.
+% type app   continuation -> term.
+% type posbox term -> term.
+% type negbox term -> term.
+:if "DEBUG_LATEX" term_to_latex T Str :- print "term_to_latex" T Str, fail.
+:if "DEBUG_LATEX" cont_to_latex T Str :- print "cont_to_latex" T Str, fail.
+
+term_to_latex (fun A T) OutString :-
+  pi x\ var_name x X,
+  (
+  term_to_latex x X => (
+  term_to_latex A Astr, term_to_latex (T x) Tstr,
+  OutString is "\\ptslam{" ^ X ^ "}{" ^ Astr ^ "}{" ^ Tstr ^ "}"
+  )).
+term_to_latex (prod A (x\ T)) OutString :-
+  !,
+  term_to_latex A Astr, term_to_latex T Tstr,
+  OutString = "\\ptsnprod{" ^ Astr ^ "}{" ^ Tstr ^ "}".
+term_to_latex (prod A T) OutString :-
+  pi x\ var_name x X,
+  (
+  term_to_latex x X => (
+  term_to_latex A Astr, term_to_latex (T x) Tstr,
+  OutString = "\\ptsprod{" ^ X ^ "}{" ^ Astr ^ "}{" ^ Tstr ^ "}"
+  )).
+term_to_latex (app Term Cont) OutString :-
+  term_to_latex Term TermString,
+  cont_to_latex Cont ContString,
+  OutString = "\\ptsapp{" ^ TermString ^ "}{" ^ ContString ^ "}".
+term_to_latex (posbox Term) OutString :-
+  term_to_latex Term TermString,
+  OutString = "\\posbox{" ^ TermString ^ "}".
+term_to_latex (negbox Term) OutString :-
+  term_to_latex Term TermString,
+  OutString = "\\negbox{" ^ TermString ^ "}".
+cont_to_latex (kappa A T) OutString :-
+  pi x\ var_name x X,
+  (
+  term_to_latex x X => (
+  term_to_latex A Astr, term_to_latex (T x) Tstr,
+  OutString = "\\ptskappa{" ^ X ^ "}{" ^ Astr ^ "}{" ^ Tstr ^ "}"
+  )).
+cont_to_latex (A ` T) OutString :-
+  term_to_latex A Astr, cont_to_latex T Tstr,
+  OutString = "\\ptscons{" ^ Astr ^ "}{" ^ Tstr ^ "}".
+cont_to_latex # "\\ptsnil".
+
+% type ctx_to_string list (pair string string) -> string -> prop.
+% ctx_to_string [] "".
+% ctx_to_string [pr Var Ty | R] S :- ctx_to_string R S', S is Var ^ ":" ^ Ty ^ ", " ^ S'.
+
+% proof_to_latex Ctx (fun A Term) (prod A B) OutString :-
+%   ctx_to_string Ctx CtxStr,
+%   pi x\ var_name x X 
+%   proof_to_latex
+%   prodR_jc Cert Sort SortCert Cert',
+%   % print "\nEnter Well-sorted product",
+%   asyncr SortCert (prod A B) (str (sort (n Sort))),
+%   % print "Exit Well-sorted product\n",
+%   asyncl Cert' [A] T (x\ unk (B x)).
+
+%   OutString = "\\infer[Pr]{\\ptsseq s{" ^ CtxStr ^ "}{" ^ "\\ptsprod{}{}{}" ^ "}{}{}{}}{" ^ SortString ^ "\\quad" ^ String1 ^ "\\quad" ^ String2 ^ "}".
