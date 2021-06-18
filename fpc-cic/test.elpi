@@ -4,43 +4,180 @@ accumulate certificates/dd.
 accumulate latex_tools.
 accumulate certificates/pairing.
 
-type pr s. % sort prop
-type ty s. % sort type
-% All sorts are negative. Old method!!
-% sortn pn.
-% sortp pp.
-% sortn t.
-% Prop is a type, and the only product is ->
-axiom pr ty.
-rel pr pr pr.
-
 type loop prop -> prop.
 loop G :- G, fail.
 loop _G.
 
-main :-
-  pi a\
-  store dd_index a (sort (p pr)) => 
-  term_to_latex a "a" =>
+% type pr s. % sort prop
+% type ty s. % sort type
+
+%% The example-printing loop. Takes decide-depth bound, context, goal, prints
+%% all possible solutions as a LaTeX itemize list
+type build_clause (pair term term) -> prop -> prop.
+build_clause (pr A B) (store dd_index A B).
+type exampleLoop int -> list (pair term term) -> term -> prop.
+:if "DEBUG" exampleLoop Int Ctx Goal :-
+!, print "Attempting" Goal "\n", std.map Ctx build_clause StoreCtx,
+  StoreCtx => loop (sigma Term\ asyncr (dd Int) Term (str Goal), print "Found" Term "\n").
+
+exampleLoop Int Ctx Goal :-
+  std.map Ctx build_clause StoreCtx,
+  StoreCtx =>
   (
-    sigma Term\
-  % asyncr (dd 1) (app [a]) (str (sort p)),
-  % print "Pass 1",
-  % % Identity
-  % asyncr (dd 3) (fun _N (app [a]) (x\ negbox (app [x]))) (unk (prod _N (app [a]) (x\ app [a]))),
-  % print "Pass 2",
-   loop (
-  % % Naturals
-  % asyncr (dd 6) Term (unk (prod _N (app [a]) (x\ (prod _ (prod _ (app [a]) (x\ app [a])) (x\ app [a]))))),
-  % % Shared naturals
-  % asyncr (pairing (dd 4) (latex (async [pr "a" (ptssort "Prop")] [] T (ptsprod "x" "a" (ptsprod "y" (ptsprod "z" "a" "a") "a")) hole) Str)) Term
-  %        %(fun _ (app [a]) c1\ fun _ (prod _ (app [a]) y\ app [a]) c2\ negbox (app [c2, c1| kappa _ (app [a]) (x\ posbox x)]))
-  %        (unk (prod _ (app [a]) (x\ (prod _ (prod _ (app [a]) (x\ app [a])) (x\ app [a]))))),
-  asyncr (dd 3) Term
-         %(fun _ (app [a]) c1\ fun _ (prod _ (app [a]) y\ app [a]) c2\ negbox (app [c2, c1| kappa _ (app [a]) (x\ posbox x)]))
-         (unk (prod (app a #) (x\ (prod (prod (app a #) (x\ app a #)) (x\ app a #))))),
-  % print "Built " Term "\n"
-  term_to_latex Term TTex,
-  print "Built $" TTex "$\n"
-   )
-  ).
+  print "\\begin{itemize}",
+  loop
+   (
+     sigma Term\
+       asyncr (dd Int) Term (unk Goal),
+       term_to_latex Term String,
+       OutStr is String,
+       print "\\item $" OutStr "$"
+   )),
+  print "\\end{itemize}".
+
+:if "DEBUG" main :- !,
+  pi prop\ pi ty\       % Sort Prop and Sort Type
+    axiom prop ty =>    % Prop is a Type
+    rel prop prop prop  =>
+    rel ty prop prop  =>
+    rel prop ty ty  =>
+    sort_name prop "Prop" => sort_name ty "Type" => sigma Ty1\ sigma Ty2\ sigma Term\
+    asyncr (dd 5) (prod (sort (n prop)) (a\ app (prod (app a #) (x\ app a #)) (kappa Ty1 Ty2))) (unk (sort (n prop))).
+    % asyncr (dd 5) Term (unk (prod (sort (n prop)) (a\ app (prod (app a #) (x\ app a #)) (kappa Ty (i\ (prod (app a #) (x\ prod i (y\ app a #) ))))))).
+% (prod (sort (n prop)) (a\ app a #))
+% pi prop\ pi ty\
+% axiom prop ty =>
+% rel prop prop prop =>
+% rel ty prop prop => pi a\ pi x\ term_to_latex a "a" => term_to_latex x "x" => store dd_index a (sort (n prop)) => store dd_index x (app a #) => asyncr (dd 5) T (unk (posbox a)).
+%   asyncr (dd 3) Term
+%          %(fun _ (app [a]) c1\ fun _ (prod _ (app [a]) y\ app [a]) c2\ negbox (app [c2, c1| kappa _ (app [a]) (x\ posbox x)]))
+%          (unk (prod (app a #) (x\ (prod (prod (app a #) (x\ app a #)) (x\ app a #))))),
+main :- 
+print "\\documentclass{scrartcl}
+\\usepackage{proofsystem_macros}
+\\title{Some examples terms}
+\\begin{document}",
+loop (example X_),
+print "\\end{document}".
+
+%% The examples are below
+type example string -> prop.
+example "NegativeSimpleProps" :-
+  print "First example: given a context containing only a negative prop $a$,
+  build all possible negative propositions with decide-depth 2\n",
+  pi prop\ pi ty\       % Sort Prop and Sort Type
+    axiom prop ty =>    % Prop is a Type
+    rel prop prop prop =>   % Only non-dependent product between prop
+    pi a\ term_to_latex a "a" => sort_name prop "Prop" => sort_name ty "Type" => 
+      exampleLoop 2 [pr a (sort (n prop))] (sort (n prop)). %% Given "a" positive, build all negative propositions 
+example "NegativeSimpleProps'" :-
+  print "Second example: given a context containing only a positive prop $a$,
+  build all possible negative propositions with decide-depth 2. The polarity of $a$ shouldn't change things.\n",
+  pi prop\ pi ty\       % Sort Prop and Sort Type
+    axiom prop ty =>    % Prop is a Type
+    rel prop prop prop =>   % Only non-dependent product between prop
+    pi a\ term_to_latex a "a" => sort_name prop "Prop" => sort_name ty "Type" => 
+      exampleLoop 2 [pr a (sort (p prop))] (sort (n prop)). %% Given "a" positive, build all negative propositions 
+example "PositiveSimpleProps'" :-
+  print "Third example: given a context containing only a positive prop $a$,
+  build all possible positive propositions with decide-depth 2. The polarity of $a$ shouldn't change things.\n",
+  pi prop\ pi ty\       % Sort Prop and Sort Type
+    axiom prop ty =>    % Prop is a Type
+    rel prop prop prop =>   % Only non-dependent product between prop
+    pi a\ term_to_latex a "a" => sort_name prop "Prop" => sort_name ty "Type" => 
+      exampleLoop 2 [pr a (sort (p prop))] (sort (p prop)).
+example "IdentityPosPropNegType" :-
+  print "Fourth example: given a context containing only a positive prop $a$,
+  build all possible terms typable with the identity, where the formula
+  well-formedness is checked with negative bias, with decide-depth 3.\n",
+  pi prop\ pi ty\       % Sort Prop and Sort Type
+    axiom prop ty =>    % Prop is a Type
+    rel prop prop prop =>   % Only non-dependent product between prop
+    pi a\ term_to_latex a "a" => sort_name prop "Prop" => sort_name ty "Type" => 
+      exampleLoop 3 [pr a (sort (n prop))] (prod (app a #) (x\ app a #)).
+example "IdentityPosPropPosType" :-
+  print "Fifth example: given a context containing only a positive prop $a$,
+  build all possible terms typable with the identity, where the formula
+  well-formedness is checked with positive bias, with decide-depth 3.\n",
+  pi prop\ pi ty\       % Sort Prop and Sort Type
+    axiom prop ty =>    % Prop is a Type
+    rel prop prop prop =>   % Only non-dependent product between prop
+    pi a\ term_to_latex a "a" => sort_name prop "Prop" => sort_name ty "Type" => 
+      exampleLoop 3 [pr a (sort (n prop))] (prod (posbox a) (x\ posbox a)).
+
+example "NegNaturalsNegType" :-
+  print "Sixth example: given a context containing only a negative prop $a$,
+  build all possible terms typable with Church naturals, where the formula
+  well-formedness is checked with negative bias, with decide-depth 4.\n",
+  pi prop\ pi ty\       % Sort Prop and Sort Type
+    axiom prop ty =>    % Prop is a Type
+    rel prop prop prop =>   % Only non-dependent product between prop
+    pi a\ term_to_latex a "a" => sort_name prop "Prop" => sort_name ty "Type" => 
+      exampleLoop 4 [pr a (sort (n prop))] (prod (app a #) (x\ prod (prod (app a #) (x\ app a #)) (x\ app a #))).
+example "PosNaturalsNegType" :-
+  print "Seventh example: given a context containing only a positive prop $a$,
+  build all possible terms typable with Church naturals, where the formula
+  well-formedness is checked with negative bias, with decide-depth 4.\n",
+  pi prop\ pi ty\       % Sort Prop and Sort Type
+    axiom prop ty =>    % Prop is a Type
+    rel prop prop prop =>   % Only non-dependent product between prop
+    pi a\ term_to_latex a "a" => sort_name prop "Prop" => sort_name ty "Type" => 
+      exampleLoop 4 [pr a (sort (p prop))] (prod (app a #) (x\ prod (prod (app a #) (x\ app a #)) (x\ app a #))).
+example "PosNaturalsNegType" :-
+  print "Eight example: given a context containing only a negative prop $a$,
+  build all possible terms typable with Church naturals, where the formula
+  well-formedness is checked with positive bias, with decide-depth 4.\n",
+  pi prop\ pi ty\       % Sort Prop and Sort Type
+    axiom prop ty =>    % Prop is a Type
+    rel prop prop prop =>   % Only non-dependent product between prop
+    pi a\ term_to_latex a "a" => sort_name prop "Prop" => sort_name ty "Type" => 
+      exampleLoop 4 [pr a (sort (n prop))] (prod (posbox a) (x\ prod (prod (posbox a) (x\ posbox a)) (x\ posbox a))).
+
+example "NegativeLFTypes" :-
+  print "Ninth example: given an empty context,
+  build all possible negative LF propositions with decide-depth 3.\n",
+  pi prop\ pi ty\       % Sort Prop and Sort Type
+    axiom prop ty =>    % Prop is a Type
+    rel prop prop prop =>   % Non-dependent product between prop
+    rel ty prop prop =>   %  Props depending on terms
+    sort_name prop "Prop" => sort_name ty "Type" => 
+    exampleLoop 3 [] (sort (n prop)).
+
+example "LFNaturals" :-
+  print "Tenth example: Church naturals in LF; negative atom, traditional type syntax",
+  pi prop\ pi ty\       % Sort Prop and Sort Type
+    axiom prop ty =>    % Prop is a Type
+    rel prop prop prop =>   % Non-dependent product between prop
+    rel ty prop prop =>   %  Props depending on terms
+    sort_name prop "Prop" => sort_name ty "Type" => 
+    exampleLoop 5 [] (prod (sort (n prop)) (a\ (prod (app a #) (x\ prod (prod (app a #) (x\ app a #)) (x\ app a #))))).
+example "LFNaturalsSharedType" :-
+  print "Tenth example: Church naturals in LF; negative atom, shared type syntax",
+  pi prop\ pi ty\       % Sort Prop and Sort Type
+    axiom prop ty =>    % Prop is a Type
+    rel prop prop prop =>   % Non-dependent product between prop
+    rel ty prop prop =>   %  Props depending on terms
+    sort_name prop "Prop" => sort_name ty "Type" => sigma Ty\
+    exampleLoop 5 [] (prod (sort (n prop)) (a\ app (prod (app a #) (x\ app a #)) (kappa Ty (i\ (prod (app a #) (x\ prod i (y\ app a #) )))))).
+
+% example "NegativeSystemF" :-
+%   print "Sixth example: given a context containing only a negative prop $a$,
+%   build all possible negative System F propositions with decide-depth 2.\n",
+%   pi prop\ pi ty\       % Sort Prop and Sort Type
+%     axiom prop ty =>    % Prop is a Type
+%     rel prop prop prop =>   % Non-dependent product between prop
+%     rel ty prop prop =>   %  Props depending on terms
+%     rel prop ty ty =>   %  Props depending on terms
+%     pi a\ term_to_latex a "a" =>
+%       exampleLoop 2 [pr a (sort (p prop))] (sort (n prop)).
+
+% example "IdentitySystemF" :-
+%   print "Seventh example: given a context containing only a negative prop $a$,
+%   build all possible System F terms of type $\\ptsapp{a}{\\ptsnil}$ with decide-depth 5.\n",
+%   pi prop\ pi ty\       % Sort Prop and Sort Type
+%     axiom prop ty =>    % Prop is a Type
+%     rel prop prop prop =>   % Non-dependent product between prop
+%     rel ty prop prop =>   %  Props depending on terms
+%     pi a\ term_to_latex a "a" =>
+%       exampleLoop 5 [pr a (sort (n prop))] (prod (app a #) (x\ app a #)). %% Given "a" positive, build all negative propositions 
+
