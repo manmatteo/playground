@@ -2,21 +2,22 @@ type proof_to_latex list (pair term term) -> term -> term -> string -> prop.
 type term_to_latex  term -> string -> prop.
 type cont_to_latex  continuation -> string -> prop.
 type var_name       term -> string -> prop.
+type sort_name      s -> string -> prop.
 
 var_name Var OutString :-
-  std.any->string Var OutString.
+  std.any->string Var Tmp,
+  OutString = "x_" ^ (substring Tmp 1 1).
   % trace.counter "run" NR,
   % std.any->string NR NRString,
   % OutString = "x" ^ "_" ^ NRString.
 
-% type fun   term -> (term -> term) -> term.
-% type prod  term -> (term -> term) -> term.
-% type kappa term -> (term -> term) -> continuation.
-% type app   continuation -> term.
-% type posbox term -> term.
-% type negbox term -> term.
 :if "DEBUG_LATEX" term_to_latex T Str :- print "term_to_latex" T Str, fail.
 :if "DEBUG_LATEX" cont_to_latex T Str :- print "cont_to_latex" T Str, fail.
+
+term_to_latex (sort (n S)) OutString :-
+  sort_name S SortString, OutString is SortString ^ "^-".
+term_to_latex (sort (p S)) OutString :-
+  sort_name S SortString, OutString is SortString ^ "^+".
 
 term_to_latex (fun A T) OutString :-
   pi x\ var_name x X,
