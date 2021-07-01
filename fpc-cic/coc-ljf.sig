@@ -21,8 +21,8 @@ type n s -> ps.
 type sort ps -> term.
 type pol   s -> ps -> prop.
 type unpol ps -> s -> prop.
-type axiom s -> s -> prop.
-type rel s -> s -> s -> prop.
+type axiom ps -> ps -> prop.
+type rel ps -> ps -> ps -> prop.
 
 type beta  term -> term -> prop.
 
