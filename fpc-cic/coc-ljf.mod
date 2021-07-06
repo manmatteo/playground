@@ -13,14 +13,24 @@ pol X (n X).
 
 %% prod
 % Pr
-asyncr Cert (fun A T) (unk (prod A B)) :-
+% asyncr Cert (fun A T) (unk (prod A B)) :-
+%   prodR_jc Cert Sort SortCert Cert',
+%   asyncr SortCert (prod A B) (unk (sort (n Sort))),
+%   asyncl Cert' [A] T (x\ unk (B x)).
+asyncr Cert (app (fun A T) TCont) (unk (app (prod A B) Cont)) :-
   prodR_jc Cert Sort SortCert Cert',
-  asyncr SortCert (prod A B) (unk (sort (n Sort))),
-  asyncl Cert' [A] T (x\ unk (B x)).
+  asyncr SortCert (app (prod A B) Cont) (unk (sort (n Sort))),
+  asyncl Cert' [A] T (x\ unk (B x)),
+  syncl Cert' 
 % Pl
-syncl Cert (prod A B) (P ` L) R :-
+% syncl Cert (prod A B) (P ` L) R :-
+%   prodL_je Cert Sort SortCert Cert1 Cert2,
+%   asyncr   SortCert (prod A B) (unk (sort (n Sort))),
+%   syncr    Cert1 P A,
+%   syncl    (Cert2 Cert1) (B P) L R.
+syncl Cert (app (prod A B) #) (P ` L) R :-
   prodL_je Cert Sort SortCert Cert1 Cert2,
-  asyncr   SortCert (prod A B) (unk (sort (n Sort))),
+  asyncr   SortCert (app (prod A B) #) (unk (sort (n Sort))),
   syncr    Cert1 P A,
   syncl    (Cert2 Cert1) (B P) L R.
 
