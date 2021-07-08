@@ -7,16 +7,16 @@
 % passed on. Thus, it only has the sort information as output.
 
 %%%%%%%%%%%%%%%% In    % Sort and SCert (O) % Output
-type prodL_je    cert -> s -> cert -> cert -> (cert -> cert) -> prop.
-type prodR_jc    cert -> s -> cert         -> (cert -> cert) -> prop.
-type releaseL_je cert -> s -> cert         -> (cert -> cert) -> prop.
-type releaseR_je cert -> s -> cert                   -> cert -> prop.
-type decideL_jc  cert -> s -> cert          -> cert -> index -> prop.
-type decideR_jc  cert -> s -> cert                   -> cert -> prop.
-type storeR_jc   cert                                -> cert -> prop.
-type axiomL_je   cert -> s -> cert                           -> prop.
-type axiomR_je   cert -> s -> cert                  -> index -> prop.
-type prodsort_jc cert -> ps -> cert -> ps -> (cert -> cert)  -> prop.
-type sorted_jc   cert                                        -> prop.
+type prodL_je    cert -> s -> cert -> (cert -> cert) -> prop.
+type prodR_jc    cert -> s ->         (cert -> cert) -> prop.
+type releaseL_je cert -> s ->         (cert -> cert) -> prop.
+type releaseR_je cert -> s ->                   cert -> prop.
+type decideL_jc  cert -> s ->          cert -> index -> prop.
+type decideR_jc  cert -> s ->                   cert -> prop.
+type storeR_jc   cert                        -> cert -> prop.
+type axiomL_je   cert -> s ->                           prop.
+type axiomR_je   cert -> s ->                  index -> prop.
+type prodsort_jc cert -> ps -> ps -> (cert -> cert)  -> prop.
+type sorted_jc   cert                                -> prop.
 %%%%%%%%%%%%%%%% Inputs                              % Sort and SortCert
-type storeL_jc   (cert -> cert) -> (index -> index) -> s -> cert -> prop.
+type storeL_jc   (cert -> cert) -> (cert -> index) ->  prop.
