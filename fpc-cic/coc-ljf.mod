@@ -17,20 +17,19 @@ pol X (n X).
 %   prodR_jc Cert Sort SortCert Cert',
 %   asyncr SortCert (prod A B) (unk (sort (n Sort))),
 %   asyncl Cert' [A] T (x\ unk (B x)).
-asyncr Cert (app (fun A T) TCont) (unk (app (prod A B) Cont)) :-
+asyncr Cert (fun A T) (unk (prod A B)) :-
   prodR_jc Cert Sort SortCert Cert',
-  asyncr SortCert (app (prod A B) Cont) (unk (sort (n Sort))),
-  asyncl Cert' [A] T (x\ unk (B x)),
-  syncl Cert' 
+  asyncr SortCert (prod A B) (unk (sort (n Sort))),
+  asyncl Cert' [A] T (x\ unk (B x)).
 % Pl
 % syncl Cert (prod A B) (P ` L) R :-
 %   prodL_je Cert Sort SortCert Cert1 Cert2,
 %   asyncr   SortCert (prod A B) (unk (sort (n Sort))),
 %   syncr    Cert1 P A,
 %   syncl    (Cert2 Cert1) (B P) L R.
-syncl Cert (app (prod A B) #) (P ` L) R :-
+syncl Cert (prod A B) (P ` L) R :-
   prodL_je Cert Sort SortCert Cert1 Cert2,
-  asyncr   SortCert (app (prod A B) #) (unk (sort (n Sort))),
+  asyncr   SortCert (prod A B) (unk (sort (n Sort))),
   syncr    Cert1 P A,
   syncl    (Cert2 Cert1) (B P) L R.
 
@@ -43,15 +42,16 @@ syncl Cert (app (prod A B) #) (P ` L) R :-
 % New sorting rule
 
 % Works fine, but what if I want to start from asyncr?
+% Cuts at the end of these axioms: otherwise there's some wild nondeterminism with the usual axiom rule.
 syncl Cert (sort X) # (sort X) :-
   sorted_jc Cert, % TODO fix
   % unpol X X', % Here I actually want to check whether X is sorted by a positive sort!! This is an argument in favour of having axioms for polarized sorts
-  axiom X _Y. % Molto TODO
+  axiom X _Y,!. % Molto TODO
 
 syncr Cert (sort X) (sort Y) :-
   sorted_jc Cert,
   % unpol X X', unpol Y Y',
-  axiom X Y.
+  axiom X Y,!.
 % asyncr Cert (sort X) (unk (sort Y)) :-
 %   sorted_jc Cert,
 %   axiom X Y.
@@ -63,13 +63,13 @@ syncr Cert (sort X) (sort Y) :-
 %   asyncr Cert1 A (unk (sort S1)),
 %   asyncl Cert2 [A] B (x\ unk (sort S2)).
 
-asyncr Cert (app (prod A B) Cont) (str (sort (n S3))) :- % Store è gratis: tanto vale assumere che sia fatto
+asyncr Cert (prod A B) (str (sort (n S3))) :- % Store è gratis: tanto vale assumere che sia fatto
   prodsort_jc Cert S1 Cert1 S2 _Cert2,
   rel S1 S2 (n S3),
   % pol S1' S1, pol S2' S2,
   syncr Cert1 A (sort S1),
-  pi x\ pi index\ store index x A => (syncr Cert1 (B x) (sort S2)),
-  syncl Cert1 (sort (n S3)) Cont (sort (n S3)). % TODO Fix certificate
+  pi x\ pi index\ store index x A => (syncr Cert1 (B x) (sort S2)).
+  % syncl Cert1 (sort (n S3)) Cont (sort (n S3)). % TODO Fix certificate
 
 %% ax
 syncl Cert N # N :-

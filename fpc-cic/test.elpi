@@ -52,7 +52,12 @@ exampleAll AxRels PP_Hints Int Ctx Goal :-
   print "\\end{itemize}".
 
 :if "DEBUG:main" main :- !,
-  example "IdentityAllNeg".
+pi prop\ pi ty\ pi a\
+axiom (n prop) (n ty) => rel (n prop) (n prop) (n prop) =>
+store dd_index a (sort (n prop)) =>
+sigma Term\
+loop (asyncr (dd 3) (app a #) (unk (sort (n prop))), print "done"),
+print Term.
   % pi prop\ pi ty\ pi a\
   %   axiom (n prop) (p ty) => store dd_index a (sort (n prop)) => term_to_latex a "a" =>
   %   rel (n prop) (n prop) (n prop) =>
@@ -71,10 +76,10 @@ print "\\end{document}".
 type example string -> prop.
 example "AllNeg" :-
 pi prop\ pi ty\ pi a\ exampleAll [axiom (n prop) (n ty), rel (n prop) (n prop) (n prop)] [term_to_latex a "a", sort_name prop "Prop", sort_name ty "Type"] 
-      2 [pr a (sort (n prop))] (sort (n prop)).
+      3 [pr a (sort (n prop))] (sort (n prop)).
 example "AllNegPosTy" :-
 pi prop\ pi ty\ pi a\ exampleAll [axiom (n prop) (p ty), rel (n prop) (n prop) (n prop)] [term_to_latex a "a", sort_name prop "Prop", sort_name ty "Type"] 
-      3 [pr a (sort (n prop))] (sort (n prop)).
+      5 [pr a (sort (n prop))] (sort (n prop)).
 example "PosTyPosANegGoal" :-
 pi prop\ pi ty\ pi a\ exampleAll [axiom (p prop) (p ty), axiom (n prop) (p ty), rel (p prop) (p prop) (n prop)] [term_to_latex a "a", sort_name prop "Prop", sort_name ty "Type"] 
       3 [pr a (sort (p prop))] (sort (n prop)).
@@ -83,7 +88,7 @@ pi prop\ pi ty\ pi a\ exampleAll [axiom (p prop) (p ty), axiom (n prop) (p ty), 
       3 [pr a (sort (p prop))] (sort (p prop)).
 example "IdentityAllNeg" :-
 pi prop\ pi ty\ pi a\ exampleAll [axiom (n prop) (n ty), rel (n prop) (n prop) (n prop)] [term_to_latex a "a", sort_name prop "Prop", sort_name ty "Type"] 
-      3 [pr a (sort (n prop))] (app (prod (negbox (app a #)) (x\ negbox (app a #))) #).
+      3 [pr a (sort (n prop))] (prod (negbox (app a #)) (x\ negbox (app a #))).
 % example "IdentityPosPropNegType" :-
 %   print "Fourth example: given a context containing only a positive prop $a$,
 %   build all possible terms typable with the identity, where the formula
