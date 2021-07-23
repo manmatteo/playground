@@ -7,7 +7,7 @@ infix ` 120.
 
 kind term type.
 type fun   term -> (term -> term) -> term.
-type prod  term -> (term -> term) -> term.
+type prod  term -> (term -> term) -> continuation -> term.
 type kappa term -> (term -> term) -> continuation.
 type app   term -> continuation -> term.
 type posbox term -> term.

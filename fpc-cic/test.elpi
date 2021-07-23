@@ -3,6 +3,7 @@ accumulate certificates/dd.
 % accumulate certificates/latex.
 accumulate latex_tools.
 accumulate certificates/pairing.
+accumulate certificates/interactive.
 
 %% Helper predicates
 type loop prop -> prop.
@@ -52,17 +53,12 @@ exampleAll AxRels PP_Hints Int Ctx Goal :-
   print "\\end{itemize}".
 
 :if "DEBUG:main" main :- !,
-pi prop\ pi ty\ pi a\
-axiom (n prop) (n ty) => rel (n prop) (n prop) (n prop) =>
-store dd_index a (sort (n prop)) =>
-sigma Term\
-loop (asyncr (dd 3) (app a #) (unk (sort (n prop))), print "done"),
-print Term.
-  % pi prop\ pi ty\ pi a\
-  %   axiom (n prop) (p ty) => store dd_index a (sort (n prop)) => term_to_latex a "a" =>
-  %   rel (n prop) (n prop) (n prop) =>
-  %   sort_name prop "Prop" => sort_name ty "Type" => % sigma Term\ sigma Cont\ sigma Boh\
-  %   asyncr (dd 3) (app a #) (unk (sort (n prop))).
+pi prop\ pi ty\ pi o\
+axiom (n prop) (p ty) => rel (n prop) (n prop) (n prop) =>
+store dd_index o (sort (n prop)) =>
+loop (sigma Ty\ sigma Ty2\ asyncr (dd 5) Ty (unk (sort (n prop))),
+print Ty).
+
 :if "DEBUG:exall" main :- loop (example X_).
 main :- 
 print "\\documentclass{scrartcl}
@@ -79,7 +75,7 @@ pi prop\ pi ty\ pi a\ exampleAll [axiom (n prop) (n ty), rel (n prop) (n prop) (
       3 [pr a (sort (n prop))] (sort (n prop)).
 example "AllNegPosTy" :-
 pi prop\ pi ty\ pi a\ exampleAll [axiom (n prop) (p ty), rel (n prop) (n prop) (n prop)] [term_to_latex a "a", sort_name prop "Prop", sort_name ty "Type"] 
-      5 [pr a (sort (n prop))] (sort (n prop)).
+      3 [pr a (sort (n prop))] (sort (n prop)).
 example "PosTyPosANegGoal" :-
 pi prop\ pi ty\ pi a\ exampleAll [axiom (p prop) (p ty), axiom (n prop) (p ty), rel (p prop) (p prop) (n prop)] [term_to_latex a "a", sort_name prop "Prop", sort_name ty "Type"] 
       3 [pr a (sort (p prop))] (sort (n prop)).
@@ -88,35 +84,13 @@ pi prop\ pi ty\ pi a\ exampleAll [axiom (p prop) (p ty), axiom (n prop) (p ty), 
       3 [pr a (sort (p prop))] (sort (p prop)).
 example "IdentityAllNeg" :-
 pi prop\ pi ty\ pi a\ exampleAll [axiom (n prop) (n ty), rel (n prop) (n prop) (n prop)] [term_to_latex a "a", sort_name prop "Prop", sort_name ty "Type"] 
-      3 [pr a (sort (n prop))] (prod (negbox (app a #)) (x\ negbox (app a #))).
-% example "IdentityPosPropNegType" :-
-%   print "Fourth example: given a context containing only a positive prop $a$,
-%   build all possible terms typable with the identity, where the formula
-%   well-formedness is checked with negative bias, with decide-depth 3.\n",
-%   pi prop\ pi ty\       % Sort Prop and Sort Type
-%     axiom prop ty =>    % Prop is a Type
-%     rel prop prop prop =>   % Only non-dependent product between prop
-%     pi a\ term_to_latex a "a" => sort_name prop "Prop" => sort_name ty "Type" => 
-%       exampleLoop 3 [pr a (sort (n prop))] (prod (app a #) (x\ app a #)).
-% example "IdentityPosPropPosType" :-
-%   print "Fifth example: given a context containing only a positive prop $a$,
-%   build all possible terms typable with the identity, where the formula
-%   well-formedness is checked with positive bias, with decide-depth 3.\n",
-%   pi prop\ pi ty\       % Sort Prop and Sort Type
-%     axiom prop ty =>    % Prop is a Type
-%     rel prop prop prop =>   % Only non-dependent product between prop
-%     pi a\ term_to_latex a "a" => sort_name prop "Prop" => sort_name ty "Type" => 
-%       exampleLoop 3 [pr a (sort (n prop))] (prod (posbox a) (x\ posbox a)).
-
-% example "NegNaturalsNegType" :-
-%   print "Sixth example: given a context containing only a negative prop $a$,
-%   build all possible terms typable with Church naturals, where the formula
-%   well-formedness is checked with negative bias, with decide-depth 4.\n",
-%   pi prop\ pi ty\       % Sort Prop and Sort Type
-%     axiom prop ty =>    % Prop is a Type
-%     rel prop prop prop =>   % Only non-dependent product between prop
-%     pi a\ term_to_latex a "a" => sort_name prop "Prop" => sort_name ty "Type" => 
-%       exampleLoop 4 [pr a (sort (n prop))] (prod (app a #) (x\ prod (prod (app a #) (x\ app a #)) (x\ app a #))).
+      3 [pr a (sort (n prop))] (prod (negbox (app a #)) (x\ negbox (app a #)) #).
+example "IdentityAllPos" :-
+pi prop\ pi ty\ pi a\ exampleAll [axiom (p prop) (n ty), rel (p prop) (p prop) (n prop)] [term_to_latex a "a", sort_name prop "Prop", sort_name ty "Type"] 
+      3 [pr a (sort (p prop))] (prod (negbox (app a #)) (x\ negbox (app a #)) #).
+example "NegNaturalsNegType" :-
+pi prop\ pi ty\ pi o\ exampleAll [axiom (n prop) (n ty), rel (n prop) (n prop) (n prop)] [term_to_latex o "o", sort_name prop "Prop", sort_name ty "Type"]
+      3 [pr o (sort (n prop))] (prod (negbox (app o #)) (x\ negbox (prod (negbox (prod (negbox (app o #)) (x\ negbox (app o #)) #)) (x\ negbox (app o #)) #)) #).
 % example "PosNaturalsNegType" :-
 %   print "Seventh example: given a context containing only a positive prop $a$,
 %   build all possible terms typable with Church naturals, where the formula
@@ -183,24 +157,3 @@ pi prop\ pi ty\ pi a\ exampleAll [axiom (n prop) (n ty), rel (n prop) (n prop) (
 % %     rel ty prop prop =>   %  Props depending on terms
 % %     pi a\ term_to_latex a "a" =>
 % %       exampleLoop 5 [pr a (sort (n prop))] (prod (app a #) (x\ app a #)). %% Given "a" positive, build all negative propositions 
-
-%% Old example loop code
-% type exampleLoop int -> list (pair term term) -> term -> prop.
-% :if "DEBUG" exampleLoop Int Ctx Goal :-
-% !, print "Attempting" Goal "\n", std.map Ctx build_clause StoreCtx,
-  % StoreCtx => loop (sigma Term\ asyncr (dd Int) Term (str Goal), print "Found" Term "\n").
-
-% exampleLoop Int Ctx Goal :-
-  % std.map Ctx build_clause StoreCtx,
-  % StoreCtx =>
-  % (
-  % print "\\begin{itemize}",
-  % loop
-  %  (
-    %  sigma Term\
-      %  asyncr (dd Int) Term (unk Goal),
-      %  term_to_latex Term String,
-      %  OutStr is String,
-      %  print "\\item $" OutStr "$"
-  %  )),
-  % print "\\end{itemize}".

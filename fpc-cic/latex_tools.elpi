@@ -26,16 +26,16 @@ term_to_latex (fun A T) OutString :-
   term_to_latex A Astr, term_to_latex (T x) Tstr,
   OutString is "\\ptslam{" ^ X ^ "}{" ^ Astr ^ "}{" ^ Tstr ^ "}"
   )).
-term_to_latex (prod A (x\ T)) OutString :-
+term_to_latex (prod A (x\ T) Cont) OutString :-
   !,
-  term_to_latex A Astr, term_to_latex T Tstr,
-  OutString = "\\ptsnprod{" ^ Astr ^ "}{" ^ Tstr ^ "}".
-term_to_latex (prod A T) OutString :-
+  term_to_latex A Astr, term_to_latex T Tstr, cont_to_latex Cont ContString,
+  OutString = "\\ptsnprodk{" ^ Astr ^ "}{" ^ Tstr ^ "}{" ^ ContString ^ "}".
+term_to_latex (prod A T Cont) OutString :-
   pi x\ var_name x X,
   (
   term_to_latex x X => (
-  term_to_latex A Astr, term_to_latex (T x) Tstr,
-  OutString = "\\ptsprod{" ^ X ^ "}{" ^ Astr ^ "}{" ^ Tstr ^ "}"
+  term_to_latex A Astr, term_to_latex (T x) Tstr, cont_to_latex Cont ContString,
+  OutString = "\\ptsprodk{" ^ X ^ "}{" ^ Astr ^ "}{" ^ Tstr ^ "}{" ^ ContString ^ "}"
   )).
 term_to_latex (app Term Cont) OutString :-
   term_to_latex Term TermString,
