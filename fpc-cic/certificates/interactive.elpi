@@ -1,0 +1,17 @@
+type nidx int -> index.
+type token cert.
+kind answer type.
+type y answer.
+
+prodL_je    token _Sort token token (x\ token)  :- print "prodL?", read y.
+prodR_jc    token _Sort token        (x\ token) :- print "prodR?", read y.
+releaseL_je token _Sort token        (x\ token) :- print "releaseL?", read y.
+releaseR_je token _Sort token        token      :- print "releaseR?", read y.
+decideL_jc  token _Sort token        token (nidx N) :- print "decideL? Index:", read N.
+decideR_jc  token _Sort token        token      :- print "decideR?", read y.
+storeR_jc   token                    token      :- print "storeR?", read y.
+axiomL_je   token _Sort token                   :- print "axiomL?", read y.
+axiomR_je   token _Sort token        (nidx N)   :- print "axiomR? Index:", read N.
+prodsort_jc token _Sort1 token _Sort2 (x\ token) :- print "prodsort?", read y.
+sorted_jc   token :- print "sorted?", read y.
+storeL_jc   (x\ token) (x\ nidx N) _Sort token :- print "storeL? Index:", read N.
