@@ -11,9 +11,42 @@ unpol (p X) X.
 pol X (p X).
 pol X (n X).
 
+% Names and maintenance
+asyncr Cert T (unk (negbox A)) :-
+  %% NOTE: If there's a negbox, then... There's no name?
+  asyncr Cert T (unk A).
+
+asyncr Cert T (unk (posbox N)) :-
+  % named N A, NOTE: If there's a posbox, then either there's a name or it's initial
+  asyncr Cert T (unk N).
+
+asyncr Cert (prod A B (kappa Ty T)) (unk (prod A B (kappa Ty C))) :-
+  pi w\ named w Ty (prod A B #) =>
+    % (print "---New name" w "for" (prod A B #),
+    asyncr Cert (T w) (unk (C w)).
+
+asyncr Cert T (unk N) :-
+  named N _Ty A,
+  % print "---Retrieved" A "at" N,
+  asyncr Cert T (unk A). 
+
+syncl Cert (negbox A) Cont G :-
+  syncl Cert A Cont G.
+
+%% These look more or less like hacks at this point
+syncr _Cert N Ty :-
+  named N Ty _Def.
+asyncr _Cert (prod A B Cont) (str Sort) :- 
+  named _N Sort (prod A B Cont).
+asyncr Cert (app Var L) (str R) :-
+  decideL_jc Cert Sort _SortCert Cert' Index,
+  store Index Var N,
+  named N (sort (n Sort)) Def,
+  syncl Cert' Def L R.
+
 %% prod
 % Pr
-asyncr Cert (fun A T) (unk (prod A B _Cont as Prod)) :-
+asyncr Cert (fun A T) (unk (prod A B # as Prod)) :-
   prodR_jc Cert Sort SortCert Cert',
   % print "---Check sort for prodR",
   asyncr SortCert Prod (unk (sort (n Sort))),
@@ -27,13 +60,15 @@ syncl Cert (prod A B _Cont as Prod) (P ` L) R :-
   syncl    (Cert2 Cert1) (B P) L R.
 
 % %% sort
-
 asyncr Cert (prod A B Cont) (str (sort (n S3))) :- % Store è gratis: tanto vale assumere che sia fatto
   prodsort_jc Cert S1 Cert1 S2 _Cert2,
   rel S1 S2 (n S3),
   % pol S1' S1, pol S2' S2,
+  % print "---one",
   syncr Cert1 A (sort S1),
-  pi x\ pi index\ store index x A => (syncr Cert1 (B x) (sort S2)),
+  % print "---one done; two",
+  pi x\ store _Index x A => (syncr Cert1 (B x) (sort S2)),
+  % print "---two done; three",
   % print "---Enter continuation",
   syncl Cert1 (sort (n S3)) Cont (sort (n S3)).
   % print "---Done continuation". % TODO Fix certificate
@@ -49,7 +84,6 @@ syncr Cert (sort X) (sort Y) :-
   % unpol X X', unpol Y Y',
   axiom X Y,!.
 
-
 %% ax
 syncl Cert N # N :-
   axiomL_je Cert Sort SortCert,
@@ -63,13 +97,9 @@ syncr Cert Var P :-
 % decide_l
 asyncr Cert (app Var L) (str R) :-
   decideL_jc Cert Sort SortCert Cert' Index,
-  % print "Enter decide...",
   store Index Var N,
-  % print "Select" N "at" Var,
   syncr SortCert N (sort (n Sort)),
-  % print "Decide on" Var "of" N,
   syncl Cert' N L R.
-  % print "Success decide".
 % decide_r
 asyncr Cert (posbox P) (str R) :-
   decideR_jc Cert Sort SortCert Cert',
@@ -85,18 +115,14 @@ asyncl Cert [N] T R :-
   pi w\ store (Index (#idx w)) w N => asyncr (Cert (#cert w)) (T w) (R w).
 %release_r
 syncr Cert (negbox T) N :-
-  % print "Enter release_r",
   releaseR_je Cert Sort SortCert Cert',
   syncr SortCert N (sort (n Sort)),
   asyncr Cert' T (unk N).
-  % print "Success release_r".
 %release_l
 syncl Cert P (kappa P T) A :-
-  % print "Enter release_l",
   releaseL_je Cert Sort SortCert Cert',
   syncr SortCert P (sort (p Sort)),
   asyncl Cert' [P] T (x\ str A).
-  % print "Success release_l".
 
 %% Placeholder. Currently unused in the kernel.
 beta X X.

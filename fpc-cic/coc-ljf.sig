@@ -28,6 +28,7 @@ type beta  term -> term -> prop.
 
 kind index type.
 type store index -> term -> term -> prop.
+type named term -> term -> term -> prop.
 
 type #idx  term -> index.
 type #cert term -> cert.

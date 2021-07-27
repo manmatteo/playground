@@ -86,55 +86,50 @@ print "\\end{document}".
 
 %% The examples are below
 type example string -> prop.
-example "AllNeg" :-
+example "NpropNtyNa_Nprop" :-
 pi prop\ pi ty\ pi a\ exampleAll [axiom (n prop) (n ty), rel (n prop) (n prop) (n prop)] [term_to_latex a "a", sort_name prop "Prop", sort_name ty "Type"] 
       3 [pr a (sort (n prop))] (sort (n prop)).
-example "AllNegPosTy" :-
+example "NpropPtyNa_Nprop" :-
 pi prop\ pi ty\ pi a\ exampleAll [axiom (n prop) (p ty), rel (n prop) (n prop) (n prop)] [term_to_latex a "a", sort_name prop "Prop", sort_name ty "Type"] 
       3 [pr a (sort (n prop))] (sort (n prop)).
-example "PosTyPosANegGoal" :-
+example "PpropPtyPa_Nprop" :-
 pi prop\ pi ty\ pi a\ exampleAll [axiom (p prop) (p ty), axiom (n prop) (p ty), rel (p prop) (p prop) (n prop)] [term_to_latex a "a", sort_name prop "Prop", sort_name ty "Type"] 
       3 [pr a (sort (p prop))] (sort (n prop)).
-example "PosTyPosAPosGoal" :-
+example "PpropPtyPa_Pprop" :-
 pi prop\ pi ty\ pi a\ exampleAll [axiom (p prop) (p ty), axiom (n prop) (p ty), rel (p prop) (p prop) (n prop)] [term_to_latex a "a", sort_name prop "Prop", sort_name ty "Type"] 
       3 [pr a (sort (p prop))] (sort (p prop)).
+example "PpropNtyPa_Nprop" :-
+pi prop\ pi ty\ pi a\ exampleAll [axiom (p prop) (n ty), axiom (n prop) (p ty), rel (p prop) (p prop) (n prop)] [term_to_latex a "a", sort_name prop "Prop", sort_name ty "Type"] 
+      3 [pr a (sort (p prop))] (sort (n prop)).
 example "IdentityAllNeg" :-
 pi prop\ pi ty\ pi a\ exampleAll [axiom (n prop) (n ty), rel (n prop) (n prop) (n prop)] [term_to_latex a "a", sort_name prop "Prop", sort_name ty "Type"] 
       3 [pr a (sort (n prop))] (prod (negbox (app a #)) (x\ negbox (app a #)) #).
 example "IdentityAllPos" :-
-pi prop\ pi ty\ pi a\ exampleAll [axiom (p prop) (n ty), rel (p prop) (p prop) (n prop)] [term_to_latex a "a", sort_name prop "Prop", sort_name ty "Type"] 
+pi prop\ pi ty\ pi a\ exampleAll [axiom (p prop) (n ty), axiom (n prop) (n ty), rel (p prop) (p prop) (n prop)] [term_to_latex a "a", sort_name prop "Prop", sort_name ty "Type"] 
       3 [pr a (sort (p prop))] (prod (negbox (app a #)) (x\ negbox (app a #)) #).
 example "NegNaturalsNegType" :-
 pi prop\ pi ty\ pi o\ exampleAll [axiom (n prop) (n ty), rel (n prop) (n prop) (n prop)] [term_to_latex o "o", sort_name prop "Prop", sort_name ty "Type"]
-      3 [pr o (sort (n prop))] (prod (negbox (app o #)) (x\ negbox (prod (negbox (prod (negbox (app o #)) (x\ negbox (app o #)) #)) (x\ negbox (app o #)) #)) #).
-% example "PosNaturalsNegType" :-
-%   print "Seventh example: given a context containing only a positive prop $a$,
-%   build all possible terms typable with Church naturals, where the formula
-%   well-formedness is checked with negative bias, with decide-depth 4.\n",
-%   pi prop\ pi ty\       % Sort Prop and Sort Type
-%     axiom prop ty =>    % Prop is a Type
-%     rel prop prop prop =>   % Only non-dependent product between prop
-%     pi a\ term_to_latex a "a" => sort_name prop "Prop" => sort_name ty "Type" => 
-%       exampleLoop 4 [pr a (sort (p prop))] (prod (app a #) (x\ prod (prod (app a #) (x\ app a #)) (x\ app a #))).
-% example "PosNaturalsNegType" :-
-%   print "Eight example: given a context containing only a negative prop $a$,
-%   build all possible terms typable with Church naturals, where the formula
-%   well-formedness is checked with positive bias, with decide-depth 4.\n",
-%   pi prop\ pi ty\       % Sort Prop and Sort Type
-%     axiom prop ty =>    % Prop is a Type
-%     rel prop prop prop =>   % Only non-dependent product between prop
-%     pi a\ term_to_latex a "a" => sort_name prop "Prop" => sort_name ty "Type" => 
-%       exampleLoop 4 [pr a (sort (n prop))] (prod (posbox a) (x\ prod (prod (posbox a) (x\ posbox a)) (x\ posbox a))).
-
-% example "NegativeLFTypes" :-
+      5 [pr o (sort (n prop))] (prod (negbox (app o #)) (x\ negbox (prod (negbox (prod (negbox (app o #)) (x\ negbox (app o #)) #)) (x\ negbox (app o #)) #)) #).
+example "PosNaturalsNegType" :-
+pi prop\ pi ty\ pi o\ exampleAll [axiom (n prop) (n ty), axiom (p prop) (n ty), rel (p prop) (n prop) (n prop), rel (n prop) (p prop) (n prop), rel (p prop) (p prop) (n prop), rel (n prop) (n prop) (n prop)] [term_to_latex o "o", sort_name prop "Prop", sort_name ty "Type"]
+      4 [pr o (sort (p prop))] (prod (negbox (app o #)) (x\ negbox (prod (negbox (prod (negbox (app o #)) (x\ negbox (app o #)) #)) (x\ negbox (app o #)) #)) #).
+example "NegNaturalsPosType" :-
+pi prop\ pi ty\ pi o\ exampleAll [axiom (n prop) (p ty), rel (n prop) (n prop) (n prop)] [term_to_latex o "o", sort_name prop "Prop", sort_name ty "Type"]
+      7 [pr o (sort (n prop))]
+      (prod o (_\o) (kappa (sort (n prop)) (x\ prod x (_\x) (kappa (sort (n prop)) (y\ posbox y))))).
+example "NegativeLFTypes" :-
 %   print "Ninth example: given an empty context,
 %   build all possible negative LF propositions with decide-depth 3.\n",
-%   pi prop\ pi ty\       % Sort Prop and Sort Type
-%     axiom prop ty =>    % Prop is a Type
-%     rel prop prop prop =>   % Non-dependent product between prop
-%     rel ty prop prop =>   %  Props depending on terms
-%     sort_name prop "Prop" => sort_name ty "Type" => 
-%     exampleLoop 3 [] (sort (n prop)).
+pi prop\ pi ty\ exampleAll [axiom (n prop) (n ty), rel (n prop) (n prop) (n prop), rel (n ty) (n prop) (n prop)] [sort_name prop "Prop", sort_name ty "Type"]
+      3 [] (sort (n prop)).
+example "LFSimpleImp" :-
+pi prop\ pi ty\ exampleCheck [axiom (n prop) (n ty), rel (n prop) (n prop) (n prop), rel (n ty) (n prop) (n prop)] [sort_name prop "Prop", sort_name ty "Type"]
+      4 [] (prod (sort (n prop)) (o\ negbox (prod (sort (n prop)) (p\ negbox (prod (negbox (app o #)) (_\ negbox (app p #)) #) ) #)) #)
+      (sort (n prop)).
+example "LFNatType" :-
+pi prop\ pi ty\ exampleCheck [axiom (n prop) (n ty), rel (n prop) (n prop) (n prop), rel (n ty) (n prop) (n prop)] [sort_name prop "Prop", sort_name ty "Type"]
+      4 [] (prod (sort (n prop)) (o\ negbox (prod (negbox (prod (negbox (app o #)) (_\ negbox (app o #)) #)) (_\ (negbox (prod (negbox (app o #)) (_\ negbox (app (sort (n prop)) #)) #)) ) #)) #)
+      (sort (n prop)).
 
 % example "LFNaturals" :-
 %   print "Tenth example: Church naturals in LF; negative atom, traditional type syntax",
