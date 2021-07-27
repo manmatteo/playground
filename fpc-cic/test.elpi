@@ -22,9 +22,9 @@ pretty_context [T|Rest] OutStr :- term_to_latex {fst T} TString1, term_to_latex 
 pred pretty_axrels i:list prop, o:string.
 pretty_axrels [] "".
 pretty_axrels [axiom A B | Rest] OutString :-
-  pretty_psort A AName, pretty_psort B BName, pretty_axrels Rest PRest, OutString = "axiom (" ^ AName ^ "," ^ BName ^ ") " ^ PRest.
+  pretty_psort A AName, pretty_psort B BName, pretty_axrels Rest PRest, OutString = "$axiom (" ^ AName ^ "," ^ BName ^ ")$ " ^ PRest.
 pretty_axrels [rel A B C | Rest] OutString :-
-  pretty_psort A AName, pretty_psort B BName, pretty_psort C CName, pretty_axrels Rest PRest, OutString = "rel (" ^ AName ^ "," ^ BName ^ "," ^ CName ^ ") " ^ PRest.
+  pretty_psort A AName, pretty_psort B BName, pretty_psort C CName, pretty_axrels Rest PRest, OutString = "$rel (" ^ AName ^ "," ^ BName ^ "," ^ CName ^ ")$ " ^ PRest.
 
 %% The example-printing loop. Takes axioms, decide-depth bound, context, goal, prints
 %% all possible solutions as a LaTeX itemize list
@@ -39,7 +39,7 @@ exampleAll AxRels PP_Hints Int Ctx Goal :-
   StoreCtx => AxRels => PP_Hints =>
   (
   pretty_axrels AxRels AxRelStrings, pretty_context Ctx CtxStr, term_to_latex Goal GoalStr,
-  Intro is "In the system given by $" ^ AxRelStrings ^ "$ print all terms of type $" ^ GoalStr ^ "$ with context ${" ^ CtxStr ^ "}$ and decide-depth " ^ (int_to_string Int),
+  Intro is "In the system given by " ^ AxRelStrings ^ "print all terms of type $" ^ GoalStr ^ "$ with context ${" ^ CtxStr ^ "}$ and decide-depth " ^ (int_to_string Int),
   print Intro,
   print "\\begin{itemize}",
   loop
@@ -52,12 +52,28 @@ exampleAll AxRels PP_Hints Int Ctx Goal :-
    )),
   print "\\end{itemize}".
 
+type exampleCheck list prop -> list prop -> int -> list (pair term term) -> term -> term -> prop.
+exampleCheck AxRels PP_Hints Int Ctx Term Goal :-
+  std.map Ctx build_clause StoreCtx,
+  StoreCtx => AxRels => PP_Hints =>
+  (
+  pretty_axrels AxRels AxRelStrings, pretty_context Ctx CtxStr, term_to_latex Goal GoalStr, term_to_latex Term TermStr,
+  Intro is "In the system given by " ^ AxRelStrings ^ " in the context ${" ^ CtxStr ^ "}$ check whether $" ^ TermStr ^ "$ has type $" ^ GoalStr ^ "$ with decide-depth " ^ (int_to_string Int),
+  print Intro,
+  asyncr (dd Int) Term (unk Goal),
+  print "Yes!").
+
 :if "DEBUG:main" main :- !,
-pi prop\ pi ty\ pi o\
-axiom (n prop) (p ty) => rel (n prop) (n prop) (n prop) =>
-store dd_index o (sort (n prop)) =>
-loop (sigma Ty\ sigma Ty2\ asyncr (dd 5) Ty (unk (sort (n prop))),
-print Ty).
+pi prop\ pi ty\
+  axiom (n prop) (n ty) =>
+  rel (n prop) (n prop) (n prop) =>
+  rel (n ty) (n prop) (n prop) =>
+  sigma T\
+      asyncr (dd 4) % T (unk (prod o (_\o) (kappa (sort (n prop)) (x\ prod x (_\x) (kappa (sort (n prop)) (y\ posbox y)))))),
+      (prod (sort (n prop)) (o\ negbox (prod (sort (n prop)) (p\ negbox (prod (negbox (app o #)) (_\ negbox (app p #)) #) ) #)) #)
+      (unk (sort (n prop))),
+      print "a" T.
+
 
 :if "DEBUG:exall" main :- loop (example X_).
 main :- 
