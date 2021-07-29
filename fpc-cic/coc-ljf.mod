@@ -75,9 +75,8 @@ asyncr Cert (prod A B Cont) (str (sort (n S3))) :- % Store è gratis: tanto vale
 % Works fine, but what if I want to start from asyncr?
 % Cuts at the end of these axioms: otherwise there's some wild nondeterminism with the usual axiom rule.
 syncl Cert (sort X) # (sort X) :-
-  sorted_jc Cert, % TODO fix
-  % unpol X X', % Here I actually want to check whether X is sorted by a positive sort!! This is an argument in favour of having axioms for polarized sorts
-  axiom X (n _Y),!.
+  sorted_jc Cert,
+  (axiom X (n _Y); axiom _ X),!. %% Topmost sorts are always negative?
 
 syncr Cert (sort X) (sort Y) :-
   sorted_jc Cert,
