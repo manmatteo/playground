@@ -28,12 +28,7 @@ pretty_axrels [rel A B C | Rest] OutString :-
 
 %% The example-printing loop. Takes axioms, decide-depth bound, context, goal, prints
 %% all possible solutions as a LaTeX itemize list
-
 type exampleAll list prop -> list prop -> int -> list (pair term term) -> term -> prop.
-:if "DEBUG:exall" exampleAll AxRels _PP_Hints Int Ctx Goal :-
-!, print "Attempting" Goal "\n", std.map Ctx build_clause StoreCtx,
-  StoreCtx => AxRels => loop (sigma Term\ asyncr (dd Int) Term (unk Goal), print "Found" Term "\n").
-
 exampleAll AxRels PP_Hints Int Ctx Goal :-
   std.map Ctx build_clause StoreCtx,
   StoreCtx => AxRels => PP_Hints =>
@@ -58,24 +53,21 @@ exampleCheck AxRels PP_Hints Int Ctx Term Goal :-
   StoreCtx => AxRels => PP_Hints =>
   (
   pretty_axrels AxRels AxRelStrings, pretty_context Ctx CtxStr, term_to_latex Goal GoalStr, term_to_latex Term TermStr,
-  Intro is "In the system given by " ^ AxRelStrings ^ " in the context ${" ^ CtxStr ^ "}$ check whether $" ^ TermStr ^ "$ has type $" ^ GoalStr ^ "$ with decide-depth " ^ (int_to_string Int),
+  Intro is "In the system given by " ^ AxRelStrings ^ " in the context ${" ^ CtxStr ^ "}$ check whether $" ^ TermStr ^ "$ has type $" ^ GoalStr ^ "$ with decide-depth " ^ (int_to_string Int) ^ "\n",
   print Intro,
   asyncr (dd Int) Term (unk Goal),
-  print "Yes!").
+  print "Yes!\n").
 
 :if "DEBUG:main" main :- !,
-pi prop\ pi ty\
-  axiom (n prop) (n ty) =>
-  rel (n prop) (n prop) (n prop) =>
-  rel (n ty) (n prop) (n prop) =>
-  sigma T\
-      asyncr (dd 4) % T (unk (prod o (_\o) (kappa (sort (n prop)) (x\ prod x (_\x) (kappa (sort (n prop)) (y\ posbox y)))))),
-      (prod (sort (n prop)) (o\ negbox (prod (sort (n prop)) (p\ negbox (prod (negbox (app o #)) (_\ negbox (app p #)) #) ) #)) #)
-      (unk (sort (n prop))),
-      print "a" T.
+example "LFFirstOrderPos".
+% pi prop\ pi ty\ pi nat\ pi z\ pi succ\
+%   axiom (n prop) (n ty) => rel (n prop) (n prop) (n prop) => rel (n ty) (n prop) (n prop) =>
+%   store dd_index nat (sort (n prop)) => store dd_index z (negbox (app nat #)) => store dd_index succ (negbox (prod (negbox (app nat #)) (_\ negbox (app nat #)) #)) =>
+%   asyncr (dd 10)
+%   (app succ (negbox (app z #) ` #))
+%   (unk (negbox (app nat #))),
+% print "a" T.
 
-
-:if "DEBUG:exall" main :- loop (example X_).
 main :- 
 print "\\documentclass{scrartcl}
 \\usepackage{proofsystem_macros}
@@ -128,43 +120,63 @@ pi prop\ pi ty\ exampleCheck [axiom (n prop) (n ty), rel (n prop) (n prop) (n pr
       (sort (n prop)).
 example "LFNatType" :-
 pi prop\ pi ty\ exampleCheck [axiom (n prop) (n ty), rel (n prop) (n prop) (n prop), rel (n ty) (n prop) (n prop)] [sort_name prop "Prop", sort_name ty "Type"]
-      4 [] (prod (sort (n prop)) (o\ negbox (prod (negbox (prod (negbox (app o #)) (_\ negbox (app o #)) #)) (_\ (negbox (prod (negbox (app o #)) (_\ negbox (app (sort (n prop)) #)) #)) ) #)) #)
+      5 [] (prod (sort (n prop)) (o\ negbox (prod (negbox (prod (negbox (app o #)) (_\ negbox (app o #)) #)) (_\ (negbox (prod (negbox (app o #)) (_\ negbox (app o #)) #)) ) #)) #)
       (sort (n prop)).
+example "LFNatSimple" :-
+pi prop\ pi ty\ pi nat\ pi z\ pi succ\ exampleCheck
+      [axiom (n prop) (n ty), rel (n prop) (n prop) (n prop), rel (n ty) (n prop) (n prop)]
+      [sort_name prop "Prop", sort_name ty "Type", term_to_latex nat "nat", term_to_latex z "z", term_to_latex succ "succ"]
+      10 [pr nat (sort (n prop)), pr z (negbox (app nat #)), pr succ (negbox (prod (negbox (app nat #)) (_\ negbox (app nat #)) #))]
+      (app succ (negbox (app z #) ` #))
+      (negbox (app nat #)).
+example "LFFirstOrder" :-
+pi ty\ pi ky\ pi i\ pi o\ pi t\ pi q\ pi f\ exampleAll
+      [axiom (n ty) (n ky), rel (n ty) (n ty) (n ty), rel (n ky) (n ty) (n ty)]
+      [sort_name ky "Kind", sort_name ty "Type", term_to_latex t "t", term_to_latex q "Q", term_to_latex i "i", term_to_latex f "f", term_to_latex o "o"]
+      6 [pr i (sort (n ty)), pr o (sort (n ty)),
+      pr t (negbox (app i #)),
+      pr q (negbox (prod (negbox (app i #)) (_\ negbox (app o #)) #)),
+      pr f (negbox (prod (negbox (app i #)) (_\ negbox (prod (negbox (app i #)) (_\ negbox (app i #)) #)) #))]
+      (negbox (app o #)).
+example "LFFirstOrderPos" :-
+pi ty\ pi ky\ pi i\ pi o\ pi t\ pi q\ pi f\ sigma Sort\ exampleAll
+      [axiom (p ty) (n ky), axiom (n ty) (n ky),
+      rel (p ty) (n ty) (n ty),
+      rel (n ty) (p ty) (n ty),
+      rel (n ty) (n ty) (n ty),
+      rel (p ty) (p ty) (n ty),
+      rel (n ky) (p ty) (n ty),
+      rel (n ky) (n ty) (n ty)]
+      [sort_name ky "Kind", sort_name ty "Type", term_to_latex t "t", term_to_latex q "Q", term_to_latex i "i", term_to_latex f "f", term_to_latex o "o"]
+      4 [pr i (sort (p ty)), pr o (sort (p ty)),
+      pr t (negbox (app i #)),
+      pr q (negbox (prod (negbox (app i #)) (_\ negbox (app o #)) #)),
+      pr f (negbox (prod (negbox (app i #)) (_\ negbox (prod (negbox (app i #)) (_\ negbox (app i #)) #)) #))]
+      (negbox (app o #)).
+example "LFFirstOrderNegOPosI" :-
+pi ty\ pi ky\ pi i\ pi o\ pi t\ pi q\ pi f\ sigma Sort\ exampleAll
+      [axiom (p ty) (n ky), axiom (n ty) (n ky),
+      rel (p ty) (n ty) (n ty),
+      rel (n ty) (p ty) (n ty),
+      rel (n ty) (n ty) (n ty),
+      rel (p ty) (p ty) (n ty),
+      rel (n ky) (p ty) (n ty),
+      rel (n ky) (n ty) (n ty)]
+      [sort_name ky "Kind", sort_name ty "Type", term_to_latex t "t", term_to_latex q "Q", term_to_latex i "i", term_to_latex f "f", term_to_latex o "o"]
+      5 [pr i (sort (p ty)), pr o (sort (n ty)),
+      pr t (negbox (app i #)),
+      pr q (negbox (prod (negbox (app i #)) (_\ negbox (app o #)) #)),
+      pr f (negbox (prod (negbox (app i #)) (_\ negbox (prod (negbox (app i #)) (_\ negbox (app i #)) #)) #))]
+      (negbox (app o #)).
 
-% example "LFNaturals" :-
-%   print "Tenth example: Church naturals in LF; negative atom, traditional type syntax",
-%   pi prop\ pi ty\       % Sort Prop and Sort Type
-%     axiom prop ty =>    % Prop is a Type
-%     rel prop prop prop =>   % Non-dependent product between prop
-%     rel ty prop prop =>   %  Props depending on terms
-%     sort_name prop "Prop" => sort_name ty "Type" => 
-%     exampleLoop 5 [] (prod (sort (n prop)) (a\ (prod (app a #) (x\ prod (prod (app a #) (x\ app a #)) (x\ app a #))))).
-% example "LFNaturalsSharedType" :-
-%   print "Tenth example: Church naturals in LF; negative atom, shared type syntax",
-%   pi prop\ pi ty\       % Sort Prop and Sort Type
-%     axiom prop ty =>    % Prop is a Type
-%     rel prop prop prop =>   % Non-dependent product between prop
-%     rel ty prop prop =>   %  Props depending on terms
-%     sort_name prop "Prop" => sort_name ty "Type" => sigma Ty\
-%     exampleLoop 5 [] (prod (sort (n prop)) (a\ app (prod (app a #) (x\ app a #)) (kappa Ty (i\ (prod (app a #) (x\ prod i (y\ app a #) )))))).
+% example "FirstOrder" :-
+% pi prop\ pi term\ pi ty\ pi ky\ pi p\ pi f\ pi t\
+% exampleCheck [axiom (n prop) (n ky), axiom (n term) (n ty), axiom (n ty) (n ky), rel (n prop) (n prop) (n prop), rel (n ty) (n ky) (n ky), rel (n ty) (n ty) (n ty)]
+%       [sort_name prop "Prop", sort_name ky "Kind", sort_name term "Term", sort_name ty "Type", term_to_latex p "P", term_to_latex f "f", term_to_latex t "t"]
+%       7 [pr p (negbox (prod (sort (n term)) (x\ sort (n prop)) #)), pr t (sort (n term))] (app p (negbox (app t #) ` #)) (sort (n prop)).
 
-% % example "NegativeSystemF" :-
-% %   print "Sixth example: given a context containing only a negative prop $a$,
-% %   build all possible negative System F propositions with decide-depth 2.\n",
-% %   pi prop\ pi ty\       % Sort Prop and Sort Type
-% %     axiom prop ty =>    % Prop is a Type
-% %     rel prop prop prop =>   % Non-dependent product between prop
-% %     rel ty prop prop =>   %  Props depending on terms
-% %     rel prop ty ty =>   %  Props depending on terms
-% %     pi a\ term_to_latex a "a" =>
-% %       exampleLoop 2 [pr a (sort (p prop))] (sort (n prop)).
-
-% % example "IdentitySystemF" :-
-% %   print "Seventh example: given a context containing only a negative prop $a$,
-% %   build all possible System F terms of type $\\ptsapp{a}{\\ptsnil}$ with decide-depth 5.\n",
-% %   pi prop\ pi ty\       % Sort Prop and Sort Type
-% %     axiom prop ty =>    % Prop is a Type
-% %     rel prop prop prop =>   % Non-dependent product between prop
-% %     rel ty prop prop =>   %  Props depending on terms
-% %     pi a\ term_to_latex a "a" =>
-% %       exampleLoop 5 [pr a (sort (n prop))] (prod (app a #) (x\ app a #)). %% Given "a" positive, build all negative propositions 
+% example "FirstOrder" :-
+% pi prop\ pi term\ pi ty\ pi p\ pi f\ pi t\
+%       exampleAll [axiom (n prop) (n ty), axiom (n term) (n ty), rel (n prop) (n prop) (n prop), rel (n term) (n prop) (n prop), rel (n term) (n term) (n term)]
+%       [sort_name prop "Prop", sort_name term "Term", sort_name ty "Type", term_to_latex p "P", term_to_latex f "f", term_to_latex t "t"]
+%       4 [pr p (prod (sort (n term)) (x\ sort (n prop)) #), pr f (prod (sort (n term)) (x\ sort (n term)) #), pr t (sort (n term))] (sort (n prop)).
