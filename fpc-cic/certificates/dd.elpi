@@ -10,6 +10,6 @@ decideR_jc  (dd N) _Sort (dd N')        (dd N') :-  N > 0, N' is N - 1.
 storeR_jc   (dd N)                     (dd N).
 axiomL_je   (dd N) _Sort (dd N).
 axiomR_je   (dd N) _Sort (dd N)        dd_index.
-prodsort_jc (dd N) _Sort1 (dd N') _Sort2 (x\ dd N') :-  N > 0, N' is N - 1.
+prodsort_jc (dd N) _Sort1 _Sort2 _Sort3 dd_index (dd N') (dd N') (dd N') :-  N > 0, N' is N - 1.
 sorted_jc   (dd _N).
-storeL_jc   (x\ dd N) (x\ dd_index) _Sort (dd N).
+storeL_jc   (x\ dd _N) (x\ dd_index).

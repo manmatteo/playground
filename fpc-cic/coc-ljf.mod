@@ -55,22 +55,26 @@ asyncr Cert (fun A T) (unk (prod A B # as Prod)) :-
 % Pl
 syncl Cert (prod A B _Cont as Prod) (P ` L) R :-
   prodL_je Cert Sort SortCert Cert1 Cert2,
+  % print "---Check sort for prodL",
   asyncr   SortCert Prod (unk (sort (n Sort))),
+  % print "---Ok sort for prodL",
+  % print "---one",
   syncr    Cert1 P A,
+  % print "---two",
   syncl    (Cert2 Cert1) (B P) L R.
 
 % %% sort
 asyncr Cert (prod A B Cont) (str (sort (n S3))) :- % Store è gratis: tanto vale assumere che sia fatto
-  prodsort_jc Cert S1 Cert1 S2 _Cert2,
+  prodsort_jc Cert S1 S2 (n S3) Index Cert1 Cert2 Cert3,
   rel S1 S2 (n S3),
   % pol S1' S1, pol S2' S2,
   % print "---one",
   syncr Cert1 A (sort S1),
   % print "---one done; two",
-  pi x\ store _Index x A => (syncr Cert1 (B x) (sort S2)),
+  pi x\ store Index x A => (syncr Cert2 (B x) (sort S2)),
   % print "---two done; three",
   % print "---Enter continuation",
-  syncl Cert1 (sort (n S3)) Cont (sort (n S3)).
+  syncl Cert3 (sort (n S3)) Cont (sort (n S3)).
   % print "---Done continuation". % TODO Fix certificate
 % Works fine, but what if I want to start from asyncr?
 % Cuts at the end of these axioms: otherwise there's some wild nondeterminism with the usual axiom rule.
@@ -110,12 +114,14 @@ asyncr Cert T (unk A) :-
   asyncr Cert' T (str A).
 % store_l
 asyncl Cert [N] T R :-
-  storeL_jc Cert Index _Sort _SortCert, %% TODO remove unneeded params
+  storeL_jc Cert Index,
   pi w\ store (Index (#idx w)) w N => asyncr (Cert (#cert w)) (T w) (R w).
 %release_r
 syncr Cert (negbox T) N :-
   releaseR_je Cert Sort SortCert Cert',
+  % print "---SortCheck for release",
   syncr SortCert N (sort (n Sort)),
+  % print "---Done, release",
   asyncr Cert' T (unk N).
 %release_l
 syncl Cert P (kappa P T) A :-
