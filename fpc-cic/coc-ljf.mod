@@ -17,56 +17,55 @@ pred topmost_sort i:ps.
 topmost_sort X :- axiom _ X, not (axiom X _).
 
 % Names and maintenance
-asyncr Cert T (unk (negbox A)) :-
-  %% NOTE: If there's a negbox, then... There's no name?
-  asyncr Cert T (unk A).
 
-asyncr Cert T (unk (posbox N)) :-
-  % named N A, NOTE: If there's a posbox, then either there's a name or it's initial
-  asyncr Cert T (unk N).
+% To fix if I switch to vals!
+% asyncr Cert T (unk (posbox N)) :-
+%   % named N A, NOTE: If there's a posbox, then either there's a name or it's initial
+%   asyncr Cert T (unk N).
 
-asyncr Cert (prod A B (kappa Ty T)) (unk (prod A B (kappa Ty C))) :-
-  pi w\ named w Ty (prod A B #) =>
-    % (print "---New name" w "for" (prod A B #),
-    asyncr Cert (T w) (unk (C w)).
+% To fix if I switch to vals!
+% asyncr Cert (prod A B (kappa Ty T)) (unk (prod A B (kappa Ty C))) :-
+%   pi w\ named w Ty (prod A B #) =>
+%     % (print "---New name" w "for" (prod A B #),
+%     asyncr Cert (T w) (unk (C w)).
 
-asyncr Cert T (unk N) :-
-  named N _Ty A,
-  % print "---Retrieved" A "at" N,
-  asyncr Cert T (unk A). 
+% To fix if I switch to vals!
+% asyncr Cert T (unk N) :-
+%   named N _Ty A,
+%   % print "---Retrieved" A "at" N,
+%   asyncr Cert T (unk A). 
 
-syncl Cert (negbox A) Cont G :-
-  syncl Cert A Cont G.
-
-%% These look more or less like hacks at this point
-syncr _Cert N Ty :-
-  named N Ty _Def.
-asyncr _Cert (prod A B Cont) (str Sort) :- 
-  named _N Sort (prod A B Cont).
-asyncr Cert (app Var L) (str R) :-
-  decideL_jc Cert Sort _SortCert Cert' Index,
-  store Index Var N,
-  named N (sort (n Sort)) Def,
-  syncl Cert' Def L R.
+%% These still look like hacks at this point
+% syncr _Cert N Ty :-
+%   named N Ty _Def.
+% asyncr _Cert (prod A B Cont) (str Sort) :- 
+%   named _N Sort (prod A B Cont).
+% asyncr Cert (app Var L) (str R) :-
+%   decideL_jc Cert Sort _SortCert Cert' Index,
+%   store Index Var N,
+%   named N (sort (n Sort)) Def,
+%   syncl Cert' Def L R.
 
 %% prod
 % Pr
-asyncr Cert (fun A T) (unk (prod A B # as Prod)) :-
+asyncr Cert (fun A T) (unk (negbox (prod A B #) as Prod)) :-
   prodR_jc Cert Sort SortCert Cert',
   % print "---Check sort for prodR",
-  asyncr SortCert Prod (unk (sort (n Sort))),
+  syncr SortCert Prod (sort (n Sort)),
   % print "---Ok sort for prodR",
   asyncl Cert' [A] T (x\ unk (B x)).
 % Pl
-syncl Cert (prod A B _Cont as Prod) (P ` L) R :-
+syncl Cert (negbox (prod A B _Cont) as Prod) (P ` L) R :-
   prodL_je Cert Sort SortCert Cert1 Cert2,
   % print "---Check sort for prodL on" Prod,
-  asyncr   SortCert Prod (unk (sort (n Sort))),
+  syncr   SortCert Prod (sort (n Sort)),
   % print "---Ok sort for prodL on" Prod,
   % print "---prodl: one" Prod,
   syncr    Cert1 P A,
   % print "---prodl: two" Prod,
-  syncl    (Cert2 Cert1) (B P) L R.
+  cut_vvv P B B',
+  % print "Voglio tagliare"  B,
+  syncl    (Cert2 Cert1) B' L R.
   % print "---Ok prodL on" Prod "at lvl" Cert.
 
 % %% sort
@@ -137,7 +136,42 @@ syncl Cert P (kappa P T) A :-
   syncr SortCert P (sort (p Sort)),
   asyncl Cert' [P] T (x\ str A).
 
-% Let's try with Dale's ideas!
-% cut X Y Z :- lcut_t X Y Z; rcut_t X Y Z.
-% lcut_t (posbox T) Xi (Xi T).
-% lcut_t (posbox T) Xi (Xi T).
+% Cut elimination in the style of Taus et al
+
+pred cut_tkt i:term, i:continuation, o:term.
+:if "DEBUG:cut" cut_tkt A B C :- print "cut_tkt" A B C, fail.
+cut_tkt (fun _A T) (Q ` K) R :- cut_vtt Q T O, cut_tkt O K R.
+cut_tkt (posbox Q) (kappa _A T) O :- cut_vtt Q T O.
+cut_tkt (app X K) M (app X L) :- name X, cut_kapp K M L.
+
+pred cut_kapp i:continuation, i:continuation, o:continuation.
+:if "DEBUG:cut" cut_kapp A B C  :- print "cut_kapp" A B C, fail.
+cut_kapp # L L.
+cut_kapp (H ` K) M (H ` L) :- cut_kapp K M L.
+cut_kapp (kappa A T) M (kappa A L)   :- pi y\ cut_tkt (T y) M (L y).
+
+pred cut_vtt i:val, i:(val -> term), o:term.
+:if "DEBUG:cut" cut_vtt  A B C :- print "cut_vtt" A B C, fail.
+cut_vtt X T (T X) :- name X.
+cut_vtt (sort S) (x\ Q x) (Q (sort S)). %% Aggiunta io
+cut_vtt P (x\ fun (A x) (y\ T x y)) (fun A' Q) :- cut_vvv P A A', pi y\ cut_vtt P (x\ T x y) (Q y).
+cut_vtt P (x\ posbox (Q x)) (posbox R) :- cut_vvv P Q R.
+cut_vtt P (x\ app Y (K x)) (app Y K') :- cut_vkk P K K'.
+cut_vtt (negbox U) (x\ app x (K x)) U' :- cut_vkk (negbox U) K K', cut_tkt U K' U'.
+
+cut_vtt P (x\ prod (A x) (y\ B x y) (K x)) (prod A' B' K') :- cut_vvv P A A', cut_vkk P K K', pi y\ cut_vvv P (x\ B x y) (B' y).
+
+pred cut_vvv i:val, i:(val -> val), o:val.
+:if "DEBUG:cut" cut_vvv  A B C :- print "cut_vvv" A B C, fail.
+cut_vvv X (x\ Q x) (Q X) :- name X.
+cut_vvv (sort S) (x\ Q x) (Q (sort S)). %% Aggiunta io
+cut_vvv P (x\ x) P.
+cut_vvv P_ (x\ Y) Y :- !.
+cut_vvv P (x\ negbox (T x)) (negbox T') :- cut_vtt P T T'.
+
+pred cut_vkk i:val, i:(val -> continuation), o:continuation.
+:if "DEBUG:cut" cut_vkk  A B C :- print "cut_vkk" A B C, fail.
+cut_vkk X (y\ K y) (K X) :- name X.
+cut_vkk P_ (x\ #)   #.
+cut_vkk P (x\ ((Q x) ` (K x))) (Q' ` K') :- cut_vvv P Q Q', cut_vkk P K K'.
+cut_vkk P (x\ kappa (A x) (y\ T x y)) (kappa A' T') :- cut_vvv P A A', pi y\ cut_vtt P (x\ T x y) (T' y).

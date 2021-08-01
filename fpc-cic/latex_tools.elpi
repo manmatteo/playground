@@ -1,9 +1,10 @@
 % shorten certificates.{ p, n, sort, axiom, rel }.
 
-type proof_to_latex list (pair term term) -> term -> term -> string -> prop.
+% type proof_to_latex list (pair term term) -> term -> term -> string -> prop.
+type val_to_latex   val  -> string -> prop.
 type term_to_latex  term -> string -> prop.
 type cont_to_latex  continuation -> string -> prop.
-type var_name       term -> string -> prop.
+type var_name       val -> string -> prop.
 type sort_name      s -> string -> prop.
 
 var_name Var OutString :-
@@ -16,6 +17,10 @@ var_name Var OutString :-
 :if "DEBUG_LATEX" term_to_latex T Str :- print "term_to_latex" T Str, fail.
 :if "DEBUG_LATEX" cont_to_latex T Str :- print "cont_to_latex" T Str, fail.
 
+val_to_latex (sort (n S)) OutString :-
+  sort_name S SortString, OutString is SortString ^ "^-".
+val_to_latex (sort (p S)) OutString :-
+  sort_name S SortString, OutString is SortString ^ "^+".
 term_to_latex (sort (n S)) OutString :-
   sort_name S SortString, OutString is SortString ^ "^-".
 term_to_latex (sort (p S)) OutString :-
@@ -24,40 +29,40 @@ term_to_latex (sort (p S)) OutString :-
 term_to_latex (fun A T) OutString :-
   pi x\ var_name x X,
   (
-  term_to_latex x X => (
-  term_to_latex A Astr, term_to_latex (T x) Tstr,
+  val_to_latex x X => (
+  val_to_latex A Astr, term_to_latex (T x) Tstr,
   OutString is "\\ptslam{" ^ X ^ "}{" ^ Astr ^ "}{" ^ Tstr ^ "}"
   )).
 term_to_latex (prod A (x\ T) Cont) OutString :-
   !,
-  term_to_latex A Astr, term_to_latex T Tstr, cont_to_latex Cont ContString,
+  val_to_latex A Astr, val_to_latex T Tstr, cont_to_latex Cont ContString,
   OutString = "\\ptsnprodk{" ^ Astr ^ "}{" ^ Tstr ^ "}{" ^ ContString ^ "}".
 term_to_latex (prod A T Cont) OutString :-
   pi x\ var_name x X,
   (
-  term_to_latex x X => (
-  term_to_latex A Astr, term_to_latex (T x) Tstr, cont_to_latex Cont ContString,
+  val_to_latex x X => (
+  val_to_latex A Astr, val_to_latex (T x) Tstr, cont_to_latex Cont ContString,
   OutString = "\\ptsprodk{" ^ X ^ "}{" ^ Astr ^ "}{" ^ Tstr ^ "}{" ^ ContString ^ "}"
   )).
 term_to_latex (app Term Cont) OutString :-
-  term_to_latex Term TermString,
+  val_to_latex Term TermString,
   cont_to_latex Cont ContString,
   OutString = "\\ptsapp{" ^ TermString ^ "}{" ^ ContString ^ "}".
 term_to_latex (posbox Term) OutString :-
-  term_to_latex Term TermString,
+  val_to_latex Term TermString,
   OutString = "\\posbox{" ^ TermString ^ "}".
-term_to_latex (negbox Term) OutString :-
+val_to_latex (negbox Term) OutString :-
   term_to_latex Term TermString,
   OutString = "\\negbox{" ^ TermString ^ "}".
 cont_to_latex (kappa A T) OutString :-
   pi x\ var_name x X,
   (
-  term_to_latex x X => (
-  term_to_latex A Astr, term_to_latex (T x) Tstr,
+  val_to_latex x X => (
+  val_to_latex A Astr, term_to_latex (T x) Tstr,
   OutString = "\\ptskappa{" ^ X ^ "}{" ^ Astr ^ "}{" ^ Tstr ^ "}"
   )).
 cont_to_latex (A ` T) OutString :-
-  term_to_latex A Astr, cont_to_latex T Tstr,
+  val_to_latex A Astr, cont_to_latex T Tstr,
   OutString = "\\ptscons{" ^ Astr ^ "}{" ^ Tstr ^ "}".
 cont_to_latex # "\\ptsnil".
 

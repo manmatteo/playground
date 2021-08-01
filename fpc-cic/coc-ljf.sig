@@ -2,16 +2,18 @@ sig coc-ljf.
 
 kind continuation type.
 type # continuation.
-type ` term -> continuation -> continuation.
+type ` val -> continuation -> continuation.
 infixr ` 120.
 
 kind term type.
-type fun   term -> (term -> term) -> term.
-type prod  term -> (term -> term) -> continuation -> term.
-type kappa term -> (term -> term) -> continuation.
-type app   term -> continuation -> term.
-type posbox term -> term.
-type negbox term -> term.
+kind val type.
+type fun   val -> (val -> term) -> term.
+type prod  val -> (val -> val) -> continuation -> term.
+type kappa val -> (val -> term) -> continuation.
+% Note that this was wrong in Taus' PPDP15 paper
+type app   val -> continuation -> term.
+type posbox val -> term.
+type negbox term -> val.
 
 %% NOTE: sorts, axioms, relations have been moved to certificates!
 type pol   s -> ps -> prop.
@@ -20,17 +22,17 @@ type unpol ps -> s -> prop.
 type beta  term -> term -> prop.
 
 kind index type.
-type store index -> term -> term -> prop.
-type named term -> term -> term -> prop.
+type store index -> val -> val -> prop.
+type named val -> val -> val -> prop.
 
-type #idx  term -> index.
-type #cert term -> cert.
+type #idx  val -> index.
+type #cert val -> cert.
 
 kind cert type.
 kind rhs type.
-type str term -> rhs.
-type unk term -> rhs.
-type asyncl (cert -> cert) -> list term -> (term -> term) -> (term -> rhs) -> prop.
+type str val -> rhs.
+type unk val -> rhs.
+type asyncl (cert -> cert) -> list val -> (val -> term) -> (val -> rhs) -> prop.
 type asyncr cert ->                        term -> rhs -> prop.
-type syncl  cert ->          term -> continuation -> term -> prop.
-type syncr  cert ->                       term -> term -> prop.
+type syncl  cert ->          val -> continuation -> val -> prop.
+type syncr  cert ->                       val -> val -> prop.

@@ -28,6 +28,6 @@ type storeL_jc   (cert -> cert) -> (cert -> index)  -> cert -> prop.
 % type sort  s -> term.
 type p s -> ps.
 type n s -> ps.
-type sort ps -> term.
+type sort ps -> A.
 type axiom ps -> ps -> prop.
 type rel ps -> ps -> ps -> prop.
