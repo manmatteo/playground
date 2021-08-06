@@ -3,7 +3,7 @@ sig coc-ljf.
 kind continuation type.
 type # continuation.
 type ` term -> continuation -> continuation.
-infix ` 120.
+infixr ` 120.
 
 kind term type.
 type fun   term -> (term -> term) -> term.
@@ -13,16 +13,9 @@ type app   term -> continuation -> term.
 type posbox term -> term.
 type negbox term -> term.
 
-kind s type. % sorts
-% type sort  s -> term.
-kind ps type. % polarized sorts
-type p s -> ps.
-type n s -> ps.
-type sort ps -> term.
+%% NOTE: sorts, axioms, relations have been moved to certificates!
 type pol   s -> ps -> prop.
 type unpol ps -> s -> prop.
-type axiom ps -> ps -> prop.
-type rel ps -> ps -> ps -> prop.
 
 type beta  term -> term -> prop.
 

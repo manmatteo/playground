@@ -6,6 +6,10 @@
 % and binds them to an eigenvariable; the instanciated certificate and index are
 % passed on. Thus, it only has the sort information as output.
 
+kind s type. % sorts
+kind ps type. % polarized sorts
+
+% namespace certificates{
 %%%%%%%%%%%%%%%% In    % Sort and SCert (O) % Output
 type prodL_je    cert -> s -> cert -> cert -> (cert -> cert) -> prop.
 type prodR_jc    cert -> s -> cert         -> (cert -> cert) -> prop.
@@ -18,4 +22,12 @@ type axiomL_je   cert -> s -> cert                           -> prop.
 type axiomR_je   cert -> s -> cert                  -> index -> prop.
 type prodsort_jc cert -> ps -> ps -> ps -> index -> cert -> cert -> cert -> prop.
 type sorted_jc   cert                                        -> prop.
-type storeL_jc   (cert -> cert) -> (index -> index)          -> prop.
+type storeL_jc   (cert -> cert) -> (cert -> index)          -> prop.
+
+%% Sorts, axioms, relations
+% type sort  s -> term.
+type p s -> ps.
+type n s -> ps.
+type sort ps -> term.
+type axiom ps -> ps -> prop.
+type rel ps -> ps -> ps -> prop.

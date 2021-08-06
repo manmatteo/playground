@@ -1,3 +1,5 @@
+% shorten certificates.{ p, n, sort, axiom, rel }.
+
 type proof_to_latex list (pair term term) -> term -> term -> string -> prop.
 type term_to_latex  term -> string -> prop.
 type cont_to_latex  continuation -> string -> prop.
