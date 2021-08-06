@@ -1,5 +1,6 @@
 module coc-ljf.
 accum_sig pts-certificates.
+% shorten certificates.{ p, n, sort, axiom, rel, prodL_je, prodR_jc, releaseL_je, releaseR_je, decideL_jc, decideL_jc, decideR_jc, storeR_jc, storeL_jc, axiomL_je, axiomL_je, axiomR_je, prodsort_jc, sorted_jc }.
 
 :if "DEBUG:kernel" asyncl A B C D :- print "asyncl" A B C D, fail.
 :if "DEBUG:kernel" asyncr A B C :- print "asyncr" A B C, fail.
@@ -10,6 +11,10 @@ unpol (n X) X.
 unpol (p X) X.
 pol X (p X).
 pol X (n X).
+
+% Small hack: topmost sort is always treated as negative. This is because since there's no axiom about it, we don't know whether it's positive or negative
+pred topmost_sort i:ps.
+topmost_sort X :- axiom _ X, not (axiom X _).
 
 % Names and maintenance
 asyncr Cert T (unk (negbox A)) :-
@@ -55,13 +60,14 @@ asyncr Cert (fun A T) (unk (prod A B # as Prod)) :-
 % Pl
 syncl Cert (prod A B _Cont as Prod) (P ` L) R :-
   prodL_je Cert Sort SortCert Cert1 Cert2,
-  % print "---Check sort for prodL",
+  % print "---Check sort for prodL on" Prod,
   asyncr   SortCert Prod (unk (sort (n Sort))),
-  % print "---Ok sort for prodL",
-  % print "---one",
+  % print "---Ok sort for prodL on" Prod,
+  % print "---prodl: one" Prod,
   syncr    Cert1 P A,
-  % print "---two",
+  % print "---prodl: two" Prod,
   syncl    (Cert2 Cert1) (B P) L R.
+  % print "---Ok prodL on" Prod "at lvl" Cert.
 
 % %% sort
 asyncr Cert (prod A B Cont) (str (sort (n S3))) :- % Store è gratis: tanto vale assumere che sia fatto
@@ -74,13 +80,13 @@ asyncr Cert (prod A B Cont) (str (sort (n S3))) :- % Store è gratis: tanto vale
   pi x\ store Index x A => (syncr Cert2 (B x) (sort S2)),
   % print "---two done; three",
   % print "---Enter continuation",
-  syncl Cert3 (sort (n S3)) Cont (sort (n S3)).
+  syncl Cert3 (sort (n S3)) Cont (sort (n S3)).%, print "---done prodsort!".
   % print "---Done continuation". % TODO Fix certificate
 % Works fine, but what if I want to start from asyncr?
 % Cuts at the end of these axioms: otherwise there's some wild nondeterminism with the usual axiom rule.
 syncl Cert (sort X) # (sort X) :-
   sorted_jc Cert,
-  (axiom X (n _Y); axiom _ X),!. %% Topmost sorts are always negative?
+  (axiom X (n _Y); topmost_sort X),!. %% Topmost sorts are always negative?
 
 syncr Cert (sort X) (sort Y) :-
   sorted_jc Cert,
@@ -101,7 +107,9 @@ syncr Cert Var P :-
 asyncr Cert (app Var L) (str R) :-
   decideL_jc Cert Sort SortCert Cert' Index,
   store Index Var N,
-  syncr SortCert N (sort (n Sort)),
+  % print "---decide-sort for" N "at" Var,
+  (syncr SortCert N (sort (n Sort)); N = sort X, topmost_sort X),
+  % print "---decide-sort!",
   syncl Cert' N L R.
 % decide_r
 asyncr Cert (posbox P) (str R) :-
@@ -115,12 +123,12 @@ asyncr Cert T (unk A) :-
 % store_l
 asyncl Cert [N] T R :-
   storeL_jc Cert Index,
-  pi w\ store (Index (#idx w)) w N => asyncr (Cert (#cert w)) (T w) (R w).
+  pi w\ store (Index (#cert w)) w N => asyncr (Cert (#cert w)) (T w) (R w).
 %release_r
 syncr Cert (negbox T) N :-
   releaseR_je Cert Sort SortCert Cert',
   % print "---SortCheck for release",
-  syncr SortCert N (sort (n Sort)),
+  (syncr SortCert N (sort (n Sort)) ; N = sort X, topmost_sort X),
   % print "---Done, release",
   asyncr Cert' T (unk N).
 %release_l
