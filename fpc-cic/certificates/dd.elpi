@@ -1,6 +1,32 @@
 type dd int -> cert.
 type dd_index index.
 
+% shorten certificates.{ p, n, sort, axiom, rel, prodL_je, prodR_jc, releaseL_je, releaseR_je, decideL_jc, decideL_jc, decideR_jc, storeR_jc, storeL_jc, axiomL_je, axiomL_je, axiomR_je, prodsort_jc, sorted_jc }.
+:if "DEBUG:cert"
+prodL_je    (dd N) _Sort (dd N) (dd N) (x\ dd N) :- print "prodL_je", !.
+:if "DEBUG:cert"
+prodR_jc    (dd N) _Sort (dd N)        (x\ dd N) :- print "prodR_jc", !.
+:if "DEBUG:cert"
+releaseL_je (dd N) _Sort (dd N)        (x\ dd N) :- print "releaseL_je", !.
+:if "DEBUG:cert"
+releaseR_je (dd N) _Sort (dd N)        (dd N)    :- print "releaseR_je", !.
+:if "DEBUG:cert"
+decideL_jc  (dd N) _Sort (dd N')        (dd N') dd_index :- N > 0, N' is N - 1, print "decideL_jc", !.
+:if "DEBUG:cert"
+decideR_jc  (dd N) _Sort (dd N')        (dd N')  :-  N > 0, N' is N - 1, print "decideR_jc", !.
+:if "DEBUG:cert"
+storeR_jc   (dd N)                     (dd N)    :- print "storeR_jc", !.
+:if "DEBUG:cert"
+axiomL_je   (dd N) _Sort (dd N')                 :- print "axiomL_je", N > 0, N' is N - 1, !.
+:if "DEBUG:cert"
+axiomR_je   (dd N) _Sort (dd N')        dd_index :- print "axiomR_je", N > 0, N' is N - 1, !.
+:if "DEBUG:cert"
+prodsort_jc (dd N) _Sort1 _Sort2 _Sort3 dd_index (dd N') (dd N') (dd N') :-  N > 0, N' is N - 1, print "prodsort_jc", !.
+:if "DEBUG:cert"
+sorted_jc   (dd _N) :- print "sorted_jc", !.
+:if "DEBUG:cert"
+storeL_jc   (x\ dd _N) (x\ dd_index) :- print "storeL_jc", !.
+
 prodL_je    (dd N) _Sort (dd N) (dd N) (x\ dd N).
 prodR_jc    (dd N) _Sort (dd N)        (x\ dd N).
 releaseL_je (dd N) _Sort (dd N)        (x\ dd N).
@@ -8,8 +34,8 @@ releaseR_je (dd N) _Sort (dd N)        (dd N).
 decideL_jc  (dd N) _Sort (dd N')        (dd N') dd_index :- N > 0, N' is N - 1.
 decideR_jc  (dd N) _Sort (dd N')        (dd N') :-  N > 0, N' is N - 1.
 storeR_jc   (dd N)                     (dd N).
-axiomL_je   (dd N) _Sort (dd N).
-axiomR_je   (dd N) _Sort (dd N)        dd_index.
+axiomL_je   (dd N) _Sort (dd N')                 :- N > 0, N' is N - 1.
+axiomR_je   (dd N) _Sort (dd N')        dd_index :- N > 0, N' is N - 1.
 prodsort_jc (dd N) _Sort1 _Sort2 _Sort3 dd_index (dd N') (dd N') (dd N') :-  N > 0, N' is N - 1.
 sorted_jc   (dd _N).
 storeL_jc   (x\ dd _N) (x\ dd_index).
