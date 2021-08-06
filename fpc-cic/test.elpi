@@ -4,6 +4,7 @@ accumulate certificates/dd.
 accumulate latex_tools.
 accumulate certificates/pairing.
 accumulate certificates/interactive.
+% accumulate certificates/lf_terms.
 
 %% Helper predicates
 type loop prop -> prop.
@@ -59,7 +60,9 @@ exampleCheck AxRels PP_Hints Int Ctx Term Goal :-
   print "Yes!\n").
 
 :if "DEBUG:main" main :- !,
-example "LFFirstOrderPos".
+example "PositiveFormulaNegatveProver".
+% example "LFFirstOrderProofsNegOPosI".
+% example "NpropNtyNa_Nprop".
 % pi prop\ pi ty\ pi nat\ pi z\ pi succ\
 %   axiom (n prop) (n ty) => rel (n prop) (n prop) (n prop) => rel (n ty) (n prop) (n prop) =>
 %   store dd_index nat (sort (n prop)) => store dd_index z (negbox (app nat #)) => store dd_index succ (negbox (prod (negbox (app nat #)) (_\ negbox (app nat #)) #)) =>
@@ -168,7 +171,58 @@ pi ty\ pi ky\ pi i\ pi o\ pi t\ pi q\ pi f\ sigma Sort\ exampleAll
       pr q (negbox (prod (negbox (app i #)) (_\ negbox (app o #)) #)),
       pr f (negbox (prod (negbox (app i #)) (_\ negbox (prod (negbox (app i #)) (_\ negbox (app i #)) #)) #))]
       (negbox (app o #)).
+example "LFFirstOrderProofsNegOPosI" :-
+%  0      1      2     3     4     5     6     7      8       9       10
+pi ty\ pi ky\ pi i\ pi o\ pi t\ pi q\ pi f\ pi pf\ pi all\ pi imp\ pi impl\ exampleCheck
+%  0      1      2     3     4     5     6     7      8       9       10
+      [axiom (n ty) (n ky), rel (n ty) (n ty) (n ty), rel (n ty) (n ky) (n ky)]
+      [sort_name ky "Kind", sort_name ty "Type", term_to_latex impl "imp_l", term_to_latex t "t", term_to_latex all "\\forall", term_to_latex imp "imp", term_to_latex q "Q", term_to_latex i "i", term_to_latex f "f", term_to_latex o "o", term_to_latex pf "pf"]
+      5 [pr i (sort (n ty)), pr o (sort (n ty)),
+      pr all (negbox (prod (negbox (prod (negbox (app i #)) (_\ negbox (app o #)) #)) (_\ negbox (app o #)) #)),
+      pr imp (negbox (prod (negbox (app o #)) (_\ negbox (prod (negbox (app o #)) (_\ negbox (app o #)) #)) #)),
+      pr pf (negbox (prod (negbox (app o #)) (_\ sort (n ty)) #)),
+      pr t (negbox (app i #)),
+      pr q (negbox (app o #)),
+      pr f (negbox (prod (negbox (app i #)) (_\ negbox (prod (negbox (app i #)) (_\ negbox (app i #)) #)) #)),
+      pr impl (negbox (prod (negbox (app o #)) (a\ negbox (prod (negbox (app o #)) (b\ negbox (prod (negbox (prod (negbox (app pf (negbox (app a #) ` #))) (_\ negbox (app pf (negbox (app b #) ` #))) #)) (_\ negbox (app pf (negbox (app imp ((negbox (app a #)) ` ((negbox (app b #)) ` #))) ` #))) #)) #)) #))]
+      (app impl (negbox (app q #) ` (negbox (app q #) ` (negbox (fun (negbox (app pf (negbox (app q #) ` #))) (x\x)) ` #))))
+      (app pf (negbox (app imp ((negbox (app q #)) ` ((negbox (app q #)) ` #))) ` #)).
 
+example "PositiveFormulaNegatveProver" :- %% Takes 10 minutes but succeeds
+%  0      1      2     3     4     5     6     7      8       9       10
+pi ty\ pi ky\ pi i\ pi o\ pi t\ pi q\ pi f\ pi pf\ pi all\ pi imp\ pi impl\ pi foo\ sigma T\ exampleCheck
+%  0      1      2     3     4     5     6     7      8       9       10
+      [axiom (n ty) (n ky),
+      axiom (p ty) (n ky),
+      rel (n ty) (n ty) (n ty),
+      rel (p ty) (n ty) (n ty),
+      rel (n ty) (p ty) (n ty),
+      rel (p ty) (p ty) (n ty),
+      rel (n ty) (n ky) (n ky),
+      rel (p ty) (n ky) (n ky)]
+      [sort_name ky "Kind", sort_name ty "Type", term_to_latex foo "foo", term_to_latex impl "imp_l", term_to_latex t "t", term_to_latex all "\\forall", term_to_latex imp "imp", term_to_latex q "Q", term_to_latex i "i", term_to_latex f "f", term_to_latex o "o", term_to_latex pf "pf"]
+      15 [pr i (sort (n ty)),
+      pr o (sort (p ty)),
+      pr imp (negbox (prod (negbox (app o #)) (_\ negbox (prod (negbox (app o #)) (_\ negbox (app o #)) #)) #)),
+      pr pf (negbox (prod (negbox (app o #)) (_\ sort (n ty)) #)),
+      pr q (negbox (app o #)),
+      pr impl
+      (negbox (prod (negbox (app o #)) (a\
+        negbox (prod (negbox (app o #)) (b\
+          negbox (prod (negbox (prod (negbox (app pf (a ` #))) (_\ negbox (app pf (b ` #))) #)) (_\
+            negbox (app imp (a ` b ` (kappa (negbox (app o #)) (x\ app pf (x ` #)))))
+          ) # )
+        ) # )
+      ) # )),
+      pr foo
+          (negbox (prod (negbox (prod (negbox (app pf (q ` #))) (_\ negbox (app pf (q ` #))) #)) (_\
+            (negbox (app pf (q ` # )))) #))
+        ]
+      (app impl (q ` q ` negbox (fun (negbox (app pf (q ` #))) (x\ app x #)) ` #))
+      (negbox (app imp (q ` q ` (kappa (negbox (app o #)) (x\ app pf (x ` #)))))).
+      % (app foo (negbox (fun (negbox (app pf (q ` #))) (x\ app x #)) ` #))
+      % (negbox (app pf (q ` #))).
+      % (sort (n ty)).
 % example "FirstOrder" :-
 % pi prop\ pi term\ pi ty\ pi ky\ pi p\ pi f\ pi t\
 % exampleCheck [axiom (n prop) (n ky), axiom (n term) (n ty), axiom (n ty) (n ky), rel (n prop) (n prop) (n prop), rel (n ty) (n ky) (n ky), rel (n ty) (n ty) (n ty)]
