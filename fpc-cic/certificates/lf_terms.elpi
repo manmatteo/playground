@@ -1,0 +1,40 @@
+accum_sig "../pts-certificates".
+% namespace lf{
+% shorten certificates.{ p, n, sort, axiom, rel, prodL_je, prodR_jc, releaseL_je, releaseR_je, decideL_jc, decideL_jc, decideR_jc, storeR_jc, storeL_jc, axiomL_je, axiomL_je, axiomR_je, prodsort_jc, sorted_jc }.
+
+kind ltrm type.
+type !let  ltrm -> ltrm -> (ltrm -> ltrm) -> ltrm.
+type !lam  ltrm -> (ltrm -> ltrm) -> ltrm.
+type !prod ltrm -> (ltrm -> ltrm) -> ltrm.
+type !app  ltrm -> ltrm -> ltrm.
+type !sort  ps -> ltrm.
+type varidx  ltrm -> index.
+type lfterm ltrm -> cert.
+type #trm cert -> ltrm.
+
+type ty s.
+type ky s.
+
+axiom (p ty) (n ky).
+axiom (n ty) (n ky).
+rel (p ty) (n ty) (n ty).
+rel (n ty) (p ty) (n ty).
+rel (n ty) (n ty) (n ty).
+rel (p ty) (p ty) (n ty).
+rel (n ky) (p ty) (n ty).
+rel (n ky) (n ty) (n ty).
+
+prodL_je    (lfterm (T Arg))      _Sort _SortCert (lfterm Arg) (x\ lfterm (T (#trm x))).
+prodR_jc    (lfterm (!lam Ty T))   _Sort _SortCert (x\ lfterm (T (#trm x))).
+releaseL_je (lfterm (!let Ty A T)) ty    _SortCert (x\ lfterm (T (#trm x))).
+releaseR_je (lfterm T)            _Sort _SortCert (lfterm T).
+decideL_jc  (lfterm (!app T1 T2))  ky    _SortCert (lfterm T2) (varidx T1).
+decideL_jc  (lfterm (!app T1 T2))  ty    _SortCert (lfterm T2) (varidx T1).
+decideR_jc  (lfterm T)            ty    _SortCert (lfterm T).
+storeR_jc   (lfterm T)                            (lfterm T).
+storeL_jc   (x\ lfterm (T_ (#trm x))) (x\ varidx (#trm x)).
+axiomL_je   (lfterm _A)           ky _SortCert.
+axiomL_je   (lfterm _A)           ty _SortCert.
+axiomR_je   (lfterm A)            ty _SortCert         (varidx A).
+prodsort_jc (lfterm (!prod A B))   _Sort1 _Sort2 _Sort3 (varidx X) (lfterm A) (lfterm (B X)) _Cont.
+sorted_jc   (lfterm A) :- print A.
