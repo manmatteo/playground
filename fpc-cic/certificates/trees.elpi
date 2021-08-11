@@ -1,0 +1,22 @@
+kind node type.
+type tree list node -> cert.
+type namedrule string -> string -> node.
+type rul string -> node.
+type son  list node -> node.
+type namedson string -> list node -> node.
+type idx cert -> index.
+
+% shorten certificates.{ p, n, sort, axiom, rel, prodL_je, prodR_jc, releaseL_je, releaseR_je, decideL_jc, decideL_jc, decideR_jc, storeR_jc, storeL_jc, axiomL_je, axiomL_je, axiomR_je, prodsort_jc, sorted_jc }.
+prodL_je    (tree [rul "prodL", namedson SortString SortTree, son LTree, son RTree]) Sort (tree SortTree) (tree LTree) (x\ tree RTree) :- sort_name Sort SortString.
+prodR_jc    (tree [rul "prodR", namedson SortString SortTree, son T]) Sort (tree SortTree) (x\ tree T) :- sort_name Sort SortString.
+releaseL_je (tree [rul "relL", namedson SortString SortTree, son T]) Sort (tree SortTree)  (x\ tree T) :- sort_name Sort SortString.
+releaseR_je (tree [rul "relR",  namedson SortString SortTree, son T]) Sort (tree SortTree)   (tree T) :- sort_name Sort SortString.
+decideL_jc  (tree [namedrule "relR" NString,  namedson SortString SortTree, son T]) Sort (tree SortTree)   (tree T) (idx N) :- sort_name Sort SortString, term_to_string N NString.
+decideR_jc  (tree [rul "relR",  namedson SortString SortTree, son T]) Sort (tree SortTree)   (tree T) :- sort_name Sort SortString.
+storeR_jc   (tree [rul "storeR", son T])                     (tree T).
+axiomL_je   (tree [rul "axL", namedson SortString SortTree]) Sort (tree SortTree)                 :- sort_name Sort SortString.
+axiomR_je   (tree [namedrule "axl" NString, namedson SortString SortTree]) Sort (tree SortTree) (idx N) :- sort_name Sort SortString, term_to_string N NString.
+prodsort_jc (tree [rul "prodsort", namedson SorS1 ST1, namedson SorS2 ST2, namedson SorS3 ST3]) Sort1 Sort2 Sort3 (idx A_) (tree ST1) (tree ST2) (tree ST3) :-
+  term_to_string Sort1 SorS1, term_to_string Sort2 SorS2, term_to_string Sort3 SorS3.
+sorted_jc   (tree [rul "sorted"]).
+storeL_jc   (x\ tree [rul "storeL", son T]) (x\ idx A_) (tree T).

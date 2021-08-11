@@ -2,38 +2,38 @@ type pairing cert -> cert -> cert.
 type pairingdex index -> index -> index.
 
 prodL_je    (pairing A B) Sort (pairing C1 Ca) (pairing C2 Cb) (x\ pairing (C3 x) (Cc x)) :-
-  prodL_je A Sort C1 C2 C3,
-  prodL_je B Sort Ca Cb Cc.
+  prodL_je A Sort C1 C2 C3,%, print "done 1",
+  prodL_je B Sort Ca Cb Cc.%, print "done 2".
 prodR_jc    (pairing A B) Sort (pairing C1 Ca)        (x\ pairing (C2 x) (Cb x)) :-
-  prodR_jc A Sort C1 C2,
-  prodR_jc B Sort Ca Cb.
+  prodR_jc A Sort C1 C2,% print "done 1",
+  prodR_jc B Sort Ca Cb.% print "done 2".
 releaseL_je (pairing A B) Sort (pairing C1 Ca)        (x\ pairing (C2 x) (Cb x)) :-
-  releaseL_je A Sort C1 C2,
-  releaseL_je B Sort Ca Cb.
+  releaseL_je A Sort C1 C2,%, print "done 1",
+  releaseL_je B Sort Ca Cb.%, print "done 2".
 releaseR_je (pairing A B) Sort (pairing C1 Ca)        (pairing C2 Cb) :- 
-  releaseR_je A Sort C1 C2,
-  releaseR_je B Sort Ca Cb.
+  releaseR_je A Sort C1 C2,%, print "done 1",
+  releaseR_je B Sort Ca Cb.%, print "done 2".
 decideL_jc  (pairing A B) Sort (pairing C1 Ca)        (pairing C2 Cb) (pairingdex I1 Ia) :-
-  decideL_jc A Sort C1 C2 I1,
-  decideL_jc B Sort Ca Cb Ia.
+  decideL_jc A Sort C1 C2 I1,%, print "done 1",
+  decideL_jc B Sort Ca Cb Ia.%, print "done 2".
 decideR_jc  (pairing A B) Sort (pairing C1 Ca)        (pairing C2 Cb) :-
-  decideR_jc A Sort C1 C2,
-  decideR_jc B Sort Ca Cb.
+  decideR_jc A Sort C1 C2,%, print "done 1",
+  decideR_jc B Sort Ca Cb.%, print "done 2".
 storeR_jc   (pairing A B)                             (pairing C1 Ca) :-
-  storeR_jc A C1,
-  storeR_jc B Ca.
+  storeR_jc A C1,%, print "done 1",
+  storeR_jc B Ca.%, print "done 2".
 axiomL_je   (pairing A B) Sort (pairing C1 Ca) :-
-  axiomL_je A Sort C1,
-  axiomL_je B Sort Ca.
+  axiomL_je A Sort C1,%, print "done 1",
+  axiomL_je B Sort Ca.%, print "done 2".
 axiomR_je   (pairing A B) Sort (pairing C1 Ca)        (pairingdex I1 Ia) :-
-  axiomR_je A Sort C1 I1,
-  axiomR_je B Sort Ca Ia.
+  axiomR_je A Sort C1 I1,%, print "done 1",
+  axiomR_je B Sort Ca Ia.%, print "done 2".
 prodsort_jc (pairing A B) Sort1 Sort2 Sort3 (pairingdex Idx1 Idx2) (pairing C1 Ca) (pairing C2 Cb) (pairing C3 Cc) :-
-  prodsort_jc A Sort1 Sort2 Sort3 Idx1 C1 C2 C3,
-  prodsort_jc B Sort1 Sort2 Sort3 Idx2 Ca Cb Cc.
+  prodsort_jc A Sort1 Sort2 Sort3 Idx1 C1 C2 C3,%, print "done 1",
+  prodsort_jc B Sort1 Sort2 Sort3 Idx2 Ca Cb Cc.%, print "done 2".
 sorted_jc   (pairing A B) :-
-  sorted_jc A,
-  sorted_jc B.
-storeL_jc   (x\ pairing (A x) (B x)) (x\ pairingdex (I1 x) (Ia x)) :-
-  storeL_jc A I1,
-  storeL_jc B Ia.
+  sorted_jc A,%, print "done 1",
+  sorted_jc B.%, print "done 2".
+storeL_jc   (x\ pairing (A x) (B x)) (x\ pairingdex (I1 x) (Ia x)) (pairing C1 Ca):-
+  storeL_jc A I1 C1,%, print "done 1",
+  storeL_jc B Ia Ca.%, print "done 2".
