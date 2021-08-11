@@ -22,7 +22,7 @@ type axiomL_je   cert -> s -> cert                           -> prop.
 type axiomR_je   cert -> s -> cert                  -> index -> prop.
 type prodsort_jc cert -> ps -> ps -> ps -> index -> cert -> cert -> cert -> prop.
 type sorted_jc   cert                                        -> prop.
-type storeL_jc   (cert -> cert) -> (cert -> index)          -> prop.
+type storeL_jc   (cert -> cert) -> (cert -> index)  -> cert -> prop.
 
 %% Sorts, axioms, relations
 % type sort  s -> term.

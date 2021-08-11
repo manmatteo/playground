@@ -122,8 +122,8 @@ asyncr Cert T (unk A) :-
   asyncr Cert' T (str A).
 % store_l
 asyncl Cert [N] T R :-
-  storeL_jc Cert Index,
-  pi w\ store (Index (#cert w)) w N => asyncr (Cert (#cert w)) (T w) (R w).
+  storeL_jc Cert Index Cert',
+  pi w\ store (Index (#cert w)) w N => asyncr Cert' (T w) (R w).
 %release_r
 syncr Cert (negbox T) N :-
   releaseR_je Cert Sort SortCert Cert',
@@ -137,5 +137,7 @@ syncl Cert P (kappa P T) A :-
   syncr SortCert P (sort (p Sort)),
   asyncl Cert' [P] T (x\ str A).
 
-%% Placeholder. Currently unused in the kernel.
-beta X X.
+% Let's try with Dale's ideas!
+% cut X Y Z :- lcut_t X Y Z; rcut_t X Y Z.
+% lcut_t (posbox T) Xi (Xi T).
+% lcut_t (posbox T) Xi (Xi T).
