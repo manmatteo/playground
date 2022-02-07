@@ -1,0 +1,59 @@
+% Aim: interpret terms in one pass, without resorting to the usual
+% two phases pre-processing (tagging - clause building => resolution)
+
+% Completely broken at the moment
+
+kind ty type.
+kind tm type.
+
+type app tm -> tm -> tm.
+type abs (tm -> tm) -> tm.
+
+type arr ty -> ty -> ty.
+
+type q   ty -> prop.
+type ans ty -> ty -> prop.
+
+goi_clausify Term Ty Clauses :-
+  
+goi_clausify (abs M) (arr Ty2 Ty1) Clauses :-
+  pi ty3\ pi ty4\ pi x\
+  goi_clausify (M x) Ty1 Cl,
+  append Cl
+  (q Ty2 :- q ty4) =>
+  (q ty3 :- q Ty1) => goi_ans M ty3 X.
+
+goi_start Term Ty X :-
+  pi t\ q t =>
+    goi_interp Term t (ans X t).
+
+goi_interp Term Type Goal :-
+  goi_clause Term Type Clause,
+  goi_backchain Clause Goal.
+
+
+goi_clause (abs M) (arr Ty2 Ty1) Cl :-
+  
+
+goi_ans (abs M) (arr Ty2 Ty1) X :-
+  pi ty3\ pi ty4\
+  (q Ty2 :- q ty4) =>
+  (q ty3 :- q Ty1) => goi_ans M ty3 X.
+
+goi_ans (app T U) Ty1 X :-
+  pi ty2\ pi ty3\ pi ty4\
+  (q ty2 :- q Ty1) =>
+  (ans X Ty1 :- ans X ty2) =>
+  (q 
+
+goi_backchain A A.
+goi_backchain (<- A B) G :- goi_backchain B G, goi_interp A.
+
+%% A reminder: a Prolog interpreter
+interp X :-
+  clause A,
+  backchain A X.
+backchain A A.
+backchain (imp A B) G :-
+  backchain B G, interp A.
+
