@@ -1,0 +1,54 @@
+% A continuation passing interpreter based on the Geometry of Interaction
+kind ty type.
+kind tm type.
+kind label type.
+
+type app tm -> tm -> tm.
+type abs (tm -> tm) -> tm.
+type arr ty -> ty -> ty.
+
+kind assumption type.
+type of tm -> ty -> label -> assumption.
+typeabbrev ctx (list assumption).
+
+type q   label -> prop.
+type ans tm -> label -> prop.
+
+type larr label -> label -> label.
+
+type split ctx -> ctx -> ctx -> prop.
+split [] [] [].
+split [A|L] L1 [A|L2] :- split L L1 L2.
+split [A|L] [A|L1] L2 :- split L L1 L2.
+
+
+type interp ctx -> tm -> ty -> label -> prop -> prop.
+interp A B C D E :- print "interp" A B C D E, fail.
+interp Ctx (app M1 M2) Ty1 L1 K :-
+  split Ctx Ctx1 Ctx2,
+  pi l2\ pi l3\ pi l4\
+  (q L1 :- q l2) =>
+  (q l4 :- q l3) =>
+  (ans X0 L1 :- ans X0 l2) =>
+  (ans X1 l3 :- ans X1 l4) =>
+  interp Ctx1 M1 (arr Ty2 Ty1) (larr l3 l2) (interp Ctx2 M2 Ty2 l4 K).
+
+interp Ctx (abs X) (arr Ty1 Ty2) (larr L1 L2) K :-
+  pi l3\ pi l4\
+  (q l3 :- q L1) =>
+  (q L2 :- q l4) =>
+  (ans X0 L1 :- ans X0 l3) =>
+  (ans X1 l4 :- ans X1 L2) =>
+  pi x\
+  interp [of x Ty1 l4 | Ctx] (X x) Ty2 l3 K.
+
+interp Ctx X Ty1 L1 K :-
+  std.mem Ctx (of X Ty1 L2),
+  (q L2 :- q L1) =>
+  (ans X0 L1 :- ans X0 L2) =>
+  K.
+
+type test prop.
+test :-
+  pi o\ pi l\ (q l) => interp [] (abs (x\ abs y\ app x y)) (arr (arr o o) (arr o o)) L (ans X l).
+
