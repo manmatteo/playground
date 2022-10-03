@@ -1,0 +1,20 @@
+** Garbage collector
+*** Tseitin Constants
+   - Tseitlin constants are introduced into formulas to simply the
+     alternation depth of logical connectives.
+   - According to Dyckhoff's slides titled "Geometrisation of
+     first-order logic", what I'm calling "introducing Tseitin
+     constants" here has also been called "atomisation" by Skolem and
+     "Morleyization".  The main semantic theorem is a "conservative
+     extension theorem".
+*** Write an FPC that checks miniscoping
+    Wrong Conjecture (this conjecture is wrong): Assume that I have
+    proved in lProlog that (miniscope B C) holds.  Here, C is the
+    result of moving quantifiers in.  Then we have the following two
+    conjection:
+    - If we polarize the connectives multiplicatively, then B |- C in
+      MLL.
+    - If we polarize the connectives additively, then C |- B in ALL. 
+    - (Both MLL and ALL have the usual first-order quantifier rules.)
+    If this conjecture holds, the we can write FPCs that mimic in LKF
+    the proof system for MLL and ALL.

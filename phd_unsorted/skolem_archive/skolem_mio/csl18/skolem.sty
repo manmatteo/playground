@@ -1,0 +1,193 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{skolem}[2018/04/13 skolem]
+
+\RequirePackage{xspace}
+\RequirePackage{graphicx}
+\RequirePackage{xcolor}
+\RequirePackage{relsize}
+\RequirePackage{letltxmacro}
+
+\RequirePackage{microtype}
+
+\RequirePackage{proof}
+
+\ProcessOptions\relax
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% general math and proof.sty
+
+\allowdisplaybreaks[4]
+
+\renewcommand*\inferPostLabel[1]{\text{#1}}
+
+\newcommand*\set[1]{\left\{#1\right\}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% sequents
+
+% write \seq{foo |- bar}
+\newcommand*\seq[1]{\seq@#1\seq@end}
+\def\seq@#1|-#2\seq@end{{#1\mathstrut}{\mkern 2mu\vdash\mkern 2mu}{#2}}
+
+\newcommand*\G{\Gamma}
+\newcommand*\D{\Delta}
+\newcommand*\W{\Omega}
+\newcommand*\Si{\Sigma}
+\newcommand*\Th{\Theta}
+
+\newcommand*\DN{\mathbin{\Downarrow}}
+\newcommand*\UP{\mathbin{\Uparrow}}
+\newcommand*\emp{\cdot}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% logic: connectives
+
+\newcommand*\dual[1]{{#1}^\perp}
+
+\newcommand*\tri@conn[3]{%
+  \@ifnextchar+{\@firstoftwo{#2}}{%
+  \@ifnextchar-{\@firstoftwo{#3}}{%
+  #1%
+}}}
+
+\newcommand*\bin@pos[1]{\mathrel{%
+  \mathchoice{%
+    \ooalign{\scalebox{.8}{$\displaystyle#1$}\cr%
+      \hidewidth\raise 1.2ex\hbox{\scalebox{.4}{$\displaystyle+$}}\hidewidth}%
+  }{%
+    \ooalign{\scalebox{.8}{$\textstyle#1$}\cr%
+      \hidewidth\raise 1.1ex\hbox{\scalebox{.4}{$\textstyle+$}}\hidewidth}%
+  }{%
+    \ooalign{\scalebox{.8}{$\scriptstyle#1$}\cr%
+      \hidewidth\raise .8ex\hbox{\scalebox{.3}{$\scriptstyle\mkern 1mu\pmb+$}}\hidewidth}%
+  }{%
+    \ooalign{\scalebox{.8}{$\scriptscriptstyle#1$}\cr%
+      \hidewidth\raise .6ex\hbox{\scalebox{.3}{$\scriptscriptstyle\mkern 1mu\pmb+$}}\hidewidth}%
+  }%
+}}
+
+\newcommand*\bin@neg[1]{\mathrel{%
+  \mathchoice{%
+    \ooalign{\scalebox{.8}{$\displaystyle#1$}\cr%
+      \hidewidth\raise 1ex\hbox{\scalebox{.5}{$\displaystyle-$}}\hidewidth}%
+  }{%
+    \ooalign{\scalebox{.8}{$\textstyle#1$}\cr%
+      \hidewidth\raise 1ex\hbox{\scalebox{.5}{$\textstyle-$}}\hidewidth}%
+  }{%
+    \ooalign{\scalebox{.8}{$\scriptstyle#1$}\cr%
+      \hidewidth\raise .7ex\hbox{\scalebox{.5}{$\scriptstyle-$}}\hidewidth}%
+  }{%
+    \ooalign{\scalebox{.8}{$\scriptscriptstyle#1$}\cr%
+      \hidewidth\raise .6ex\hbox{\scalebox{.5}{$\scriptscriptstyle-$}}\hidewidth}%
+  }%
+}}
+
+\newcommand*\AND{\tri@conn{\land}{\bin@pos\land}{\bin@neg\land}}
+\newcommand*\OR{\tri@conn{\lor}{\bin@pos\lor}{\bin@neg\lor}}
+
+\newcommand*\const@pos[1]{\mathord{%
+  \mathchoice{%
+    \ooalign{\scalebox{.7}{$\displaystyle#1$}\cr%
+      \hidewidth\raise 1.2ex\hbox{\scalebox{.4}{$\displaystyle+$}}\hidewidth}%
+  }{%
+    \ooalign{\scalebox{.7}{$\textstyle#1$}\cr%
+      \hidewidth\raise 1.2ex\hbox{\scalebox{.4}{$\textstyle+$}}\hidewidth}%
+  }{%
+    \ooalign{\scalebox{.7}{$\scriptstyle#1$}\cr%
+      \hidewidth\raise .8ex\hbox{\scalebox{.3}{$\scriptstyle\mkern 1mu\pmb+$}}\hidewidth}%
+  }{%
+    \ooalign{\scalebox{.7}{$\scriptscriptstyle#1$}\cr%
+      \hidewidth\raise .6ex\hbox{\scalebox{.3}{$\scriptscriptstyle\mkern 1mu\pmb+$}}\hidewidth}%
+  }
+}}
+
+\newcommand*\const@neg[1]{\mathord{%
+  \mathchoice{%
+    \ooalign{\scalebox{.7}{$\displaystyle#1$}\cr%
+      \hidewidth\raise 1.2ex\hbox{\scalebox{.4}{$\displaystyle-$}}\hidewidth}%
+  }{%
+    \ooalign{\scalebox{.7}{$\textstyle#1$}\cr%
+      \hidewidth\raise 1.2ex\hbox{\scalebox{.4}{$\textstyle-$}}\hidewidth}%
+  }{%
+    \ooalign{\scalebox{.7}{$\scriptstyle#1$}\cr%
+      \hidewidth\raise .8ex\hbox{\scalebox{.4}{$\scriptstyle\mkern 1mu-$}}\hidewidth}%
+  }{%
+    \ooalign{\scalebox{.7}{$\scriptscriptstyle#1$}\cr%
+      \hidewidth\raise .6ex\hbox{\scalebox{.4}{$\scriptscriptstyle\mkern 1mu-$}}\hidewidth}%
+  }
+}}
+
+\newcommand*\TOP{\tri@conn{\top}{\const@pos\top}{\const@neg\top}}
+\newcommand*\BOT{\tri@conn{\bot}{\const@pos\bot}{\const@neg\bot}}
+
+\newcommand*\binder[1]{#1\binder@}
+\def\binder@#1.{{#1}{.}\,}
+\newcommand*\ALL{\binder\forall}
+\newcommand*\EX{\binder\exists}
+\newcommand*\NAB{\binder\nabla}
+\newcommand*\LAM{\binder\lambda}
+
+\newcommand*\NEG{\mathop{\lnot}}
+\newcommand*\WF[1]{(\texttt{wf}~#1)}
+\newcommand*\CP[2]{(\texttt{copy}~#1~#2)}
+
+\newcommand*\Cscr[1]{{\mathcal C}(#1)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% names of systems
+
+\newcommand*{\lP}{$\lambda$Prolog\xspace}
+\newcommand*\LK{\textit{LK}\xspace}
+\newcommand*\LKF{\textit{LKF}\xspace}
+\newcommand*\LKFa{\textit{LKF\/$^a$}\xspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% listings
+
+\colorlet{lprolog}{blue!70!black}
+
+\lstdefinelanguage{lprolog}{%
+  alsoletter={-},
+  classoffset=0,%
+  morekeywords={sig,module,type,kind,pi,sigma,end},%
+  keywordstyle=\color{lprolog},%
+  classoffset=0,%
+  otherkeywords={:-,=>,<=,\&},%
+  sensitive=true,%
+  morestring=[b]",%
+  morecomment=[l]\%,%
+  morecomment=[n]{/*}{*/},%
+}
+
+\lstset{%
+  basicstyle=\smaller\ttfamily,%
+  showspaces=false,%showstringspaces=false,
+  breakatwhitespace=true,breaklines=true,%
+  language=lprolog,%
+  commentstyle=\itshape,%
+  xleftmargin=10pt,
+  includerangemarker=false,
+}
+
+\newcommand*{\SavedLstInline}{}
+\LetLtxMacro\SavedLstInline\lstinline
+\DeclareRobustCommand*{\lstinline}{%
+  \ifmmode
+    \let\SavedBGroup\bgroup
+    \def\bgroup{%
+      \let\bgroup\SavedBGroup
+      \hbox\bgroup
+    }%
+  \fi
+  \SavedLstInline
+}
+\DeclareRobustCommand\lsti[1][]{\lstinline[basicstyle=\ttfamily,keepspaces=true,#1]}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\endinput
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main.tex"
+%%% End:

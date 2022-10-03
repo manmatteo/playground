@@ -1,0 +1,221 @@
+\begin{thebibliography}{10}
+
+\bibitem{andreoli92jlc}
+Jean-Marc Andreoli.
+\newblock Logic programming with focusing proofs in linear logic.
+\newblock {\em J. of Logic and Computation}, 2(3):297--347, 1992.
+\newblock \href {http://dx.doi.org/10.1093/logcom/2.3.297}
+  {\path{doi:10.1093/logcom/2.3.297}}.
+
+\bibitem{andrews81jacm}
+Peter~B. Andrews.
+\newblock Theorem proving via general matings.
+\newblock {\em J. ACM}, 28(2):193--214, 1981.
+\newblock \href {http://dx.doi.org/10.1145/322248.322249}
+  {\path{doi:10.1145/322248.322249}}.
+
+\bibitem{avigad03tocl}
+Jeremy Avigad.
+\newblock Eliminating definitions and skolem functions in first-order logic.
+\newblock {\em ACM Transactions on Computational Logic}, 4:402--415, 2003.
+
+\bibitem{baaz12jsl}
+Matthias Baaz, Stefan Hetzl, and Daniel Weller.
+\newblock On the complexity of proof deskolemization.
+\newblock {\em J. of Symbolic Logic}, 77(2):669--686, 2012.
+\newblock \href {http://dx.doi.org/10.2178/jsl/1333566645}
+  {\path{doi:10.2178/jsl/1333566645}}.
+
+\bibitem{baaz94fi}
+Matthias Baaz and Alexander Leitsch.
+\newblock On skolemization and proof complexity.
+\newblock {\em Fundamenta Informaticae}, 20(4):353--379, 1994.
+\newblock URL:
+  \url{https://content.iospress.com/articles/fundamenta-informaticae/fi20-4-4},
+  \href {http://dx.doi.org/10.3233/FI-1994-2044}
+  {\path{doi:10.3233/FI-1994-2044}}.
+
+\bibitem{barbosa17cade}
+Haniel Barbosa, Jasmin~Christian Blanchette, and Pascal Fontaine.
+\newblock Scalable fine-grained proofs for formula processing.
+\newblock In Leonardo de~Moura, editor, {\em 26th International Conference on
+  Automated Deduction (CADE)}, volume 10395 of {\em LNCS}, pages 398--412.
+  Springer, 2017.
+\newblock URL: \url{https://doi.org/10.1007/978-3-319-63046-5\_25}, \href
+  {http://dx.doi.org/10.1007/978-3-319-63046-5\_25}
+  {\path{doi:10.1007/978-3-319-63046-5\_25}}.
+
+\bibitem{blanco17cade}
+Roberto Blanco, Zakaria Chihani, and Dale Miller.
+\newblock Translating between implicit and explicit versions of proof.
+\newblock In Leonardo de~Moura, editor, {\em Automated Deduction - {CADE} 26 -
+  26th International Conference on Automated Deduction, Gothenburg, Sweden,
+  August 6-11, 2017, Proceedings}, volume 10395 of {\em Lecture Notes in
+  Computer Science}, pages 255--273. Springer, 2017.
+\newblock URL: \url{https://doi.org/10.1007/978-3-319-63046-5\_16}, \href
+  {http://dx.doi.org/10.1007/978-3-319-63046-5\_16}
+  {\path{doi:10.1007/978-3-319-63046-5\_16}}.
+
+\bibitem{chihani13pxtp}
+Zakaria Chihani, Dale Miller, and Fabien Renaud.
+\newblock Checking foundational proof certificates for first-order logic
+  (extended abstract).
+\newblock In J.~C. Blanchette and J.~Urban, editors, {\em Third International
+  Workshop on Proof Exchange for Theorem Proving (PxTP 2013)}, volume~14 of
+  {\em EPiC Series}, pages 58--66. EasyChair, 2013.
+
+\bibitem{chihani17jar}
+Zakaria Chihani, Dale Miller, and Fabien Renaud.
+\newblock A semantic framework for proof evidence.
+\newblock {\em J. of Automated Reasoning}, 59:287--330, 2017.
+\newblock doi:\texttt{10.1007/s10817-016-9380-6}.
+\newblock URL: \url{http://dx.doi.org/10.1007/s10817-016-9380-6}, \href
+  {http://dx.doi.org/10.1007/s10817-016-9380-6}
+  {\path{doi:10.1007/s10817-016-9380-6}}.
+
+\bibitem{church40}
+Alonzo Church.
+\newblock A formulation of the {Simple} {Theory} of {Types}.
+\newblock {\em J. of Symbolic Logic}, 5:56--68, 1940.
+
+\bibitem{denivelle02csl}
+Hans de~Nivelle.
+\newblock Extraction of proofs from the clausal normal form transformation.
+\newblock In {\em CSL: 16th Workshop on Computer Science Logic}, volume 2471 of
+  {\em LNCS}, pages 584--598. LNCS, Springer-Verlag, 2002.
+
+\bibitem{dunchev15lpar}
+Cvetan Dunchev, Ferruccio Guidi, Claudio~Sacerdoti Coen, and Enrico Tassi.
+\newblock {ELPI:} fast, embeddable, $\lambda${Prolog} interpreter.
+\newblock In Martin Davis, Ansgar Fehnker, Annabelle McIver, and Andrei
+  Voronkov, editors, {\em Logic for Programming, Artificial Intelligence, and
+  Reasoning - 20th International Conference, {LPAR-20} 2015, Suva, Fiji,
+  November 24-28, 2015, Proceedings}, volume 9450 of {\em LNCS}, pages
+  460--468. Springer, 2015.
+\newblock URL: \url{http://dx.doi.org/10.1007/978-3-662-48899-7\_32}, \href
+  {http://dx.doi.org/10.1007/978-3-662-48899-7\_32}
+  {\path{doi:10.1007/978-3-662-48899-7\_32}}.
+
+\bibitem{ebner16ijcar}
+Gabriel Ebner, Stefan Hetzl, Giselle Reis, Martin Riener, Simon Wolfsteiner,
+  and Sebastian Zivota.
+\newblock System description: {GAPT} 2.0.
+\newblock In Nicola Olivetti and Ashish Tiwari, editors, {\em Proceedings of
+  the 8th International Joint Conference on Automated Reasoning, {IJCAR} 2016},
+  volume 9706 of {\em LNCS}, pages 293--301. Springer, 2016.
+\newblock \href {http://dx.doi.org/10.1007/978-3-319-40229-1}
+  {\path{doi:10.1007/978-3-319-40229-1}}.
+
+\bibitem{farber16paar}
+Michael F{\"a}rber and Cezary Kaliszyk.
+\newblock No choice: Reconstruction of first-order {ATP} proofs without skolem
+  functions.
+\newblock In Pascal Fontaine, Stephan~Schulz 0001, and Josef Urban, editors,
+  {\em Proceedings of the 5th Workshop on Practical Aspects of Automated
+  Reasoning (PAAR)}, volume 1635 of {\em CEUR Workshop Proceedings}, pages
+  24--31. CEUR-WS.org, 2016.
+
+\bibitem{fontaine06tacas}
+Pascal Fontaine, Jean-Yves Marion, Stephan Merz, Leonor~Prensa Nieto, and
+  Alwen~Fernanto Tiu.
+\newblock Expressiveness + automation + soundness: Towards combining {SMT}
+  solvers and interactive proof assistants.
+\newblock In Holger Hermanns and Jens Palsberg, editors, {\em TACAS: Tools and
+  Algorithms for the Construction and Analysis of Systems, 12th International
+  Conference}, volume 3920 of {\em LNCS}, pages 167--181. Springer, 2006.
+\newblock \href {http://dx.doi.org/10.1007/11691372\_11}
+  {\path{doi:10.1007/11691372\_11}}.
+
+\bibitem{gentzen35}
+Gerhard Gentzen.
+\newblock Investigations into logical deduction.
+\newblock In M.~E. Szabo, editor, {\em {The Collected Papers of Gerhard
+  Gentzen}}, pages 68--131. North-Holland, Amsterdam, 1935.
+\newblock \href {http://dx.doi.org/10.1007/BF01201353}
+  {\path{doi:10.1007/BF01201353}}.
+
+\bibitem{girard91mscs}
+Jean-Yves Girard.
+\newblock A new constructive logic: classical logic.
+\newblock {\em Math. Structures in Comp. Science}, 1:255--296, 1991.
+\newblock \href {http://dx.doi.org/10.1017/S0960129500001328}
+  {\path{doi:10.1017/S0960129500001328}}.
+
+\bibitem{kohlenbach03apal}
+Ulrich Kohlenbach and Paulo Oliva.
+\newblock Proof mining in ${L}_1$-approximation.
+\newblock {\em Annals of Pure and Applied Logic}, 121(1):1--38, 2003.
+
+\bibitem{liang09tcs}
+Chuck Liang and Dale Miller.
+\newblock Focusing and polarization in linear, intuitionistic, and classical
+  logics.
+\newblock {\em Theoretical Computer Science}, 410(46):4747--4768, 2009.
+\newblock \href {http://dx.doi.org/10.1016/j.tcs.2009.07.041}
+  {\path{doi:10.1016/j.tcs.2009.07.041}}.
+
+\bibitem{miller87sl}
+Dale Miller.
+\newblock A compact representation of proofs.
+\newblock {\em Studia Logica}, 46(4):347--370, 1987.
+
+\bibitem{miller90abs}
+Dale Miller.
+\newblock Abstractions in logic programming.
+\newblock In Piergiorgio Odifreddi, editor, {\em Logic and Computer Science},
+  pages 329--359. Academic Press, 1990.
+\newblock URL:
+  \url{http://www.lix.polytechnique.fr/Labo/Dale.Miller/papers/AbsInLP.pdf.pdf}.
+
+\bibitem{miller91iclp}
+Dale Miller.
+\newblock Unification of simply typed lambda-terms as logic programming.
+\newblock In {\em Eighth International Logic Programming Conference}, pages
+  255--269, Paris, France, June 1991. MIT Press.
+
+\bibitem{miller83}
+Dale~A. Miller.
+\newblock {\em Proofs in Higher-order Logic}.
+\newblock PhD thesis, Carnegie-Mellon University, August 1983.
+\newblock URL:
+  \url{http://www.lix.polytechnique.fr/Labo/Dale.Miller/papers/th.pdf}.
+
+\bibitem{nadathur99cade}
+Gopalan Nadathur and Dustin~J. Mitchell.
+\newblock System description: {Teyjus} --- {A} compiler and abstract machine
+  based implementation of {$\lambda$Prolog}.
+\newblock In H.~Ganzinger, editor, {\em 16th Conf.\ on Automated Deduction
+  (CADE)}, number 1632 in LNAI, pages 287--291, Trento, 1999. Springer.
+
+\bibitem{nonnengart01handbook}
+Andreas Nonnengart and Christoph Weidenbach.
+\newblock Computing small clause normal forms.
+\newblock In Alan Robinson and Andrei Voronkov, editors, {\em Handbook of
+  Automated Reasoning}, volume~I, chapter~6, pages 335--367. Elsevier Science
+  B.V., 2001.
+
+\bibitem{reger17arcade}
+Giles Reger and Martin Suda.
+\newblock Checkable proofs for first-order theorem proving.
+\newblock In Giles Reger and Dmitriy Traytel, editors, {\em {ARCADE} 2017, 1st
+  International Workshop on Automated Reasoning: Challenges, Applications,
+  Directions, Exemplary Achievements}, volume~51 of {\em EPiC Series in
+  Computing}, pages 55--63. EasyChair, 2017.
+\newblock URL: \url{http://www.easychair.org/publications/paper/5W2B}.
+
+\bibitem{robinson01book}
+J.~Alan Robinson and Andrei Voronkov.
+\newblock {\em Handbook of Automated Reasoning}.
+\newblock MIT Press, 2001.
+
+\bibitem{stump13fmsd}
+Aaron Stump, Duckki Oe, Andrew Reynolds, Liana Hadarean, and Cesare Tinelli.
+\newblock {SMT} proof checking using a logical framework.
+\newblock {\em Formal Methods in System Design}, 42(1):91--118, 2013.
+
+\bibitem{troelstra00book}
+A.~S. Troelstra and H.~Schwichtenberg.
+\newblock {\em Basic Proof Theory}.
+\newblock Cambridge University Press, 2 edition, 2000.
+
+\end{thebibliography}

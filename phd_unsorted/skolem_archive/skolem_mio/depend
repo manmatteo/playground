@@ -1,0 +1,30 @@
+skolem-lk-examples.lpo: skolem-lk-examples.mod skolem-lk-examples.sig maxcert.sig lib.sig classical.sig lkf-formulas.sig lkf-kernel.sig lkf-certificates.sig
+maxcert.lpo: maxcert.mod maxcert.sig lkf-certificates.sig lkf-formulas.sig
+lkf-kernel.lpo: lkf-kernel.mod lkf-kernel.sig lkf-certificates.sig lib.sig classical.sig lkf-formulas.sig
+lkf-formulas.lpo: lkf-formulas.mod lkf-formulas.sig 
+lib.lpo: lib.mod lib.sig 
+ginterp.lpo: ginterp.mod ginterp.sig lib.sig classical.sig
+geo-fpc.lpo: geo-fpc.mod geo-fpc.sig lkf-certificates.sig lib.sig lkf-formulas.sig
+geo-examples.lpo: geo-examples.mod geo-examples.sig lib.sig classical.sig classical-examples.sig lkf-formulas.sig lkf-kernel.sig geo-fpc.sig lkf-certificates.sig
+exp-sk-fpc.lpo: exp-sk-fpc.mod exp-sk-fpc.sig lkf-certificates.sig lib.sig classical.sig lkf-formulas.sig
+exp-fpc.lpo: exp-fpc.mod exp-fpc.sig lkf-certificates.sig lib.sig classical.sig lkf-formulas.sig
+exp-examples.lpo: exp-examples.mod exp-examples.sig lib.sig classical.sig lkf-formulas.sig lkf-kernel.sig exp-sk-fpc.sig lkf-certificates.sig
+copy_interpreter.lpo: copy_interpreter.mod copy_interpreter.sig classical.sig lib.sig
+classical.lpo: classical.mod classical.sig lib.sig
+classical-examples.lpo: classical-examples.mod classical-examples.sig classical.sig lib.sig
+ck-trans.lpo: ck-trans.mod ck-trans.sig lib.sig classical.sig lkf-certificates.sig lkf-formulas.sig
+skolem-lk-examples.lp: skolem-lk-examples.lpo maxcert.lpo lib.lpo classical.lpo lkf-formulas.lpo lkf-kernel.lpo
+maxcert.lp: maxcert.lpo 
+lkf-kernel.lp: lkf-kernel.lpo 
+lkf-formulas.lp: lkf-formulas.lpo 
+lib.lp: lib.lpo 
+ginterp.lp: ginterp.lpo lib.lpo classical.lpo
+geo-fpc.lp: geo-fpc.lpo 
+geo-examples.lp: geo-examples.lpo lib.lpo classical.lpo classical-examples.lpo lkf-formulas.lpo lkf-kernel.lpo geo-fpc.lpo
+exp-sk-fpc.lp: exp-sk-fpc.lpo 
+exp-fpc.lp: exp-fpc.lpo 
+exp-examples.lp: exp-examples.lpo lib.lpo classical.lpo lkf-formulas.lpo lkf-kernel.lpo exp-sk-fpc.lpo
+copy_interpreter.lp: copy_interpreter.lpo classical.lpo lib.lpo
+classical.lp: classical.lpo 
+classical-examples.lp: classical-examples.lpo 
+ck-trans.lp: ck-trans.lpo 

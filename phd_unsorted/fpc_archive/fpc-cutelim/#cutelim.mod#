@@ -1,5 +1,0 @@
-module cutelim.
-accumulate oracle-fpc.
-
-cut CutForm Cert RightForm ImpCert RightCert :-
-  

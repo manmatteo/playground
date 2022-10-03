@@ -1,0 +1,125 @@
+% module ceres.
+% Sequent calculus kernel + Clause set generation 
+accumulate lambda.
+accumulate utility.
+
+% Polarities: needed if we want to do both CbN and CbV
+% Right now only negative polarities are used
+type isNegForm, isNegAtm, isPosForm, isPosAtm, isNeg, isPos     form -> prop. 
+
+% Focused sequents
+kind rhs                                 type.  % The RHS of the async sequent (either str or unk)
+type str                          form -> rhs.  % The right-hand-side is stored.
+type unk                          form -> rhs.  % The right-hand-side is unknown.
+kind seq                                 type.  % sequents
+type async           list form -> rhs  -> seq.  % async
+type lfoc                 form -> form -> seq.  % left focus
+type rfoc                         form -> seq.  % right focus
+% Indexing and marking, clause sets
+type unfoc           list form -> list form -> seq.
+kind index type.
+type cut_ancestor                form -> prop.
+type mark                       index -> prop.
+type storage            index -> form -> prop.  % storage of formulas
+
+% Sequent calculus proofs
+kind rul type.  % Sequent calculus rules
+typeabbrev proof (list rul).
+type impl proof -> rul.
+type impr, ax rul.
+type cut (pair form proof) -> rul.
+
+type ljf_entry      form -> proof  -> (list seq) -> prop.
+type check      list (pair index form) -> seq -> proof -> (list seq) -> prop.  % top-level predicate
+
+isNegForm (_ imp _).
+isNeg A :- isNegForm A ; isNegAtm A.
+% isPosForm (d+ _)    & isPosForm (some _)  & isPosForm f  &  isPosForm t+.
+isPos A :- isPosForm A.
+type o, f form.
+isNegAtm o.
+isPosForm f.
+
+ljf_entry Form Proof Cset :- check [] (async [] (unk Form)) Proof Cset. 
+:if "DEBUG" check Ctx Seq Proof Clause :- print "check" Ctx Seq Proof Clause, fail.
+
+% Sequent calculus rules
+% Structural Rules
+% decide
+check Ctx (async [] (str R)) Proof Cset :-
+  look Ctx _ N, isNeg N,
+  check Ctx (lfoc N R) Proof Cset.
+check Ctx (async [] (str P)) Proof T :-
+  isPos P, check Ctx (rfoc P) Proof T.
+% release
+check Ctx (lfoc P R) Proof T :- isPos P, check Ctx (async [P] (str R)) Proof T.
+check Ctx (rfoc N)   Proof T :- isNeg N, check Ctx (async [] (unk N))  Proof T.
+% store
+check Ctx (async [C|Theta] R) Proof Cset :- (isNeg C ; isPosAtm C),
+  pi w\ 
+  if (cut_ancestor C) (mark w =>
+    check [(pr w C)| Ctx] (async Theta R) Proof Cset
+  ) (
+    check [(pr w C)| Ctx] (async Theta R) Proof Cset
+  ).
+check Ctx (async [] (unk D)) Proof T :- (isPos D ; isNegAtm D),
+  check Ctx (async [] (str D)) Proof T.
+% Identity rules
+% Initial (negative - CbN)
+check Ctx (lfoc Na Na) [ax] Clause :-
+  isNegAtm Na,
+  cfilter Ctx LHS,
+  if (cut_ancestor Na) (Clause = [(unfoc LHS [Na])]) (
+    if (LHS = []) (Clause = []) (Clause = [(unfoc LHS [f])])
+  ).
+
+% Positive initial (needed if we want CbV)
+% check Ctx (rfoc Pa)    T :- isPosAtm Pa, initialR_je Indx, storage Indx Pa.
+
+% cut
+check Ctx (async [] (unk R)) [cut (pr F P1) | P2] Cset:-  
+  cut_ancestor F =>
+  check Ctx (async [] (unk F)) P1 Cset1,
+  check Ctx (async [F] (unk R)) P2 Cset2,
+  std.append Cset1 Cset2 Cset.
+
+% Asynchronous Rules
+% Implication right
+check Ctx (async [] (unk (A imp B))) [impr|P] Cset :-
+  if (cut_ancestor (A imp B)) (
+    cut_ancestor A => cut_ancestor B =>
+      check Ctx (async [A] (unk B)) P Cset
+  ) (
+    check Ctx (async [A] (unk B)) P Cset
+  ).
+
+% Synchronous Rules
+% Implication left
+check Ctx (lfoc (A imp B) R) [impl P1|P] Cset :-
+  if (cut_ancestor (A imp B)) (
+    cut_ancestor A => cut_ancestor B =>
+      check Ctx (rfoc A) P1 Cset1,
+      check Ctx (lfoc B R) P Cset2,
+      std.append Cset1 Cset2 Cset
+  ) (
+    check Ctx (rfoc A) P1 Cset1,
+    check Ctx (lfoc B R) P Cset2,
+    merge_cset Cset1 Cset2 Cset
+  ).
+
+type merge_cset, merge_aux list seq -> list seq -> list seq -> prop.
+merge_cset X Y Z :- print "merge" X Y Z, fail.
+merge_aux X Y Z :- print "mergeaux" X Y Z, fail.
+merge_cset [] _ [].
+merge_cset [A | C1] C2 C :-
+  merge_aux [A | C1] C2 C',
+  merge_cset C1 C2 C'',
+  std.append C' C'' C.
+merge_aux _ [] [].
+merge_aux [(unfoc L1 R1) | Cset1] [(unfoc L2 R2) | Cset2] [(unfoc L R) | Cset] :-
+  std.append L1 L2 L, std.append R1 R2 R,
+  merge_aux [(unfoc L1 R1) | Cset1] Cset2 Cset.
+
+pred cfilter i:list (pair index form), o:list form.
+cfilter [] [].
+cfilter [(pr X Y)|L] R :- if (mark X) (R = Y :: L1) (R = L1), cfilter L L1.

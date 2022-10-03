@@ -1,0 +1,215 @@
+Type arr,tensor,sum o -> o -> o.
+Type top o.
+
+Type p,q,r o.
+
+Define atomic : o -> prop by
+atomic p; atomic q; atomic r.
+
+Define wff : o -> prop by
+wff A := atomic A;
+wff (arr P Q) := wff P /\ wff Q;
+wff (tensor P Q) := wff P /\ wff Q;
+wff (sum P Q) := wff P /\ wff Q.
+
+Define linctx : olist -> prop by
+linctx nil;
+linctx (Head :: Rest) := atomic Head /\ linctx Rest;
+linctx ((arr P Q) :: Rest) := linctx Rest.
+
+% Helpers
+Define splitctx : olist -> olist -> olist -> prop by
+splitctx nil nil nil;
+splitctx (Head :: Rest) (Head :: L1) L2 := splitctx Rest L1 L2 /\ linctx (Head :: Rest);
+splitctx (Head :: Rest) L1 (Head :: L2) := splitctx Rest L1 L2 /\ linctx (Head :: Rest).
+
+Define subctx : olist -> olist -> prop by
+subctx X nil := linctx X;
+subctx (X :: Tail) (X :: Tail') := linctx (X :: Tail) /\ subctx Tail Tail';
+subctx (X :: Tail) List := linctx (X :: Tail) /\ subctx Tail List.
+
+Theorem splits_are_subctxs : forall L L1 L2, linctx L -> linctx L1 -> linctx L2 -> splitctx L L1 L2 -> subctx L L1 /\ subctx L L2.
+induction on 1.
+intros.
+case H1. % Case on L
+case H4. search. % Base: list is empty, thus splitted in empties
+% L is (Atom :: Rest)
+% Cases of split: can go to L1 or L2
+case H4. case H2. apply IH to H6 H10 H3 H7. search. 
+apply IH to H6 H9 H3 H7. search.
+
+case H3. apply IH to H6 H2 H10 H7. search.
+apply IH to H6 H2 H9 H7. search.
+
+% L is ((arr P Q) :: Rest), and then again cases of split
+case H4. case H2. apply IH to H5 H9 H3 H6. search. 
+apply IH to H5 H8 H3 H6. search.
+case H3. apply IH to H5 H2 H9 H6. search.
+apply IH to H5 H2 H8 H6. search.
+
+Theorem subctx_monotonic : forall X L1 L2, subctx L1 L2 -> member X L2 -> member X L1.
+induction on 1.
+intros.
+case H1. % Case on subctx
+case H2.
+case H2.
+search.
+apply IH to H4 H5.
+search.
+apply IH to H4 H2.
+search.
+
+Theorem subctx_remains : forall Head L1 L2, linctx L1 -> linctx L2 -> subctx L1 (Head :: L2) -> subctx L1 L2.
+induction on 3.
+intros. case H3. search. 
+case H1. 
+apply IH to H7 H2 H5.
+search.
+case H4. case H7.
+apply IH to H6 H2 H5.
+search.
+
+% Synthetic connectives
+Define pof : olist -> o -> prop by
+pof Delta (sum P Q) := linctx Delta /\ pof Delta P;
+pof Delta (sum P Q) := linctx Delta /\ pof Delta Q;
+pof Delta (tensor P Q) := linctx Delta /\ exists Delta1 Delta2, linctx Delta1 /\ linctx Delta2 /\ splitctx Delta Delta1 Delta2 /\ pof Delta1 P /\ pof Delta2 P;
+pof nil top;
+pof ((arr P Q)::nil) (arr P Q);
+pof (X :: nil) X := atomic X.
+
+%% Large step focusing judgements
+% Value (right focus)
+Define vof : olist -> o -> prop,
+% Functions (left focus)
+fof : olist -> o -> o -> prop,
+% Gamma |- Delta
+sof : olist -> olist -> prop,
+% Expressions (unfocused sequent)
+eof : olist -> o -> prop by
+
+vof Gamma P := exists Delta, linctx Delta /\ pof Delta P /\ sof Gamma Delta;
+
+fof Gamma P Q := forall Delta Gamma', linctx Delta /\ linctx Gamma  /\ linctx Gamma' /\ pof Delta P /\ splitctx Gamma' Gamma Delta -> eof Gamma' Q;
+
+sof Gamma nil;
+sof Gamma ((arr P Q) :: Delta) := linctx Delta /\ sof Gamma Delta /\ fof Gamma P Q;
+sof Gamma (X :: Delta) := linctx Delta /\ atomic X /\ member X Gamma /\ sof Gamma Delta; 
+
+eof Gamma R := exists P Q, member (arr P Q) Gamma /\ vof Gamma P /\ fof Gamma Q R;
+eof Gamma P := vof Gamma P.
+
+Theorem triv: eof nil (arr p p).
+unfold 7. unfold.
+exists ((arr p p) :: nil). split. search. search.
+unfold. search. search. unfold. intros. case H1. case H5. case H6. search. 
+
+Theorem arrow_identity: forall P Q Gamma, member (arr P Q) Gamma -> fof Gamma P Q. 
+intros. unfold. intros. 
+unfold. 
+exists P. exists Q.
+split. 
+case H2.
+apply splits_are_subctxs to H5 H4 H3 H7. apply subctx_monotonic to H8 H1. search.
+skip. % (needs to use ctx identity)
+skip. % (uses identity)
+
+Theorem identity: forall P Gamma, fof Gamma P P. 
+intros. unfold. intros.
+unfold 7. unfold. exists Delta. split. case H1. search. case H1. search.
+
+skip. % (uses ctx identity)
+
+Theorem ctx_identity : forall Gamma Delta, linctx Delta -> linctx Gamma -> subctx Gamma Delta -> sof Gamma Delta.
+induction on 1. % Induction on list length
+intros. case H1. % Cases of linctx Delta
+search. % 1 - Delta is nil. Fine.
+unfold. % 2 - Delta is (atomic :: Rest)
+search. search. % Rest is a linctx and Head is atomic, so I can apply the rule
+assert member Head (Head :: Rest).
+apply subctx_monotonic to H3 H6. search.
+backchain IH.
+apply subctx_remains to H2 H5 H3.
+search.
+skip. % (Uses arrow identity)
+
+Theorem id_arr_ctx: (forall P Gamma, wff P -> fof Gamma P P) /\ (forall P Q Gamma, wff (arr P Q) -> member (arr P Q) Gamma -> fof Gamma P Q) /\ (forall Gamma Delta, linctx Delta -> linctx Gamma -> subctx Gamma Delta -> sof Gamma Delta).
+induction on 1 1 1.
+split.
+% Theorem identity: forall P Gamma, wff P -> fof Gamma P P. 
+intros.
+ unfold. intros. unfold 7. unfold. exists Delta. split. case H2. search. case H2. search.
+%% External induction 1: identity uses context identity
+case H1.
+case H2.
+case H7. case H3. case H3. case H3. search. case H3. 
+search.
+unfold. search. search. apply splits_are_subctxs to H5 H4 _ H7. apply subctx_monotonic to H11 _. search.
+unfold.
+
+
+
+
+
+case H1.
+case H2.
+case H7. case H3. case H3. case H3. case H3. case H3. unfold. search. search.
+assert member P (P::nil). apply splits_are_subctxs to H6 H5 H4 H8.
+apply subctx_monotonic to H12 H10. search. search.
+case H2.
+apply splits_are_subctxs to H7 H6 H5 H9.
+apply IH2 to H5 H7 H11.
+
+backchain IH2.
+case H2.
+search.
+case H2. search.
+case H2.
+apply splits_are_subctxs to H7 H6 H5 H9. search.
+case H2.
+backchain IH2.
+apply splits_are_subctxs to H7 H6 H5 H9. search.
+case H2.
+backchain IH2.
+apply splits_are_subctxs to H7 H6 H5 H9. search.
+
+% Theorem arrow_identity: forall P Q Gamma, member (arr P Q) Gamma -> fof Gamma P Q. 
+intros.
+unfold.
+intros.
+unfold.
+exists P. exists Q.
+split. 
+case H3.
+apply splits_are_subctxs to H6 H5 H4 H8. apply subctx_monotonic to H9 H2. search.
+% Reduce to context identity
+unfold. exists Delta. split. case H3. search. case H3. search.
+% Case analysis for the general induction
+case H1.
+case H3.
+case H8. case H4. case H4. case H4. search. case H4. 
+assert member P (P::nil). apply splits_are_subctxs to H7 H6 H5 H9.
+apply subctx_monotonic to H13 H11. search. 
+case H3.
+apply splits_are_subctxs to H8 H7 H6 H10. 
+apply IH2 to H4 H6 H8 H12. search.
+% External induction: (uses identity) Should work without induction?
+case H1. case H4.
+backchain IH.
+% Theorem ctx_identity : forall Gamma Delta, linctx Delta -> linctx Gamma -> subctx Gamma Delta -> sof Gamma Delta.
+induction on 2. % Induction on list length
+intros. case H2. % Cases of linctx Delta
+search. % 1 - Delta is nil. Fine.
+unfold. % 2 - Delta is (atomic :: Rest)
+search. search. % Rest is a linctx and Head is atomic, so I can apply the rule
+assert member Head (Head :: Rest).
+apply subctx_monotonic to H4 H7. search.
+backchain IH3.
+apply subctx_remains to H3 H6 H4.
+search.
+unfold. search. backchain IH3. skip.
+assert wff (arr P1 Q).
+
+
+apply IH1 to 
+skip. % (Uses arrow identity)
