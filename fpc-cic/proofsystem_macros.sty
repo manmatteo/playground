@@ -1,0 +1,92 @@
+\ProvidesPackage{proofsystem_macros}
+
+\newcommand*{\hastype}[2]{#1 : #2}
+\newcommand*{\posbox}[1]{\left \lceil #1 \right \rceil }
+\newcommand*{\negbox}[1]{\left \lfloor #1 \right \rfloor }
+% \newcommand*{\bc}[2]{P\Downarrow #1 \vdash #2}
+\newcommand*{\Ctx}[0]{\Gamma}
+\newcommand*{\ptswf}[1]{#1\; wf}
+\newcommand*{\ptspsorts}{\mathscr P}
+\newcommand*{\ptsnsorts}{\mathscr N}
+\newcommand*{\ptssorts}{\mathscr S}
+\newcommand*{\ptsax}[0]{\mathscr A}
+\newcommand*{\ptsrule}[0]{\mathscr R}
+\newcommand*{\ptsinax}[2]{(#1,#2) \in \ptsax}
+\newcommand*{\ptsinrule}[3]{(#1,#2,#3) \in \ptsrule}
+\newcommand*{\ptslam}[3]{\lambda #1^{#2}.#3}
+\newcommand*{\ptskappa}[3]{\kappa #1^{#2}.(#3)}
+\newcommand*{\ptsname}[3]{(#1 : #2) := #3}
+\newcommand*{\ptsprod}[3]{(#1\colon#2)#3}
+\newcommand*{\ptsnprod}[2]{(#1 \to #2)}
+\newcommand*{\ptsprodk}[4]{(#1\colon#2)#3 \; #4}
+\newcommand*{\ptsnprodk}[3]{(#1 \to #2) \; #3}
+\newcommand*{\ptsapp}[2]{#1~#2}
+\newcommand*{\ptscons}[2]{#1 :: #2}
+\newcommand*{\ptsnil}[0]{\epsilon}
+\newcommand*{\subst}[3]{[#2/#3]#1}
+\ExplSyntaxOn\cs_set_eq:NN\IfEmptyTF\tl_if_blank:nTF\ExplSyntaxOff{}
+\NewDocumentCommand{\ptsasync}{m O{\cdot} m O{\cdot} O{\cdot}}{#1 \Uparrow #2 \vdash #3 : #4 \Uparrow #5}
+% \NewDocumentCommand{\ptssyncl}{m O{\cdot} m}{#1 \Downarrow #2 \vdash #3}
+\NewDocumentCommand{\ptsseq}{ts ta m m m m m}{
+      \providecommand{\seqarr}{\Uparrow}
+      \IfBooleanT{#1}{\renewcommand\seqarr{\Downarrow}}
+      \IfBooleanT{#2}{\renewcommand\seqarr{\Uparrow}}
+      #3 \seqarr \IfEmptyTF{#4}{\cdot}{#4} \vdash #5 : \IfEmptyTF{#6}{\cdot}{#6} \seqarr \IfEmptyTF{#7}{\cdot}{#7}}
+\newcommand{\bc}[5]{#1#2\Downarrow #3 : #4 \vdash #5}
+\NewDocumentCommand{\ptssorted}{m m m}{#1 \vdash #2 : #3}
+\newcommand{\rulewfe}[0]{
+  \infer{\ptswf\emptyset}{}
+}
+\newcommand{\rulewf}[4]{
+  \infer{\ptswf{#1,#2:#3}}{#4 \quad (#2 \not \in Dom(#1))}
+}
+\newcommand{\ruleax}[4]{
+  \infer{\ptsseq a{#1}{}{#2}{}{#3}}{#4 \quad \ptsinax{#2}{#3}}
+}
+\newcommand{\ruleprodwf}[6]{
+ \infer{\ptsseq a{#1}{}{\ptsprod{x}{A}{B}}{}{#4}}{
+    #5
+    \quad
+    #6
+    \quad \ptsinrule{#2}{#3}{#4}}
+}
+\newcommand{\ruleinitn}[4]{
+  \infer[axiom_n]{\ptsseq s{#1}{#2}{\ptsnil}{}{#2}}
+        {#4 \qquad #3^-\in\ptsnsorts}
+}
+\newcommand{\ruleinitp}[5]{
+  \infer[axiom_p]{\ptsseq s{#1, #2: #3)}{}{#2}{#3}{}}
+        {#5 \qquad #4^+\in\ptspsorts}
+}
+\newcommand{\ruleprodr}[7]{
+  \infer[P_r]{\ptsseq a{#1}{}{\ptslam{#2}{#3}{#4}}{\ptsprod{#2}{#3}{#5}}{}}
+        {#6 \quad #7}
+}
+\newcommand{\ruleprodl}[8]{ %% TODO Needs better implementation handling premises
+  \infer[P_l]{\ptsseq s{#1}{\ptsprod{#2}{#3}{#4}}{\ptscons{#5}{#6}}{}{#7}}
+        {#8}
+}
+\newcommand{\ruledecl}[7]{
+  \infer[decide_l]{\ptsseq a{#1 , #2 : #3}{}{\ptsapp{#2}{#4}}{}{#5}}
+        {#6 \quad #7}
+}
+\newcommand{\ruledecr}[5]{
+  \infer[decide_r]{\ptsseq a{#1}{}{\posbox{#2}}{}{#3}}
+        {#4 \quad #5}
+}
+\newcommand{\rulestorel}[6]{
+  \infer[store_{l}]{\ptsseq a{#1}{#2,\Theta}{#3}{#4}{}}
+        {#5 \quad #6}
+      }
+\newcommand{\rulestorer}[4]{
+  \infer[store_{r}]{\ptsseq a{#1}{}{\negbox{#2}}{#3}{}}
+        {#4}
+}
+\newcommand{\rulerell}[7]{
+  \infer[release_{l}]{\ptsseq s{#1}{#2}{\ptskappa{#3}{#2}{#4}}{}{#5}}
+        {#6 \qquad #7}
+}
+\newcommand{\rulerelr}[5]{
+  \infer[release_{r}]{\ptsseq s{#1}{}{\negbox{#2}}{#3}{}}
+        {#4 \qquad #5}
+}

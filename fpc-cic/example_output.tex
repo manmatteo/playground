@@ -1,0 +1,189 @@
+\documentclass{scrartcl}
+\usepackage{proofsystem_macros}
+\title{Some examples terms}
+\begin{document}
+In the system given by $axiom (Prop^-,Type^-)$ $rel (Prop^-,Prop^-,Prop^-)$ print all terms of type $Prop^-$ with context ${a:Prop^-,}$ and decide-depth 3
+\begin{itemize}
+\item $ 
+ \ptsnprodk{\negbox{\ptsnprodk{\negbox{\ptsapp{a}{\ptsnil}}}{\negbox{\ptsapp{a}{\ptsnil}}}{\ptsnil}}}{\negbox{\ptsnprodk{\negbox{\ptsapp{a}{\ptsnil}}}{\negbox{\ptsapp{a}{\ptsnil}}}{\ptsnil}}}{\ptsnil} 
+ $
+\item $ 
+ \ptsnprodk{\negbox{\ptsnprodk{\negbox{\ptsapp{a}{\ptsnil}}}{\negbox{\ptsapp{a}{\ptsnil}}}{\ptsnil}}}{\negbox{\ptsapp{a}{\ptsnil}}}{\ptsnil} 
+ $
+\item $ 
+ \ptsnprodk{\negbox{\ptsapp{a}{\ptsnil}}}{\negbox{\ptsnprodk{\negbox{\ptsapp{a}{\ptsnil}}}{\negbox{\ptsapp{a}{\ptsnil}}}{\ptsnil}}}{\ptsnil} 
+ $
+\item $ 
+ \ptsnprodk{\negbox{\ptsapp{a}{\ptsnil}}}{\negbox{\ptsapp{a}{\ptsnil}}}{\ptsnil} 
+ $
+\item $ \ptsapp{a}{\ptsnil} $
+\end{itemize}
+In the system given by $axiom (Prop^-,Type^+)$ $rel (Prop^-,Prop^-,Prop^-)$ print all terms of type $Prop^-$ with context ${a:Prop^-,}$ and decide-depth 3
+\begin{itemize}
+\item $ \ptsnprodk{a}{a}{\ptskappa{x_3}{Prop^-}{\posbox{x_3}}} $
+\item $ \ptsnprodk{a}{a}{\ptskappa{x_3}{Prop^-}{\posbox{a}}} $
+\item $ \posbox{a} $
+\end{itemize}
+In the system given by $axiom (Prop^+,Type^+)$ $axiom (Prop^-,Type^+)$ $rel (Prop^+,Prop^+,Prop^-)$ print all terms of type $Prop^-$ with context ${a:Prop^+,}$ and decide-depth 3
+\begin{itemize}
+\item $ \ptsnprodk{a}{a}{\ptskappa{x_3}{Prop^-}{\posbox{x_3}}} $
+\end{itemize}
+In the system given by $axiom (Prop^+,Type^+)$ $axiom (Prop^-,Type^+)$ $rel (Prop^+,Prop^+,Prop^-)$ print all terms of type $Prop^+$ with context ${a:Prop^+,}$ and decide-depth 3
+\begin{itemize}
+\item $ \posbox{a} $
+\end{itemize}
+In the system given by $axiom (Prop^+,Type^-)$ $axiom (Prop^-,Type^+)$ $rel (Prop^+,Prop^+,Prop^-)$ print all terms of type $Prop^-$ with context ${a:Prop^+,}$ and decide-depth 3
+\begin{itemize}
+\item $ 
+ \ptsnprodk{\negbox{\ptsapp{a}{\ptsnil}}}{\negbox{\ptsapp{a}{\ptsnil}}}{\ptskappa{x_3}{Prop^-}{\posbox{x_3}}} 
+ $
+\end{itemize}
+In the system given by $axiom (Prop^-,Type^-)$ $rel (Prop^-,Prop^-,Prop^-)$ print all terms of type $\negbox{\ptsnprodk{\negbox{\ptsapp{a}{\ptsnil}}}{\negbox{\ptsapp{a}{\ptsnil}}}{\ptsnil}}$ with context ${a:Prop^-,}$ and decide-depth 3
+\begin{itemize}
+\item $ \ptslam{x_3}{\negbox{\ptsapp{a}{\ptsnil}}}{\ptsapp{x_3}{\ptsnil}} $
+\end{itemize}
+In the system given by $axiom (Prop^+,Type^-)$ $axiom (Prop^-,Type^-)$ $rel (Prop^+,Prop^+,Prop^-)$ print all terms of type $\negbox{\ptsnprodk{\negbox{\ptsapp{a}{\ptsnil}}}{\negbox{\ptsapp{a}{\ptsnil}}}{\ptsnil}}$ with context ${a:Prop^+,}$ and decide-depth 3
+\begin{itemize}
+\item $ \ptslam{x_3}{\negbox{\ptsapp{a}{\ptsnil}}}{\posbox{x_3}} $
+\end{itemize}
+In the system given by $axiom (Prop^-,Type^-)$ $rel (Prop^-,Prop^-,Prop^-)$ print all terms of type $\negbox{\ptsnprodk{\negbox{\ptsapp{o}{\ptsnil}}}{\negbox{\ptsnprodk{\negbox{\ptsnprodk{\negbox{\ptsapp{o}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}}}{\ptsnil}}$ with context ${o:Prop^-,}$ and decide-depth 5
+\begin{itemize}
+\item $ 
+ \ptslam{x_3}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptslam{x_4}{\negbox{\ptsnprodk{\negbox{\ptsapp{o}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}}}{\ptsapp{x_4}{\ptscons{\negbox{\ptsapp{x_4}{\ptscons{\negbox{\ptsapp{x_3}{\ptsnil}}}{\ptsnil}}}}{\ptsnil}}}} 
+ $
+\item $ 
+ \ptslam{x_3}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptslam{x_4}{\negbox{\ptsnprodk{\negbox{\ptsapp{o}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}}}{\ptsapp{x_4}{\ptscons{\negbox{\ptsapp{x_3}{\ptsnil}}}{\ptsnil}}}} 
+ $
+\item $ 
+ \ptslam{x_3}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptslam{x_4}{\negbox{\ptsnprodk{\negbox{\ptsapp{o}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}}}{\ptsapp{x_3}{\ptsnil}}} 
+ $
+\end{itemize}
+In the system given by $axiom (Prop^-,Type^-)$ $axiom (Prop^+,Type^-)$ $rel (Prop^+,Prop^-,Prop^-)$ $rel (Prop^-,Prop^+,Prop^-)$ $rel (Prop^+,Prop^+,Prop^-)$ $rel (Prop^-,Prop^-,Prop^-)$ print all terms of type $\negbox{\ptsnprodk{\negbox{\ptsapp{o}{\ptsnil}}}{\negbox{\ptsnprodk{\negbox{\ptsnprodk{\negbox{\ptsapp{o}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}}}{\ptsnil}}$ with context ${o:Prop^+,}$ and decide-depth 4
+\begin{itemize}
+\item $ 
+ \ptslam{x_3}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptslam{x_4}{\negbox{\ptsnprodk{\negbox{\ptsapp{o}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}}}{\ptsapp{x_4}{\ptscons{x_3}{\ptskappa{x_5}{\negbox{\ptsapp{o}{\ptsnil}}}{\posbox{x_5}}}}}} 
+ $
+\item $ 
+ \ptslam{x_3}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptslam{x_4}{\negbox{\ptsnprodk{\negbox{\ptsapp{o}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}}}{\ptsapp{x_4}{\ptscons{x_3}{\ptskappa{x_5}{\negbox{\ptsapp{o}{\ptsnil}}}{\posbox{x_3}}}}}} 
+ $
+\item $ 
+ \ptslam{x_3}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptslam{x_4}{\negbox{\ptsnprodk{\negbox{\ptsapp{o}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}}}{\ptsapp{x_4}{\ptscons{x_3}{\ptskappa{x_5}{\negbox{\ptsapp{o}{\ptsnil}}}{\posbox{x_5}}}}}} 
+ $
+\item $ 
+ \ptslam{x_3}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptslam{x_4}{\negbox{\ptsnprodk{\negbox{\ptsapp{o}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}}}{\ptsapp{x_4}{\ptscons{x_3}{\ptskappa{x_5}{\negbox{\ptsapp{o}{\ptsnil}}}{\posbox{x_3}}}}}} 
+ $
+\item $ 
+ \ptslam{x_3}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptslam{x_4}{\negbox{\ptsnprodk{\negbox{\ptsapp{o}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}}}{\posbox{x_3}}} 
+ $
+\end{itemize}
+In the system given by $axiom (Prop^-,Type^-)$ $rel (Prop^-,Prop^-,Prop^-)$ $rel (Type^-,Prop^-,Prop^-)$ print all terms of type $Prop^-$ with context ${}$ and decide-depth 3
+\begin{itemize}
+\item $ 
+ \ptsnprodk{\negbox{\ptsprodk{x_2}{Prop^-}{\negbox{\ptsapp{x_2}{\ptsnil}}}{\ptsnil}}}{\negbox{\ptsprodk{x_2}{Prop^-}{\negbox{\ptsapp{x_2}{\ptsnil}}}{\ptsnil}}}{\ptsnil} 
+ $
+\item $ 
+ \ptsprodk{x_2}{Prop^-}{\negbox{\ptsnprodk{\negbox{\ptsapp{x_2}{\ptsnil}}}{\negbox{\ptsapp{x_2}{\ptsnil}}}{\ptsnil}}}{\ptsnil} 
+ $
+\item $ 
+ \ptsnprodk{Prop^-}{\negbox{\ptsprodk{x_2}{Prop^-}{\negbox{\ptsapp{x_2}{\ptsnil}}}{\ptsnil}}}{\ptsnil} 
+ $
+\item $ 
+ \ptsprodk{x_2}{Prop^-}{\negbox{\ptsnprodk{Prop^-}{\negbox{\ptsapp{x_2}{\ptsnil}}}{\ptsnil}}}{\ptsnil} 
+ $
+\item $ \ptsprodk{x_2}{Prop^-}{\negbox{\ptsapp{x_2}{\ptsnil}}}{\ptsnil} $
+\end{itemize}
+In the system given by $axiom (Prop^-,Type^-)$ $rel (Prop^-,Prop^-,Prop^-)$ $rel (Type^-,Prop^-,Prop^-)$  in the context ${}$ check whether $\ptsprodk{x_2}{Prop^-}{\negbox{\ptsprodk{x_3}{Prop^-}{\negbox{\ptsnprodk{\negbox{\ptsapp{x_2}{\ptsnil}}}{\negbox{\ptsapp{x_3}{\ptsnil}}}{\ptsnil}}}{\ptsnil}}}{\ptsnil}$ has type $Prop^-$ with decide-depth 4
+
+Yes!
+
+In the system given by $axiom (Prop^-,Type^-)$ $rel (Prop^-,Prop^-,Prop^-)$ $rel (Type^-,Prop^-,Prop^-)$  in the context ${}$ check whether $\ptsprodk{x_2}{Prop^-}{\negbox{\ptsnprodk{\negbox{\ptsnprodk{\negbox{\ptsapp{x_2}{\ptsnil}}}{\negbox{\ptsapp{x_2}{\ptsnil}}}{\ptsnil}}}{\negbox{\ptsnprodk{\negbox{\ptsapp{x_2}{\ptsnil}}}{\negbox{\ptsapp{x_2}{\ptsnil}}}{\ptsnil}}}{\ptsnil}}}{\ptsnil}$ has type $Prop^-$ with decide-depth 5
+
+Yes!
+
+In the system given by $axiom (Prop^-,Type^-)$ $rel (Prop^-,Prop^-,Prop^-)$ $rel (Type^-,Prop^-,Prop^-)$  in the context ${nat:Prop^-,z:\negbox{\ptsapp{nat}{\ptsnil}},succ:\negbox{\ptsnprodk{\negbox{\ptsapp{nat}{\ptsnil}}}{\negbox{\ptsapp{nat}{\ptsnil}}}{\ptsnil}},}$ check whether $\ptsapp{succ}{\ptscons{\negbox{\ptsapp{z}{\ptsnil}}}{\ptsnil}}$ has type $\negbox{\ptsapp{nat}{\ptsnil}}$ with decide-depth 10
+
+Yes!
+
+In the system given by $axiom (Type^-,Kind^-)$ $rel (Type^-,Type^-,Type^-)$ $rel (Kind^-,Type^-,Type^-)$ print all terms of type $\negbox{\ptsapp{o}{\ptsnil}}$ with context ${i:Type^-,o:Type^-,t:\negbox{\ptsapp{i}{\ptsnil}},Q:\negbox{\ptsnprodk{\negbox{\ptsapp{i}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}},f:\negbox{\ptsnprodk{\negbox{\ptsapp{i}{\ptsnil}}}{\negbox{\ptsnprodk{\negbox{\ptsapp{i}{\ptsnil}}}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsnil}}}{\ptsnil}},}$ and decide-depth 6
+\begin{itemize}
+\item $ \ptsapp{Q}{\ptscons{\negbox{\ptsapp{t}{\ptsnil}}}{\ptsnil}} $
+\item $ 
+ \ptsapp{Q}{\ptscons{\negbox{\ptsapp{f}{\ptscons{\negbox{\ptsapp{t}{\ptsnil}}}{\ptscons{\negbox{\ptsapp{t}{\ptsnil}}}{\ptsnil}}}}}{\ptsnil}} 
+ $
+\item $ 
+ \ptsapp{Q}{\ptscons{\negbox{\ptsapp{f}{\ptscons{\negbox{\ptsapp{t}{\ptsnil}}}{\ptscons{\negbox{\ptsapp{f}{\ptscons{\negbox{\ptsapp{t}{\ptsnil}}}{\ptscons{\negbox{\ptsapp{t}{\ptsnil}}}{\ptsnil}}}}}{\ptsnil}}}}}{\ptsnil}} 
+ $
+\item $ 
+ \ptsapp{Q}{\ptscons{\negbox{\ptsapp{f}{\ptscons{\negbox{\ptsapp{f}{\ptscons{\negbox{\ptsapp{t}{\ptsnil}}}{\ptscons{\negbox{\ptsapp{t}{\ptsnil}}}{\ptsnil}}}}}{\ptscons{\negbox{\ptsapp{t}{\ptsnil}}}{\ptsnil}}}}}{\ptsnil}} 
+ $
+\item $ 
+ \ptsapp{Q}{\ptscons{\negbox{\ptsapp{f}{\ptscons{\negbox{\ptsapp{f}{\ptscons{\negbox{\ptsapp{t}{\ptsnil}}}{\ptscons{\negbox{\ptsapp{t}{\ptsnil}}}{\ptsnil}}}}}{\ptscons{\negbox{\ptsapp{f}{\ptscons{\negbox{\ptsapp{t}{\ptsnil}}}{\ptscons{\negbox{\ptsapp{t}{\ptsnil}}}{\ptsnil}}}}}{\ptsnil}}}}}{\ptsnil}} 
+ $
+\end{itemize}
+In the system given by $axiom (Type^+,Kind^-)$ $axiom (Type^-,Kind^-)$ $rel (Type^+,Type^-,Type^-)$ $rel (Type^-,Type^+,Type^-)$ $rel (Type^-,Type^-,Type^-)$ $rel (Type^+,Type^+,Type^-)$ $rel (Kind^-,Type^+,Type^-)$ $rel (Kind^-,Type^-,Type^-)$ print all terms of type $\negbox{\ptsapp{o}{\ptsnil}}$ with context ${i:Type^+,o:Type^+,t:\negbox{\ptsapp{i}{\ptsnil}},Q:\negbox{\ptsnprodk{\negbox{\ptsapp{i}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}},f:\negbox{\ptsnprodk{\negbox{\ptsapp{i}{\ptsnil}}}{\negbox{\ptsnprodk{\negbox{\ptsapp{i}{\ptsnil}}}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsnil}}}{\ptsnil}},}$ and decide-depth 4
+\begin{itemize}
+\item $ 
+ \ptsapp{Q}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{o}{\ptsnil}}}{\posbox{x_7}}}} 
+ $
+\item $ 
+ \ptsapp{Q}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{o}{\ptsnil}}}{\posbox{x_7}}}} 
+ $
+\end{itemize}
+In the system given by $axiom (Type^+,Kind^-)$ $axiom (Type^-,Kind^-)$ $rel (Type^+,Type^-,Type^-)$ $rel (Type^-,Type^+,Type^-)$ $rel (Type^-,Type^-,Type^-)$ $rel (Type^+,Type^+,Type^-)$ $rel (Kind^-,Type^+,Type^-)$ $rel (Kind^-,Type^-,Type^-)$ print all terms of type $\negbox{\ptsapp{o}{\ptsnil}}$ with context ${i:Type^+,o:Type^-,t:\negbox{\ptsapp{i}{\ptsnil}},Q:\negbox{\ptsnprodk{\negbox{\ptsapp{i}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}},f:\negbox{\ptsnprodk{\negbox{\ptsapp{i}{\ptsnil}}}{\negbox{\ptsnprodk{\negbox{\ptsapp{i}{\ptsnil}}}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsnil}}}{\ptsnil}},}$ and decide-depth 4
+\begin{itemize}
+\item $ \ptsapp{Q}{\ptscons{t}{\ptsnil}} $
+\item $ \ptsapp{Q}{\ptscons{t}{\ptsnil}} $
+\item $ 
+ \ptsapp{f}{\ptscons{t}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsapp{Q}{\ptscons{x_7}{\ptsnil}}}}}} 
+ $
+\item $ 
+ \ptsapp{f}{\ptscons{t}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsapp{Q}{\ptscons{x_7}{\ptsnil}}}}}} 
+ $
+\item $ 
+ \ptsapp{f}{\ptscons{t}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsapp{Q}{\ptscons{t}{\ptsnil}}}}}} 
+ $
+\item $ 
+ \ptsapp{f}{\ptscons{t}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsapp{Q}{\ptscons{t}{\ptsnil}}}}}} 
+ $
+\item $ 
+ \ptsapp{f}{\ptscons{t}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsapp{Q}{\ptscons{x_7}{\ptsnil}}}}}} 
+ $
+\item $ 
+ \ptsapp{f}{\ptscons{t}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsapp{Q}{\ptscons{x_7}{\ptsnil}}}}}} 
+ $
+\item $ 
+ \ptsapp{f}{\ptscons{t}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsapp{Q}{\ptscons{t}{\ptsnil}}}}}} 
+ $
+\item $ 
+ \ptsapp{f}{\ptscons{t}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsapp{Q}{\ptscons{t}{\ptsnil}}}}}} 
+ $
+\item $ 
+ \ptsapp{f}{\ptscons{t}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsapp{Q}{\ptscons{x_7}{\ptsnil}}}}}} 
+ $
+\item $ 
+ \ptsapp{f}{\ptscons{t}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsapp{Q}{\ptscons{x_7}{\ptsnil}}}}}} 
+ $
+\item $ 
+ \ptsapp{f}{\ptscons{t}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsapp{Q}{\ptscons{t}{\ptsnil}}}}}} 
+ $
+\item $ 
+ \ptsapp{f}{\ptscons{t}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsapp{Q}{\ptscons{t}{\ptsnil}}}}}} 
+ $
+\item $ 
+ \ptsapp{f}{\ptscons{t}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsapp{Q}{\ptscons{x_7}{\ptsnil}}}}}} 
+ $
+\item $ 
+ \ptsapp{f}{\ptscons{t}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsapp{Q}{\ptscons{x_7}{\ptsnil}}}}}} 
+ $
+\item $ 
+ \ptsapp{f}{\ptscons{t}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsapp{Q}{\ptscons{t}{\ptsnil}}}}}} 
+ $
+\item $ 
+ \ptsapp{f}{\ptscons{t}{\ptscons{t}{\ptskappa{x_7}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsapp{Q}{\ptscons{t}{\ptsnil}}}}}} 
+ $
+\end{itemize}
+In the system given by $axiom (Type^-,Kind^-)$ $rel (Type^-,Type^-,Type^-)$ $rel (Type^-,Kind^-,Kind^-)$  in the context ${i:Type^-,o:Type^-,\forall:\negbox{\ptsnprodk{\negbox{\ptsnprodk{\negbox{\ptsapp{i}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}},imp:\negbox{\ptsnprodk{\negbox{\ptsapp{o}{\ptsnil}}}{\negbox{\ptsnprodk{\negbox{\ptsapp{o}{\ptsnil}}}{\negbox{\ptsapp{o}{\ptsnil}}}{\ptsnil}}}{\ptsnil}},pf:\negbox{\ptsnprodk{\negbox{\ptsapp{o}{\ptsnil}}}{Type^-}{\ptsnil}},t:\negbox{\ptsapp{i}{\ptsnil}},Q:\negbox{\ptsapp{o}{\ptsnil}},f:\negbox{\ptsnprodk{\negbox{\ptsapp{i}{\ptsnil}}}{\negbox{\ptsnprodk{\negbox{\ptsapp{i}{\ptsnil}}}{\negbox{\ptsapp{i}{\ptsnil}}}{\ptsnil}}}{\ptsnil}},imp_l:\negbox{\ptsprodk{x_1}{\negbox{\ptsapp{o}{\ptsnil}}}{\negbox{\ptsprodk{x_1}{\negbox{\ptsapp{o}{\ptsnil}}}{\negbox{\ptsnprodk{\negbox{\ptsnprodk{\negbox{\ptsapp{pf}{\ptscons{\negbox{\ptsapp{x_1}{\ptsnil}}}{\ptsnil}}}}{\negbox{\ptsapp{pf}{\ptscons{\negbox{\ptsapp{x_1}{\ptsnil}}}{\ptsnil}}}}{\ptsnil}}}{\negbox{\ptsapp{pf}{\ptscons{\negbox{\ptsapp{imp}{\ptscons{\negbox{\ptsapp{x_1}{\ptsnil}}}{\ptscons{\negbox{\ptsapp{x_1}{\ptsnil}}}{\ptsnil}}}}}{\ptsnil}}}}{\ptsnil}}}{\ptsnil}}}{\ptsnil}},}$ check whether $\ptsapp{imp_l}{\ptscons{\negbox{\ptsapp{Q}{\ptsnil}}}{\ptscons{\negbox{\ptsapp{Q}{\ptsnil}}}{\ptscons{\negbox{\ptslam{x_1}{\negbox{\ptsapp{pf}{\ptscons{\negbox{\ptsapp{Q}{\ptsnil}}}{\ptsnil}}}}{\ptsapp{x_1}{\ptsnil}}}}{\ptsnil}}}}$ has type $\negbox{\ptsapp{pf}{\ptscons{\negbox{\ptsapp{imp}{\ptscons{\negbox{\ptsapp{Q}{\ptsnil}}}{\ptscons{\negbox{\ptsapp{Q}{\ptsnil}}}{\ptsnil}}}}}{\ptsnil}}}$ with decide-depth 10
+
+Yes!
+
+\end{document}
