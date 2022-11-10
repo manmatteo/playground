@@ -64,7 +64,7 @@ cont_to_latex (kappa A T) OutString :-
 cont_to_latex (A ` T) OutString :-
   val_to_latex A Astr, cont_to_latex T Tstr,
   OutString = "\\ptscons{" ^ Astr ^ "}{" ^ Tstr ^ "}".
-cont_to_latex # "\\ptsnil".
+cont_to_latex nl "\\ptsnil".
 
 % type ctx_to_string list (pair string string) -> string -> prop.
 % ctx_to_string [] "".

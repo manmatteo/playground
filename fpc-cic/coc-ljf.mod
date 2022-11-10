@@ -25,8 +25,8 @@ topmost_sort X :- axiom _ X, not (axiom X _).
 
 % To fix if I switch to vals!
 % asyncr Cert (prod A B (kappa Ty T)) (unk (prod A B (kappa Ty C))) :-
-%   pi w\ named w Ty (prod A B #) =>
-%     % (print "---New name" w "for" (prod A B #),
+%   pi w\ named w Ty (prod A B nl) =>
+%     % (print "---New name" w "for" (prod A B nl),
 %     asyncr Cert (T w) (unk (C w)).
 
 % To fix if I switch to vals!
@@ -48,7 +48,7 @@ topmost_sort X :- axiom _ X, not (axiom X _).
 
 %% prod
 % Pr
-asyncr Cert (fun A T) (unk (negbox (prod A B #) as Prod)) :-
+asyncr Cert (fun A T) (unk (negbox (prod A B nl) as Prod)) :-
   prodR_jc Cert Sort SortCert Cert',
   % print "---Check sort for prodR",
   syncr SortCert Prod (sort (n Sort)),
@@ -83,7 +83,7 @@ asyncr Cert (prod A B Cont) (str (sort (n S3))) :- % Store è gratis: tanto vale
   % print "---Done continuation". % TODO Fix certificate
 % Works fine, but what if I want to start from asyncr?
 % Cuts at the end of these axioms: otherwise there's some wild nondeterminism with the usual axiom rule.
-syncl Cert (sort X) # (sort X) :-
+syncl Cert (sort X) nl (sort X) :-
   sorted_jc Cert,
   (axiom X (n _Y); topmost_sort X),!. %% Topmost sorts are always negative?
 
@@ -93,7 +93,7 @@ syncr Cert (sort X) (sort Y) :-
   axiom X Y,!.
 
 %% ax
-syncl Cert N # N :-
+syncl Cert N nl N :-
   axiomL_je Cert Sort SortCert,
   syncr SortCert N (sort (n Sort)).
 syncr Cert Var P :-
@@ -122,7 +122,7 @@ asyncr Cert T (unk A) :-
 % store_l
 asyncl Cert [N] T R :-
   storeL_jc Cert Index Cert',
-  pi w\ store (Index (#cert w)) w N => asyncr Cert' (T w) (R w).
+  pi w\ store (Index (to_cert w)) w N => asyncr Cert' (T w) (R w).
 %release_r
 syncr Cert (negbox T) N :-
   releaseR_je Cert Sort SortCert Cert',
@@ -146,7 +146,7 @@ cut_tkt (app X K) M (app X L) :- name X, cut_kapp K M L.
 
 pred cut_kapp i:continuation, i:continuation, o:continuation.
 :if "DEBUG:cut" cut_kapp A B C  :- print "cut_kapp" A B C, fail.
-cut_kapp # L L.
+cut_kapp nl L L.
 cut_kapp (H ` K) M (H ` L) :- cut_kapp K M L.
 cut_kapp (kappa A T) M (kappa A L)   :- pi y\ cut_tkt (T y) M (L y).
 
@@ -172,6 +172,6 @@ cut_vvv P (x\ negbox (T x)) (negbox T') :- cut_vtt P T T'.
 pred cut_vkk i:val, i:(val -> continuation), o:continuation.
 :if "DEBUG:cut" cut_vkk  A B C :- print "cut_vkk" A B C, fail.
 cut_vkk X (y\ K y) (K X) :- name X.
-cut_vkk P_ (x\ #)   #.
+cut_vkk P_ (x\ nl)   nl.
 cut_vkk P (x\ ((Q x) ` (K x))) (Q' ` K') :- cut_vvv P Q Q', cut_vkk P K K'.
 cut_vkk P (x\ kappa (A x) (y\ T x y)) (kappa A' T') :- cut_vvv P A A', pi y\ cut_vtt P (x\ T x y) (T' y).

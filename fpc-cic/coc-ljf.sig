@@ -1,9 +1,9 @@
 sig coc-ljf.
 
 kind continuation type.
-type # continuation.
-type ` val -> continuation -> continuation.
-infixr ` 120.
+type nl continuation.
+type (`) val -> continuation -> continuation.
+% infixr ` 120.
 
 kind term type.
 kind val type.
@@ -25,8 +25,8 @@ kind index type.
 type store index -> val -> val -> prop.
 type named val -> val -> val -> prop.
 
-type #idx  val -> index.
-type #cert val -> cert.
+type to_idx  val -> index.
+type to_cert val -> cert.
 
 kind cert type.
 kind rhs type.
